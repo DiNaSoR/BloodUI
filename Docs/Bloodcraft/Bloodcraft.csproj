@@ -3,7 +3,7 @@
 	<PropertyGroup>	
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<AssemblyName>BloodCraftPlus</AssemblyName>
+		<AssemblyName>Bloodcraftplus</AssemblyName>
 		<Version>1.12.17</Version>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<RestoreSources>

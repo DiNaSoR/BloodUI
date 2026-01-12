@@ -11,8 +11,8 @@ v-rising = ["oakveil-update", "mods", "server"]
 
 [package]
 namespace = "DiNaSoR"
-name = "BloodCraftPlus"
+name = "Bloodcraftplus"
 versionNumber = "1.12.17"
 description = "Leveling, expertise, legacies, professions, familiars, classes, quests!"
-websiteUrl = "https://github.com/DiNaSoR/BloodCraftPlus"
+websiteUrl = "https://github.com/DiNaSoR/Bloodcraftplus"
 containsNsfwContent = false

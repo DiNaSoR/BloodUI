@@ -22,8 +22,8 @@ public static class WorldBootstrapPatch
             m.GetParameters().Length == 0
         );
 
-    const string QuestTargetSystemTypeName = "Bloodcraft.Systems.Quests.QuestTargetSystem, Bloodcraft";
-    const string PrimalWarEventSystemTypeName = "Bloodcraft.Systems.PrimalWarEventSystem, Bloodcraft";
+    const string QuestTargetSystemTypeName = "Bloodcraft.Systems.Quests.QuestTargetSystem, Bloodcraftplus";
+    const string PrimalWarEventSystemTypeName = "Bloodcraft.Systems.PrimalWarEventSystem, Bloodcraftplus";
 
     [HarmonyPatch(typeof(WorldBootstrapUtilities), nameof(WorldBootstrapUtilities.AddSystemsToWorld))]
     [HarmonyPrefix]
