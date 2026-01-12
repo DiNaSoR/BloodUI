@@ -129,6 +129,44 @@
 ### References
 - Files:
   - `Services/CharacterMenu/Shared/UIFactory.cs`
+
+---
+
+## L-009 — MSBuild post-build targets must not break builds
+
+### Status
+- Active
+
+### Tags
+- [Build] [DX] [Reliability]
+
+### Introduced
+- 2026-01-12
+
+### Symptom
+- `dotnet build` fails on machines without a .NET 6 runtime due to a post-build `Exec` that runs the built `net6.0` assembly.
+- Deploy copy steps can fail or copy the wrong DLL when `<AssemblyName>` differs from the project filename.
+
+### Root cause
+- Post-build steps were unconditional and depended on local machine state (installed runtimes / writable Steam install paths).
+- Copy tasks used `$(ProjectName).dll` instead of the actual build output path.
+
+### Wrong approach (DO NOT REPEAT)
+- Hardcoding post-build `Exec`/deploy steps as always-on.
+- Copying `$(TargetDir)$(ProjectName).dll` when `AssemblyName` is not the same as `ProjectName`.
+
+### Correct approach
+- Copy using `$(TargetPath)` (the actual primary build output).
+- Guard optional post-build steps behind properties/conditions, and make deploy copies non-fatal (`ContinueOnError`) so a clean build is always possible.
+
+### Rule
+> Build must be able to succeed without local deploy paths or runtime prerequisites; optional post-build actions must be guarded and copy from `$(TargetPath)`.
+
+### References
+- Files:
+  - `Eclipse.csproj`
+  - `Docs/Bloodcraft/Bloodcraft.csproj`
+  - `Docs/Bloodcraft/.codex/install.sh`
   - `Services/HUD/Shared/*`
 ---
 

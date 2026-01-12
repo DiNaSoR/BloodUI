@@ -56,7 +56,7 @@
 	</ItemGroup>
 	
 	<Target Name="BuildToClient" AfterTargets="Build" Condition="Exists('$(ClientInstallPath)\BepInEx\plugins')">
-		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="$(ClientInstallPath)\BepInEx\plugins" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ClientInstallPath)\BepInEx\plugins" ContinueOnError="true" />
 	</Target>
 	
 </Project>

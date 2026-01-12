@@ -66,7 +66,12 @@ fi
 echo "Building Bloodcraft project..."
 dotnet build "$PROJECT_PATH" --configuration Release --no-restore -p:RunGenerateREADME=false
 
-DLL_PATH="$REPO_ROOT/bin/Release/net6.0/Bloodcraft.dll"
+ASSEMBLY_NAME="$(sed -n 's:.*<AssemblyName>\\(.*\\)</AssemblyName>.*:\\1:p' "$PROJECT_PATH" | head -n 1)"
+if [ -z "$ASSEMBLY_NAME" ]; then
+    ASSEMBLY_NAME="$(basename "$PROJECT_PATH" .csproj)"
+fi
+
+DLL_PATH="$REPO_ROOT/bin/Release/net6.0/${ASSEMBLY_NAME}.dll"
 if [ ! -f "$DLL_PATH" ]; then
     echo "Build failed: $DLL_PATH not found." >&2
     exit 1

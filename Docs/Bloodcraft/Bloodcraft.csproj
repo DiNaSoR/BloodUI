@@ -17,7 +17,7 @@
 		<OutputType>Exe</OutputType>
 		<UseAppHost>false</UseAppHost>
 		<NuGetAudit>False</NuGetAudit>
-		<RunGenerateREADME>true</RunGenerateREADME>
+		<RunGenerateREADME Condition="'$(RunGenerateREADME)'==''">false</RunGenerateREADME>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -57,8 +57,8 @@
                 <None Include="Factory/README-Usage.cs" />
         </ItemGroup>
 	
-	<Target Name="BuildToServer" AfterTargets="Build">
-		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\VRisingDedicatedServer\BepInEx\plugins" />
+	<Target Name="BuildToServer" AfterTargets="Build" Condition="Exists('C:\Program Files (x86)\Steam\steamapps\common\VRisingDedicatedServer\BepInEx\plugins')">
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\VRisingDedicatedServer\BepInEx\plugins" ContinueOnError="true" />
 	</Target>
 	
 	<Target Name="GenerateREADME" Condition="'$(RunGenerateREADME)' == 'true'" AfterTargets="Build">
