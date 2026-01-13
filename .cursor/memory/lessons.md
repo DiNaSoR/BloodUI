@@ -132,6 +132,40 @@
 
 ---
 
+## L-013 — UI command indices must match server semantics
+
+### Status
+- Active
+
+### Tags
+- [UI] [Commands] [Reliability]
+
+### Introduced
+- 2026-01-13
+
+### Symptom
+- Clicking the first Class spell row sends `.class csp 0` and equips the default spell (e.g., “Veil of Shadow”) instead of the intended class spell.
+
+### Root cause
+- Server semantics reserve `.class csp 0` for the default class spell and use `1..N` for class spells, but the UI used zero-based row indices for command parameters (and unlock level indexing).
+
+### Wrong approach (DO NOT REPEAT)
+- Reusing zero-based UI list indices as chat command parameters when the server uses 1-based indexing (or reserves values like `0`).
+
+### Correct approach
+- Translate UI row indices to server command indices (e.g., `rowIndex + 1`), and keep any related arrays (like unlock levels) aligned to the same indexing scheme.
+
+### Rule
+> Any UI that sends server commands must match the server’s indexing/parameter contract; do not assume UI list order/zero-based indices map 1:1.
+
+### References
+- Files:
+  - `Services/CharacterMenu/Tabs/ClassTab.cs`
+  - `Docs/Bloodcraft/Commands/ClassCommands.cs`
+  - `Docs/Bloodcraft/Utilities/Classes.cs`
+
+---
+
 ## L-010 — CI: `dotnet build -t:Compile` does not create `bin/` outputs
 
 ### Status

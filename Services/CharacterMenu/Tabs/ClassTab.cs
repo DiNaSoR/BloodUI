@@ -491,7 +491,7 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             int spellIndex = index;
             button.onClick.AddListener((UnityAction)(() =>
             {
-                Quips.SendCommand($".class csp {spellIndex}");
+                Quips.SendCommand($".class csp {spellIndex + 1}");
             }));
         }
 
@@ -503,7 +503,7 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             indexBg.color = new Color(0.31f, 0.31f, 0.35f, 0.6f);
             indexBg.raycastTarget = false;
 
-            TextMeshProUGUI indexText = CreateRowText(indexRect, reference, index.ToString(), ChipFontScale, FontStyles.Normal);
+            TextMeshProUGUI indexText = CreateRowText(indexRect, reference, (index + 1).ToString(), ChipFontScale, FontStyles.Normal);
             if (indexText != null)
             {
                 indexText.alignment = TextAlignmentOptions.Center;
@@ -632,6 +632,7 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
 
         int spellCount = classSpells?.Count ?? 0;
         int unlockCount = _classSpellUnlockLevels?.Count ?? 0;
+        int unlockIndexOffset = unlockCount == spellCount + 1 ? 1 : 0;
 
         for (int i = 0; i < _spellRows.Count; i++)
         {
@@ -654,9 +655,10 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
 
             if (row.ReqText != null)
             {
-                if (i < unlockCount && _classSpellUnlockLevels != null)
+                int unlockIndex = i + unlockIndexOffset;
+                if (unlockIndex < unlockCount && _classSpellUnlockLevels != null)
                 {
-                    int req = _classSpellUnlockLevels[i];
+                    int req = _classSpellUnlockLevels[unlockIndex];
                     row.ReqText.text = req > 0 ? $"(P{req})" : "";
                 }
                 else

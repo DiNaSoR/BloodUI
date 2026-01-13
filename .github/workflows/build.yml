@@ -77,27 +77,87 @@ jobs:
       - name: Build Bloodcraftplus (Release)
         run: dotnet build Docs/Bloodcraft/Bloodcraft.csproj --configuration Release -p:Version=${{ steps.extract_versions.outputs.bloodcraft_version }} -p:RunGenerateREADME=false
 
-      - name: Prepare release assets
+      - name: Get commit messages since last release
+        id: commits
         run: |
-          cp Docs/Bloodcraft/CHANGELOG.md Bloodcraftplus-CHANGELOG.md
+          # Get the previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          if [ -z "$PREV_TAG" ]; then
+            # If no previous tag, get last 10 commits
+            COMMITS=$(git log --pretty=format:"- %s (\`%h\`)" -n 10)
+          else
+            # Get commits since last tag
+            COMMITS=$(git log --pretty=format:"- %s (\`%h\`)" ${PREV_TAG}..HEAD)
+          fi
+          
+          # Escape for GitHub Actions
+          COMMITS="${COMMITS//'%'/'%25'}"
+          COMMITS="${COMMITS//$'\n'/'%0A'}"
+          COMMITS="${COMMITS//$'\r'/'%0D'}"
+          
+          echo "changes<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMITS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: GH Release
         uses: softprops/action-gh-release@v1
         if: github.event_name == 'workflow_dispatch'
         with:
           body: |
-            Manual pre-release build
+            # 🧛 Release v${{ steps.extract_versions.outputs.eclipse_version }}
 
-            - EclipsePlus: ${{ steps.extract_versions.outputs.eclipse_version }}
-            - Bloodcraftplus: ${{ steps.extract_versions.outputs.bloodcraft_version }}
+            <div align="center">
+            
+            ![V Rising Mod](https://img.shields.io/badge/V%20Rising-Mod-red?style=for-the-badge&logo=steam)
+            ![EclipsePlus](https://img.shields.io/badge/Client-EclipsePlus%20v${{ steps.extract_versions.outputs.eclipse_version }}-blue?style=for-the-badge)
+            ![Bloodcraftplus](https://img.shields.io/badge/Server-Bloodcraftplus%20v${{ steps.extract_versions.outputs.bloodcraft_version }}-green?style=for-the-badge)
+            
+            </div>
+
+            ---
+
+            ## 📦 Downloads
+
+            | Mod | Type | Version | Description |
+            |-----|------|---------|-------------|
+            | **EclipsePlus.dll** | 🖥️ Client | `v${{ steps.extract_versions.outputs.eclipse_version }}` | Install on your game client |
+            | **Bloodcraftplus.dll** | 🖧 Server | `v${{ steps.extract_versions.outputs.bloodcraft_version }}` | Install on your server |
+
+            ---
+
+            ## 📋 What's Changed
+
+            ${{ steps.commits.outputs.changes }}
+
+            ---
+
+            ## 🚀 Installation
+
+            ### Client (EclipsePlus)
+            1. Download `EclipsePlus.dll`
+            2. Place in `VRising/BepInEx/plugins/`
+            3. Launch the game
+
+            ### Server (Bloodcraftplus)
+            1. Download `Bloodcraftplus.dll`
+            2. Place in `VRisingServer/BepInEx/plugins/`
+            3. Restart the server
+
+            ---
+
+            <div align="center">
+            
+            Made with ❤️ for the V Rising modding community
+            
+            </div>
           name: v${{ steps.extract_versions.outputs.eclipse_version }}-bc${{ steps.extract_versions.outputs.bloodcraft_version }}
           fail_on_unmatched_files: true
           prerelease: true
           tag_name: v${{ steps.extract_versions.outputs.eclipse_version }}-bc${{ steps.extract_versions.outputs.bloodcraft_version }}
+          generate_release_notes: false
           files: |
             ./bin/Release/net6.0/EclipsePlus.dll
-            ./Docs/Bloodcraft/bin/Release/net6.0/Bloodcraftplus.dll        
-            CHANGELOG.md
-            Bloodcraftplus-CHANGELOG.md
+            ./Docs/Bloodcraft/bin/Release/net6.0/Bloodcraftplus.dll
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
