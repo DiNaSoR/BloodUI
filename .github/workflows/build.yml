@@ -77,6 +77,10 @@ jobs:
       - name: Build Bloodcraftplus (Release)
         run: dotnet build Docs/Bloodcraft/Bloodcraft.csproj --configuration Release -p:Version=${{ steps.extract_versions.outputs.bloodcraft_version }} -p:RunGenerateREADME=false
 
+      - name: Prepare release assets
+        run: |
+          cp Docs/Bloodcraft/CHANGELOG.md Bloodcraftplus-CHANGELOG.md
+
       - name: GH Release
         uses: softprops/action-gh-release@v1
         if: github.event_name == 'workflow_dispatch'
@@ -92,8 +96,8 @@ jobs:
           tag_name: v${{ steps.extract_versions.outputs.eclipse_version }}-bc${{ steps.extract_versions.outputs.bloodcraft_version }}
           files: |
             ./bin/Release/net6.0/EclipsePlus.dll
-            ./Docs/Bloodcraft/bin/Release/net6.0/Bloodcraftplus.dll
+            ./Docs/Bloodcraft/bin/Release/net6.0/Bloodcraftplus.dll        
             CHANGELOG.md
-            Docs/Bloodcraft/CHANGELOG.md
+            Bloodcraftplus-CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -166,6 +166,38 @@
 
 ---
 
+## L-012 — GitHub Releases: uploaded assets must have unique names
+
+### Status
+- Active
+
+### Tags
+- [CI] [Release] [DX]
+
+### Introduced
+- 2026-01-12
+
+### Symptom
+- `softprops/action-gh-release` fails during asset upload when multiple files share the same basename (e.g., `CHANGELOG.md`), resulting in errors like `404 Not Found` / unmatched uploads.
+
+### Root cause
+- GitHub release assets are keyed by asset name; `action-gh-release` uses the file basename as the asset name, so two different paths with the same basename collide.
+
+### Wrong approach (DO NOT REPEAT)
+- Listing both `CHANGELOG.md` and `Docs/Bloodcraft/CHANGELOG.md` under `files:` (same asset name).
+
+### Correct approach
+- Ensure each uploaded asset has a unique filename (copy/rename before uploading).
+
+### Rule
+> Never upload multiple release assets with the same basename; rename/copy first so asset names are unique.
+
+### References
+- Files:
+  - `.github/workflows/build.yml`
+
+---
+
 ## L-011 — Character menu tabs: keep `BloodcraftTab` enum and tab wiring consistent
 
 ### Status

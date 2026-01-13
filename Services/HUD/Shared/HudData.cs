@@ -186,7 +186,9 @@ internal static class HudData
         "TabGradient",
         "Window_Box",
         "Window_Box_Background",
-        "Window_Divider_Horizontal_V_Red"
+        "Window_Divider_Horizontal_V_Red",
+        "Glow03",
+        "Glow04"
     ];
 
     public static readonly Dictionary<Profession, string> ProfessionIcons = new()

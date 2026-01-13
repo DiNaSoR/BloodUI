@@ -284,8 +284,10 @@ internal class ProgressionTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         
         // Wire up click handler
         int subTabIndex = (int)subTab;
-        Button unityButton = buttonRect.gameObject.AddComponent<Button>();
-        unityButton.onClick.AddListener((UnityEngine.Events.UnityAction)(() => OnSubTabClicked(subTabIndex)));
+        if (button != null)
+        {
+            button.onClick.AddListener((UnityEngine.Events.UnityAction)(() => OnSubTabClicked(subTabIndex)));
+        }
 
         return button;
     }

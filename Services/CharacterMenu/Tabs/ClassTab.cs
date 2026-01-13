@@ -2,11 +2,14 @@ using Eclipse.Services.CharacterMenu.Base;
 using Eclipse.Services.CharacterMenu.Interfaces;
 using Eclipse.Services.CharacterMenu.Shared;
 using Eclipse.Services.HUD.Shared;
-using Stunlock.Core;
+using Eclipse.Utilities;
+using ProjectM.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Services.DataService;
@@ -20,50 +23,43 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
 {
     #region Constants
 
-    private const float HeaderBackgroundAlpha = 0.95f;
-    private const float RowBackgroundAlpha = 0.35f;
+    private const float SectionSpacing = 8f;
     private const float RowSpacing = 4f;
-    private const float RowHorizontalSpacing = 10f;
-    private const int RowPaddingHorizontal = 12;
-    private const int RowPaddingVertical = 8;
-    private const float DividerOpacity = 0.7f;
-    private const float ColumnSpacing = 12f;
-    private const float CardSpacing = 8f;
-
-    private const float HeaderFontScale = UIFactory.ProfessionHeaderFontScale;
-    private const float RowFontScale = UIFactory.ProfessionFontScale;
-    private const float SmallFontScale = 0.7f;
-    private const float ChipFontScale = 0.6f;
-
     private const float RowHeight = 32f;
     private const float SpellRowHeight = 28f;
-    private const float ClassIconSize = 12f;
-    private const float SpellIndexSize = 18f;
-    private const float ChipPadding = 4f;
+    private const float ClassIconSize = 14f;
+    private const float SpellIndexSize = 20f;
+    private const int CardPadding = 10;
+    private const float CardInnerSpacing = 6f;
 
-    private static readonly Color HeaderBackgroundColor = new(0.1f, 0.1f, 0.12f, HeaderBackgroundAlpha);
-    private static readonly Color RowBackgroundColor = new(0f, 0f, 0f, RowBackgroundAlpha);
-    private static readonly Color ActiveRowBorderColor = new(0.5f, 0.05f, 0.06f, 0.7f);
-    private static readonly Color ActiveStatusColor = new(0.62f, 0.95f, 0.71f, 1f); // #9ef2b5
-    private static readonly Color LockedColor = new(0.82f, 0.35f, 0.35f, 0.8f);
+    private const float TitleFontScale = 0.82f;
+    private const float RowFontScale = 0.75f;
+    private const float SmallFontScale = 0.65f;
+    private const float ChipFontScale = 0.55f;
 
+    private static readonly Color CardBackgroundColor = new(0f, 0f, 0f, 0.32f);
+    private static readonly Color HeaderBackgroundColor = new(0.1f, 0.1f, 0.12f, 0.95f);
+    private static readonly Color RowBackgroundColor = new(0.05f, 0.05f, 0.08f, 0.75f);
+    private static readonly Color ActiveRowBackgroundColor = new(0.5f, 0.05f, 0.06f, 0.35f);
+    private static readonly Color TitleColor = new(0.95f, 0.84f, 0.7f, 1f);
+    private static readonly Color MetaColor = new(1f, 1f, 1f, 0.55f);
+    private static readonly Color HintColor = new(1f, 1f, 1f, 0.48f);
+    private static readonly Color ActiveColor = new(0.62f, 0.95f, 0.71f, 1f);
+
+    private static readonly string[] CardSpriteNames = ["Window_Box", "Window_Box_Background", "SimpleBox_Normal"];
     private static readonly string[] HeaderSpriteNames = ["Act_BG", "TabGradient", "Window_Box_Background"];
-    private static readonly string[] CardSpriteNames = ["Window_Box", "Window_Box_Background"];
-    private static readonly string[] DividerSpriteNames = ["Divider_Horizontal", "Window_Divider_Horizontal_V_Red"];
 
-    // Class colors from Bloodcraft
     private static readonly Dictionary<PlayerClass, Color> ClassColors = new()
     {
         { PlayerClass.None, Color.gray },
-        { PlayerClass.BloodKnight, new Color(1f, 0f, 0f, 1f) },           // #ff0000
-        { PlayerClass.DemonHunter, new Color(1f, 0.8f, 0f, 1f) },         // #ffcc00
-        { PlayerClass.VampireLord, new Color(0f, 1f, 1f, 1f) },           // #00ffff
-        { PlayerClass.ShadowBlade, new Color(0.6f, 0.2f, 1f, 1f) },       // #9933ff
-        { PlayerClass.ArcaneSorcerer, new Color(0f, 0.5f, 0.5f, 1f) },    // #008080
-        { PlayerClass.DeathMage, new Color(0f, 1f, 0f, 1f) }              // #00ff00
+        { PlayerClass.BloodKnight, new Color(1f, 0f, 0f, 1f) },
+        { PlayerClass.DemonHunter, new Color(1f, 0.8f, 0f, 1f) },
+        { PlayerClass.VampireLord, new Color(0f, 1f, 1f, 1f) },
+        { PlayerClass.ShadowBlade, new Color(0.6f, 0.2f, 1f, 1f) },
+        { PlayerClass.ArcaneSorcerer, new Color(0f, 0.5f, 0.5f, 1f) },
+        { PlayerClass.DeathMage, new Color(0f, 1f, 0f, 1f) }
     };
 
-    // Class on-hit effect descriptions
     private static readonly Dictionary<PlayerClass, string> ClassOnHitEffects = new()
     {
         { PlayerClass.None, "" },
@@ -81,24 +77,24 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
 
     private RectTransform _panelRoot;
     private TextMeshProUGUI _referenceText;
-    
+    private Transform _contentRoot;
+
     // Class Selection
-    private Transform _classSelectionCard;
     private TextMeshProUGUI _currentClassText;
     private TextMeshProUGUI _onHitEffectText;
+    private Transform _classListRoot;
     private readonly List<ClassRowUI> _classRows = [];
-    
+
     // Class Spells
-    private Transform _classSpellsCard;
     private TextMeshProUGUI _shiftSlotText;
+    private TextMeshProUGUI _shiftToggleText;
+    private Image _shiftToggleImage;
+    private Transform _spellListRoot;
     private readonly List<SpellRowUI> _spellRows = [];
-    
+
     // Stat Synergies
-    private Transform _statSynergiesCard;
-    private TextMeshProUGUI _weaponSynergyLabel;
-    private Transform _weaponSynergyChips;
-    private TextMeshProUGUI _bloodSynergyLabel;
-    private Transform _bloodSynergyChips;
+    private TextMeshProUGUI _weaponSynergyText;
+    private TextMeshProUGUI _bloodSynergyText;
 
     #endregion
 
@@ -108,6 +104,28 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
     public override string TabLabel => "Class";
     public override string SectionTitle => "Class System";
     public override BloodcraftTab TabType => BloodcraftTab.Progression;
+
+    #endregion
+
+    #region Nested Types
+
+    private sealed class ClassRowUI(GameObject root, PlayerClass playerClass, TextMeshProUGUI nameText, TextMeshProUGUI statusText, Image background)
+    {
+        public GameObject Root { get; } = root;
+        public PlayerClass PlayerClass { get; } = playerClass;
+        public TextMeshProUGUI NameText { get; } = nameText;
+        public TextMeshProUGUI StatusText { get; } = statusText;
+        public Image Background { get; } = background;
+    }
+
+    private sealed class SpellRowUI(GameObject root, int index, TextMeshProUGUI nameText, TextMeshProUGUI reqText, Image background)
+    {
+        public GameObject Root { get; } = root;
+        public int Index { get; } = index;
+        public TextMeshProUGUI NameText { get; } = nameText;
+        public TextMeshProUGUI ReqText { get; } = reqText;
+        public Image Background { get; } = background;
+    }
 
     #endregion
 
@@ -124,27 +142,17 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             return null;
         }
 
-        UIFactory.ConfigureTopLeftAnchoring(rectTransform);
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
 
-        // Create horizontal layout for two columns
-        HorizontalLayoutGroup hLayout = rectTransform.gameObject.AddComponent<HorizontalLayoutGroup>();
-        hLayout.childAlignment = TextAnchor.UpperLeft;
-        hLayout.spacing = ColumnSpacing;
-        hLayout.childForceExpandWidth = true;
-        hLayout.childForceExpandHeight = false;
-        hLayout.childControlWidth = true;
-        hLayout.childControlHeight = true;
+        EnsureVerticalLayout(rectTransform, spacing: SectionSpacing);
 
-        // Left Column: Class Selection
-        Transform leftColumn = CreateColumn(rectTransform, "LeftColumn");
-        _classSelectionCard = CreateClassSelectionCard(leftColumn, reference);
-
-        // Right Column: Class Spells + Stat Synergies
-        Transform rightColumn = CreateColumn(rectTransform, "RightColumn");
-        _classSpellsCard = CreateClassSpellsCard(rightColumn, reference);
-        _statSynergiesCard = CreateStatSynergiesCard(rightColumn, reference);
-
+        _contentRoot = CreateContentRoot(rectTransform, reference);
         rectTransform.gameObject.SetActive(false);
+
         _panelRoot = rectTransform;
         return rectTransform;
     }
@@ -175,170 +183,72 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         base.Reset();
         _panelRoot = null;
         _referenceText = null;
-        _classSelectionCard = null;
+        _contentRoot = null;
         _currentClassText = null;
         _onHitEffectText = null;
+        _classListRoot = null;
         _classRows.Clear();
-        _classSpellsCard = null;
         _shiftSlotText = null;
+        _shiftToggleText = null;
+        _shiftToggleImage = null;
+        _spellListRoot = null;
         _spellRows.Clear();
-        _statSynergiesCard = null;
-        _weaponSynergyLabel = null;
-        _weaponSynergyChips = null;
-        _bloodSynergyLabel = null;
-        _bloodSynergyChips = null;
+        _weaponSynergyText = null;
+        _bloodSynergyText = null;
     }
 
     #endregion
 
-    #region Private Methods - Layout
+    #region Panel Construction
 
-    private static Transform CreateColumn(Transform parent, string name)
+    private Transform CreateContentRoot(Transform parent, TextMeshProUGUI reference)
     {
-        RectTransform rectTransform = CreateRectTransformObject(name, parent);
-        if (rectTransform == null)
+        RectTransform root = CreateRectTransformObject("ClassContentRoot", parent);
+        if (root == null)
         {
             return null;
         }
 
-        UIFactory.ConfigureTopLeftAnchoring(rectTransform);
+        root.anchorMin = new Vector2(0f, 1f);
+        root.anchorMax = new Vector2(1f, 1f);
+        root.pivot = new Vector2(0f, 1f);
+        root.offsetMin = Vector2.zero;
+        root.offsetMax = Vector2.zero;
 
-        VerticalLayoutGroup vLayout = rectTransform.gameObject.AddComponent<VerticalLayoutGroup>();
-        vLayout.childAlignment = TextAnchor.UpperLeft;
-        vLayout.spacing = CardSpacing;
-        vLayout.childForceExpandWidth = true;
-        vLayout.childForceExpandHeight = false;
-        vLayout.childControlWidth = true;
-        vLayout.childControlHeight = true;
+        EnsureVerticalLayout(root, spacing: SectionSpacing);
 
-        LayoutElement layout = rectTransform.gameObject.AddComponent<LayoutElement>();
-        layout.flexibleWidth = 1f;
+        // Class Selection Card
+        CreateClassSelectionCard(root, reference);
 
-        return rectTransform;
+        // Divider
+        _ = CreateDivider(root);
+
+        // Class Spells Card
+        CreateClassSpellsCard(root, reference);
+
+        // Divider
+        _ = CreateDivider(root);
+
+        // Stat Synergies Card
+        CreateStatSynergiesCard(root, reference);
+
+        return root;
     }
 
-    private Transform CreateCard(Transform parent, string name, string headerTitle)
+    private void CreateClassSelectionCard(Transform parent, TextMeshProUGUI reference)
     {
-        RectTransform rectTransform = CreateRectTransformObject(name, parent);
-        if (rectTransform == null)
-        {
-            return null;
-        }
-
-        UIFactory.ConfigureTopLeftAnchoring(rectTransform);
-
-        // Card background
-        Image background = rectTransform.gameObject.AddComponent<Image>();
-        ApplySprite(background, CardSpriteNames);
-        background.color = new Color(0.04f, 0.04f, 0.05f, 0.72f);
-        background.type = Image.Type.Sliced;
-        background.raycastTarget = false;
-
-        VerticalLayoutGroup vLayout = rectTransform.gameObject.AddComponent<VerticalLayoutGroup>();
-        vLayout.childAlignment = TextAnchor.UpperLeft;
-        vLayout.spacing = RowSpacing;
-        vLayout.childForceExpandWidth = true;
-        vLayout.childForceExpandHeight = false;
-        vLayout.childControlWidth = true;
-        vLayout.childControlHeight = true;
-        vLayout.padding = UIFactory.CreatePadding(RowPaddingHorizontal, RowPaddingHorizontal, RowPaddingVertical, RowPaddingVertical);
-
-        ContentSizeFitter fitter = rectTransform.gameObject.AddComponent<ContentSizeFitter>();
-        fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-        // Card header
-        CreateCardHeader(rectTransform, headerTitle);
-
-        return rectTransform;
-    }
-
-    private void CreateCardHeader(Transform parent, string title)
-    {
-        RectTransform headerRect = CreateRectTransformObject("CardHeader", parent);
-        if (headerRect == null)
+        RectTransform card = CreateCard(parent, "ClassSelectionCard");
+        if (card == null)
         {
             return;
         }
 
-        UIFactory.ConfigureTopLeftAnchoring(headerRect);
+        _ = CreateCardHeader(card, reference, "CLASS SELECTION");
 
-        Image headerBg = headerRect.gameObject.AddComponent<Image>();
-        ApplySprite(headerBg, HeaderSpriteNames);
-        headerBg.color = HeaderBackgroundColor;
-        headerBg.raycastTarget = false;
+        _currentClassText = CreateTextRow(card, reference, "Current: None", TitleFontScale, FontStyles.Bold, TitleColor);
+        _onHitEffectText = CreateTextRow(card, reference, "On-Hit: ", SmallFontScale, FontStyles.Normal, MetaColor);
 
-        HorizontalLayoutGroup hLayout = headerRect.gameObject.AddComponent<HorizontalLayoutGroup>();
-        hLayout.childAlignment = TextAnchor.MiddleLeft;
-        hLayout.spacing = 8f;
-        hLayout.childForceExpandWidth = false;
-        hLayout.childForceExpandHeight = false;
-        hLayout.childControlWidth = true;
-        hLayout.childControlHeight = true;
-        hLayout.padding = UIFactory.CreatePadding(8, 8, 4, 4);
-
-        LayoutElement headerLayout = headerRect.gameObject.AddComponent<LayoutElement>();
-        headerLayout.preferredHeight = 28f;
-        headerLayout.minHeight = 28f;
-
-        // Icon placeholder
-        RectTransform iconRect = CreateRectTransformObject("Icon", headerRect);
-        if (iconRect != null)
-        {
-            iconRect.sizeDelta = new Vector2(18f, 18f);
-            Image icon = iconRect.gameObject.AddComponent<Image>();
-            icon.color = new Color(1f, 1f, 1f, 0.9f);
-            icon.raycastTarget = false;
-
-            LayoutElement iconLayout = iconRect.gameObject.AddComponent<LayoutElement>();
-            iconLayout.preferredWidth = 18f;
-            iconLayout.minWidth = 18f;
-            iconLayout.preferredHeight = 18f;
-            iconLayout.minHeight = 18f;
-        }
-
-        // Title text
-        if (_referenceText != null)
-        {
-            TextMeshProUGUI titleText = UIFactory.CreateTextElement(headerRect, "Title", _referenceText, SmallFontScale, FontStyles.Bold);
-            if (titleText != null)
-            {
-                titleText.text = title.ToUpperInvariant();
-                titleText.color = new Color(0.9f, 0.875f, 0.835f, 1f); // #e6dfd5
-            }
-        }
-    }
-
-    #endregion
-
-    #region Private Methods - Class Selection
-
-    private Transform CreateClassSelectionCard(Transform parent, TextMeshProUGUI reference)
-    {
-        Transform card = CreateCard(parent, "ClassSelectionCard", "CLASS SELECTION");
-        if (card == null)
-        {
-            return null;
-        }
-
-        // Current class label
-        _currentClassText = UIFactory.CreateTextElement(card, "CurrentClass", reference, RowFontScale, FontStyles.Normal);
-        if (_currentClassText != null)
-        {
-            _currentClassText.text = "Current: None";
-            _currentClassText.color = new Color(0.95f, 0.84f, 0.7f, 1f); // #f1d7b2
-        }
-
-        // On-hit effect label
-        _onHitEffectText = UIFactory.CreateTextElement(card, "OnHitEffect", reference, SmallFontScale, FontStyles.Normal);
-        if (_onHitEffectText != null)
-        {
-            _onHitEffectText.text = "On-Hit: ";
-            _onHitEffectText.color = new Color(1f, 1f, 1f, 0.55f);
-        }
-
-        // Class list container
-        Transform listRoot = UIFactory.CreateListRoot(card, "ClassList", RowSpacing);
+        _classListRoot = CreateListRoot(card, "ClassList", RowSpacing);
 
         // Create class rows
         foreach (PlayerClass playerClass in Enum.GetValues(typeof(PlayerClass)))
@@ -348,25 +258,17 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
                 continue;
             }
 
-            ClassRowUI row = CreateClassRow(listRoot, playerClass);
+            ClassRowUI row = CreateClassRow(_classListRoot, reference, playerClass);
             if (row != null)
             {
                 _classRows.Add(row);
             }
         }
 
-        // Hint text
-        TextMeshProUGUI hintText = UIFactory.CreateTextElement(card, "Hint", reference, ChipFontScale, FontStyles.Italic);
-        if (hintText != null)
-        {
-            hintText.text = "Click a class to select or change. Changing class may require a special item.";
-            hintText.color = new Color(1f, 1f, 1f, 0.48f);
-        }
-
-        return card;
+        _ = CreateTextRow(card, reference, "Click a class to select or change.", ChipFontScale, FontStyles.Italic, HintColor);
     }
 
-    private ClassRowUI CreateClassRow(Transform parent, PlayerClass playerClass)
+    private ClassRowUI CreateClassRow(Transform parent, TextMeshProUGUI reference, PlayerClass playerClass)
     {
         RectTransform rectTransform = CreateRectTransformObject($"ClassRow_{playerClass}", parent);
         if (rectTransform == null)
@@ -374,38 +276,56 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             return null;
         }
 
-        UIFactory.ConfigureTopLeftAnchoring(rectTransform);
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
 
+        // Background
         Image background = rectTransform.gameObject.AddComponent<Image>();
         ApplySprite(background, CardSpriteNames);
         background.color = RowBackgroundColor;
         background.type = Image.Type.Sliced;
         background.raycastTarget = true;
 
+        // Layout
         HorizontalLayoutGroup hLayout = rectTransform.gameObject.AddComponent<HorizontalLayoutGroup>();
         hLayout.childAlignment = TextAnchor.MiddleLeft;
-        hLayout.spacing = RowHorizontalSpacing;
+        hLayout.spacing = 10f;
         hLayout.childForceExpandWidth = false;
         hLayout.childForceExpandHeight = false;
         hLayout.childControlWidth = true;
         hLayout.childControlHeight = true;
-        hLayout.padding = UIFactory.CreatePadding(RowPaddingHorizontal, RowPaddingHorizontal, 8, 8);
+        hLayout.padding = CreatePadding(10, 10, 6, 6);
 
         LayoutElement rowLayout = rectTransform.gameObject.AddComponent<LayoutElement>();
         rowLayout.preferredHeight = RowHeight;
         rowLayout.minHeight = RowHeight;
+        rowLayout.flexibleWidth = 1f;
 
-        // Class color icon
+        // Button
+        SimpleStunButton button = rectTransform.gameObject.AddComponent<SimpleStunButton>();
+        if (button != null)
+        {
+            string className = playerClass.ToString();
+            button.onClick.AddListener((UnityAction)(() =>
+            {
+                string cmd = _classType == PlayerClass.None
+                    ? $".class s {className}"
+                    : $".class c {className}";
+                Quips.SendCommand(cmd);
+            }));
+        }
+
+        // Icon
         RectTransform iconRect = CreateRectTransformObject("ClassIcon", rectTransform);
-        Image icon = null;
         if (iconRect != null)
         {
-            iconRect.sizeDelta = new Vector2(ClassIconSize, ClassIconSize);
-            icon = iconRect.gameObject.AddComponent<Image>();
+            Image icon = iconRect.gameObject.AddComponent<Image>();
             icon.color = ClassColors.GetValueOrDefault(playerClass, Color.gray);
             icon.raycastTarget = false;
 
-            // Make it circular (if needed, can use a circle sprite)
             LayoutElement iconLayout = iconRect.gameObject.AddComponent<LayoutElement>();
             iconLayout.preferredWidth = ClassIconSize;
             iconLayout.minWidth = ClassIconSize;
@@ -413,125 +333,122 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             iconLayout.minHeight = ClassIconSize;
         }
 
-        // Class name
-        TextMeshProUGUI nameText = null;
-        if (_referenceText != null)
+        // Class Name
+        TextMeshProUGUI nameText = CreateRowText(rectTransform, reference, HudUtilities.SplitPascalCase(playerClass.ToString()), RowFontScale, FontStyles.Normal);
+        if (nameText != null)
         {
-            nameText = UIFactory.CreateTextElement(rectTransform, "ClassName", _referenceText, RowFontScale, FontStyles.Normal);
-            if (nameText != null)
-            {
-                nameText.text = HudUtilities.SplitPascalCase(playerClass.ToString());
-                nameText.color = ClassColors.GetValueOrDefault(playerClass, Color.white);
-
-                LayoutElement nameLayout = nameText.gameObject.AddComponent<LayoutElement>();
-                nameLayout.flexibleWidth = 1f;
-            }
+            nameText.color = ClassColors.GetValueOrDefault(playerClass, Color.white);
+            LayoutElement nameLayout = nameText.GetComponent<LayoutElement>() ?? nameText.gameObject.AddComponent<LayoutElement>();
+            nameLayout.flexibleWidth = 1f;
         }
 
-        // Status badge (will be shown for active class)
-        TextMeshProUGUI statusText = null;
-        if (_referenceText != null)
+        // Status Text
+        TextMeshProUGUI statusText = CreateRowText(rectTransform, reference, "", SmallFontScale, FontStyles.Bold);
+        if (statusText != null)
         {
-            statusText = UIFactory.CreateTextElement(rectTransform, "Status", _referenceText, ChipFontScale, FontStyles.Bold);
-            if (statusText != null)
-            {
-                statusText.text = "ACTIVE";
-                statusText.color = ActiveStatusColor;
-                statusText.gameObject.SetActive(false);
-
-                LayoutElement statusLayout = statusText.gameObject.AddComponent<LayoutElement>();
-                statusLayout.preferredWidth = 50f;
-            }
+            statusText.color = ActiveColor;
+            statusText.alignment = TextAlignmentOptions.Right;
+            LayoutElement statusLayout = statusText.GetComponent<LayoutElement>() ?? statusText.gameObject.AddComponent<LayoutElement>();
+            statusLayout.preferredWidth = 80f;
+            statusLayout.minWidth = 80f;
         }
 
-        return new ClassRowUI(rectTransform.gameObject, playerClass, icon, nameText, statusText, background);
+        return new ClassRowUI(rectTransform.gameObject, playerClass, nameText, statusText, background);
     }
 
-    private void UpdateClassSelection()
+    private void CreateClassSpellsCard(Transform parent, TextMeshProUGUI reference)
     {
-        PlayerClass currentClass = _classType;
-
-        // Update current class text
-        if (_currentClassText != null)
-        {
-            Color classColor = ClassColors.GetValueOrDefault(currentClass, Color.white);
-            string colorHex = ColorUtility.ToHtmlStringRGB(classColor);
-            string className = currentClass == PlayerClass.None ? "None" : HudUtilities.SplitPascalCase(currentClass.ToString());
-            _currentClassText.text = $"Current: <color=#{colorHex}>{className}</color>";
-        }
-
-        // Update on-hit effect text
-        if (_onHitEffectText != null)
-        {
-            string effect = ClassOnHitEffects.GetValueOrDefault(currentClass, "");
-            _onHitEffectText.text = string.IsNullOrEmpty(effect) ? "" : $"On-Hit: {effect}";
-        }
-
-        // Update class rows
-        foreach (ClassRowUI row in _classRows)
-        {
-            bool isActive = row.PlayerClass == currentClass;
-            
-            if (row.StatusText != null)
-            {
-                row.StatusText.gameObject.SetActive(isActive);
-            }
-
-            if (row.Background != null)
-            {
-                Color bgColor = isActive 
-                    ? new Color(0.5f, 0.05f, 0.06f, 0.18f) 
-                    : RowBackgroundColor;
-                row.Background.color = bgColor;
-            }
-        }
-    }
-
-    #endregion
-
-    #region Private Methods - Class Spells
-
-    private Transform CreateClassSpellsCard(Transform parent, TextMeshProUGUI reference)
-    {
-        Transform card = CreateCard(parent, "ClassSpellsCard", "CLASS SPELLS");
+        RectTransform card = CreateCard(parent, "ClassSpellsCard");
         if (card == null)
         {
-            return null;
+            return;
         }
 
-        // Shift slot status
-        _shiftSlotText = UIFactory.CreateTextElement(card, "ShiftSlot", reference, SmallFontScale, FontStyles.Normal);
-        if (_shiftSlotText != null)
+        _ = CreateCardHeader(card, reference, "CLASS SPELLS");
+
+        // Shift toggle row with button
+        RectTransform shiftRow = CreateRectTransformObject("ShiftRow", card);
+        if (shiftRow != null)
         {
-            _shiftSlotText.text = "Shift Slot: Ready";
-            _shiftSlotText.color = new Color(1f, 1f, 1f, 0.55f);
+            shiftRow.anchorMin = new Vector2(0f, 1f);
+            shiftRow.anchorMax = new Vector2(1f, 1f);
+            shiftRow.pivot = new Vector2(0f, 1f);
+            shiftRow.offsetMin = Vector2.zero;
+            shiftRow.offsetMax = Vector2.zero;
+
+            HorizontalLayoutGroup shiftLayout = shiftRow.gameObject.AddComponent<HorizontalLayoutGroup>();
+            shiftLayout.childAlignment = TextAnchor.MiddleLeft;
+            shiftLayout.spacing = 10f;
+            shiftLayout.childControlWidth = true;
+            shiftLayout.childControlHeight = true;
+            shiftLayout.childForceExpandWidth = false;
+            shiftLayout.childForceExpandHeight = false;
+
+            LayoutElement shiftRowLayout = shiftRow.gameObject.AddComponent<LayoutElement>();
+            shiftRowLayout.preferredHeight = 28f;
+
+            _shiftSlotText = CreateRowText(shiftRow, reference, "Shift Slot: Ready", SmallFontScale, FontStyles.Normal);
+            if (_shiftSlotText != null)
+            {
+                _shiftSlotText.color = MetaColor;
+                LayoutElement textLayout = _shiftSlotText.GetComponent<LayoutElement>() ?? _shiftSlotText.gameObject.AddComponent<LayoutElement>();
+                textLayout.flexibleWidth = 1f;
+            }
+
+            // Toggle button
+            RectTransform toggleBtn = CreateRectTransformObject("ShiftToggleBtn", shiftRow);
+            if (toggleBtn != null)
+            {
+                _shiftToggleImage = toggleBtn.gameObject.AddComponent<Image>();
+                // Set initial appearance based on current state
+                bool isShiftOn = _classShiftSlotEnabled;
+                _shiftToggleImage.color = isShiftOn 
+                    ? new Color(0.2f, 0.7f, 0.2f, 1f)  // Bright green for ON
+                    : new Color(0.6f, 0.2f, 0.2f, 1f); // Dark red for OFF
+                _shiftToggleImage.raycastTarget = true;
+
+                LayoutElement btnLayout = toggleBtn.gameObject.AddComponent<LayoutElement>();
+                btnLayout.preferredWidth = 50f;
+                btnLayout.minWidth = 50f;
+                btnLayout.preferredHeight = 24f;
+
+                _shiftToggleText = CreateRowText(toggleBtn, reference, isShiftOn ? "ON" : "OFF", ChipFontScale, FontStyles.Bold);
+                if (_shiftToggleText != null)
+                {
+                    _shiftToggleText.alignment = TextAlignmentOptions.Center;
+                    _shiftToggleText.color = Color.white;
+                }
+
+                SimpleStunButton toggleButton = toggleBtn.gameObject.AddComponent<SimpleStunButton>();
+                if (toggleButton != null)
+                {
+                    toggleButton.onClick.AddListener((UnityAction)(() =>
+                    {
+                        // Optimistic UI update - toggle visual state immediately
+                        _classShiftSlotEnabled = !_classShiftSlotEnabled;
+                        UpdateClassSpells(); // Refresh the toggle display
+                        Quips.SendCommand(".class shift");
+                    }));
+                }
+            }
         }
 
-        // Spell list container
-        Transform listRoot = UIFactory.CreateListRoot(card, "SpellList", RowSpacing);
+        _spellListRoot = CreateListRoot(card, "SpellList", RowSpacing);
 
-        // Create placeholder spell rows (will be populated from server data)
+        // Create spell rows
         for (int i = 0; i < 4; i++)
         {
-            SpellRowUI row = CreateSpellRow(listRoot, i);
+            SpellRowUI row = CreateSpellRow(_spellListRoot, reference, i);
             if (row != null)
             {
                 _spellRows.Add(row);
             }
         }
 
-        // Hint text
-        TextMeshProUGUI hintText = UIFactory.CreateTextElement(card, "Hint", reference, ChipFontScale, FontStyles.Italic);
-        if (hintText != null)
-        {
-            hintText.text = "Click a spell to set it as your Shift ability. (P#) indicates prestige requirement.";
-            hintText.color = new Color(1f, 1f, 1f, 0.48f);
-        }
-
-        return card;
+        _ = CreateTextRow(card, reference, "Click a spell to set your Shift ability.", ChipFontScale, FontStyles.Italic, HintColor);
     }
 
-    private SpellRowUI CreateSpellRow(Transform parent, int index)
+    private SpellRowUI CreateSpellRow(Transform parent, TextMeshProUGUI reference, int index)
     {
         RectTransform rectTransform = CreateRectTransformObject($"SpellRow_{index}", parent);
         if (rectTransform == null)
@@ -539,42 +456,56 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             return null;
         }
 
-        UIFactory.ConfigureTopLeftAnchoring(rectTransform);
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
 
+        // Background
         Image background = rectTransform.gameObject.AddComponent<Image>();
         ApplySprite(background, CardSpriteNames);
         background.color = RowBackgroundColor;
         background.type = Image.Type.Sliced;
         background.raycastTarget = true;
 
+        // Layout
         HorizontalLayoutGroup hLayout = rectTransform.gameObject.AddComponent<HorizontalLayoutGroup>();
         hLayout.childAlignment = TextAnchor.MiddleLeft;
-        hLayout.spacing = RowHorizontalSpacing;
+        hLayout.spacing = 10f;
         hLayout.childForceExpandWidth = false;
         hLayout.childForceExpandHeight = false;
         hLayout.childControlWidth = true;
         hLayout.childControlHeight = true;
-        hLayout.padding = UIFactory.CreatePadding(RowPaddingHorizontal, RowPaddingHorizontal, 8, 8);
+        hLayout.padding = CreatePadding(10, 10, 4, 4);
 
         LayoutElement rowLayout = rectTransform.gameObject.AddComponent<LayoutElement>();
         rowLayout.preferredHeight = SpellRowHeight;
         rowLayout.minHeight = SpellRowHeight;
+        rowLayout.flexibleWidth = 1f;
 
-        // Spell index badge
-        RectTransform indexRect = CreateRectTransformObject("SpellIndex", rectTransform);
-        TextMeshProUGUI indexText = null;
-        if (indexRect != null && _referenceText != null)
+        // Button
+        SimpleStunButton button = rectTransform.gameObject.AddComponent<SimpleStunButton>();
+        if (button != null)
         {
-            indexRect.sizeDelta = new Vector2(SpellIndexSize, SpellIndexSize);
-            
+            int spellIndex = index;
+            button.onClick.AddListener((UnityAction)(() =>
+            {
+                Quips.SendCommand($".class csp {spellIndex}");
+            }));
+        }
+
+        // Index badge
+        RectTransform indexRect = CreateRectTransformObject("SpellIndex", rectTransform);
+        if (indexRect != null)
+        {
             Image indexBg = indexRect.gameObject.AddComponent<Image>();
             indexBg.color = new Color(0.31f, 0.31f, 0.35f, 0.6f);
             indexBg.raycastTarget = false;
 
-            indexText = UIFactory.CreateTextElement(indexRect, "IndexText", _referenceText, ChipFontScale, FontStyles.Normal);
+            TextMeshProUGUI indexText = CreateRowText(indexRect, reference, index.ToString(), ChipFontScale, FontStyles.Normal);
             if (indexText != null)
             {
-                indexText.text = index.ToString();
                 indexText.alignment = TextAlignmentOptions.Center;
                 indexText.color = new Color(1f, 1f, 1f, 0.7f);
             }
@@ -586,173 +517,229 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             indexLayout.minHeight = SpellIndexSize;
         }
 
-        // Spell name
-        TextMeshProUGUI nameText = null;
-        if (_referenceText != null)
+        // Spell Name
+        TextMeshProUGUI nameText = CreateRowText(rectTransform, reference, $"Spell {index + 1}", SmallFontScale, FontStyles.Normal);
+        if (nameText != null)
         {
-            nameText = UIFactory.CreateTextElement(rectTransform, "SpellName", _referenceText, SmallFontScale, FontStyles.Normal);
-            if (nameText != null)
-            {
-                nameText.text = $"Spell {index + 1}";
-                nameText.color = new Color(0.91f, 0.89f, 0.84f, 1f);
-
-                LayoutElement nameLayout = nameText.gameObject.AddComponent<LayoutElement>();
-                nameLayout.flexibleWidth = 1f;
-            }
+            nameText.color = new Color(0.91f, 0.89f, 0.84f, 1f);
+            LayoutElement nameLayout = nameText.GetComponent<LayoutElement>() ?? nameText.gameObject.AddComponent<LayoutElement>();
+            nameLayout.flexibleWidth = 1f;
         }
 
-        // Prestige requirement
-        TextMeshProUGUI reqText = null;
-        if (_referenceText != null)
+        // Requirement Text
+        TextMeshProUGUI reqText = CreateRowText(rectTransform, reference, "", ChipFontScale, FontStyles.Normal);
+        if (reqText != null)
         {
-            reqText = UIFactory.CreateTextElement(rectTransform, "Requirement", _referenceText, ChipFontScale, FontStyles.Normal);
-            if (reqText != null)
-            {
-                reqText.text = "";
-                reqText.color = new Color(1f, 1f, 1f, 0.5f);
-
-                LayoutElement reqLayout = reqText.gameObject.AddComponent<LayoutElement>();
-                reqLayout.preferredWidth = 40f;
-            }
+            reqText.color = new Color(1f, 0.5f, 0.5f, 0.8f);
+            reqText.alignment = TextAlignmentOptions.Right;
+            LayoutElement reqLayout = reqText.GetComponent<LayoutElement>() ?? reqText.gameObject.AddComponent<LayoutElement>();
+            reqLayout.preferredWidth = 40f;
         }
 
-        return new SpellRowUI(rectTransform.gameObject, index, nameText, reqText, indexText, background);
+        return new SpellRowUI(rectTransform.gameObject, index, nameText, reqText, background);
     }
 
-    private void UpdateClassSpells()
+    private void CreateStatSynergiesCard(Transform parent, TextMeshProUGUI reference)
     {
-        // Update shift slot status
-        if (_shiftSlotText != null)
+        RectTransform card = CreateCard(parent, "StatSynergiesCard");
+        if (card == null)
         {
-            bool hasShift = _shiftSpellIndex >= 0;
-            string statusColor = hasShift ? "#9ef2b5" : "#ffffff";
-            string statusText = hasShift ? "Equipped" : _classShiftSlotEnabled ? "Ready" : "Disabled";
-            _shiftSlotText.text = $"Shift Slot: <color={statusColor}>{statusText}</color>";
+            return;
         }
 
-        // Update spell rows with actual data
-        PlayerClass currentClass = _classType;
-        _classSpells.TryGetValue(currentClass, out List<int> classSpells);
-        
-        // Build spell entries (including default spell at index 0)
-        List<(int Index, int SpellId)> spellEntries = [];
-        if (_defaultClassSpell != 0)
-        {
-            spellEntries.Add((0, _defaultClassSpell));
-        }
-        if (classSpells != null)
-        {
-            for (int i = 0; i < classSpells.Count; i++)
-            {
-                spellEntries.Add((i + 1, classSpells[i]));
-            }
-        }
+        _ = CreateCardHeader(card, reference, "STAT SYNERGIES");
 
-        // Update rows
-        for (int i = 0; i < _spellRows.Count; i++)
-        {
-            SpellRowUI row = _spellRows[i];
-            if (i < spellEntries.Count)
-            {
-                var (index, spellId) = spellEntries[i];
-                row.Root.SetActive(true);
+        _ = CreateTextRow(card, reference, "Your class gives bonuses to specific stats from weapon and blood types.", SmallFontScale, FontStyles.Normal, MetaColor);
 
-                // Get spell name from prefab
-                PrefabGUID spellPrefab = new(spellId);
-                string spellName = spellPrefab.GetLocalizedName();
-                if (string.IsNullOrEmpty(spellName) || spellName.Equals("LocalizationKey.Empty"))
-                {
-                    spellName = spellPrefab.GetPrefabName();
-                }
-
-                if (row.NameText != null)
-                {
-                    row.NameText.text = spellName;
-                }
-
-                if (row.IndexText != null)
-                {
-                    row.IndexText.text = index.ToString();
-                }
-
-                // Get prestige requirement
-                int requiredPrestige = index < _classSpellUnlockLevels.Count ? _classSpellUnlockLevels[index] : 0;
-                if (row.RequirementText != null)
-                {
-                    if (requiredPrestige > 0)
-                    {
-                        row.RequirementText.text = $"(P{requiredPrestige})";
-                        bool isLocked = _experiencePrestige < requiredPrestige;
-                        row.RequirementText.color = isLocked ? LockedColor : new Color(1f, 1f, 1f, 0.5f);
-                    }
-                    else
-                    {
-                        row.RequirementText.text = "";
-                    }
-                }
-
-                // Highlight active spell
-                int activeIndex = _shiftSpellIndex >= 0 ? _shiftSpellIndex + 1 : -1;
-                bool isActive = index == activeIndex;
-                
-                if (row.Background != null)
-                {
-                    row.Background.color = isActive 
-                        ? new Color(0.6f, 0.2f, 0.1f, 0.1f)
-                        : RowBackgroundColor;
-                }
-
-                if (row.NameText != null)
-                {
-                    row.NameText.fontStyle = isActive ? FontStyles.Bold : FontStyles.Normal;
-                    row.NameText.color = isActive 
-                        ? new Color(0.95f, 0.84f, 0.7f, 1f)
-                        : new Color(0.91f, 0.89f, 0.84f, 1f);
-                }
-            }
-            else
-            {
-                row.Root.SetActive(false);
-            }
-        }
+        _weaponSynergyText = CreateTextRow(card, reference, "Weapon Stats: Loading...", SmallFontScale, FontStyles.Normal, new Color(1f, 0.9f, 0.8f, 1f));
+        _bloodSynergyText = CreateTextRow(card, reference, "Blood Stats: Loading...", SmallFontScale, FontStyles.Normal, new Color(0.9f, 0.8f, 0.8f, 1f));
     }
 
     #endregion
 
-    #region Private Methods - Stat Synergies
+    #region Panel Updates
 
-    private Transform CreateStatSynergiesCard(Transform parent, TextMeshProUGUI reference)
+    private void UpdateClassSelection()
     {
-        Transform card = CreateCard(parent, "StatSynergiesCard", "STAT SYNERGIES");
-        if (card == null)
+        PlayerClass currentClass = _classType;
+
+        if (_currentClassText != null)
         {
-            return null;
+            string className = currentClass == PlayerClass.None
+                ? "None"
+                : HudUtilities.SplitPascalCase(currentClass.ToString());
+            Color classColor = ClassColors.GetValueOrDefault(currentClass, Color.white);
+            _currentClassText.text = $"Current: <color=#{ColorUtility.ToHtmlStringRGB(classColor)}>{className}</color>";
         }
 
-        // Weapon Stats section
-        _weaponSynergyLabel = UIFactory.CreateTextElement(card, "WeaponLabel", reference, ChipFontScale, FontStyles.Bold);
-        if (_weaponSynergyLabel != null)
+        if (_onHitEffectText != null)
         {
-            _weaponSynergyLabel.text = "WEAPON STATS (1.5x)";
-            _weaponSynergyLabel.color = new Color(1f, 1f, 1f, 0.55f);
+            string effect = ClassOnHitEffects.GetValueOrDefault(currentClass, "");
+            _onHitEffectText.text = $"On-Hit: {effect}";
+            _onHitEffectText.gameObject.SetActive(!string.IsNullOrEmpty(effect));
         }
 
-        _weaponSynergyChips = CreateChipContainer(card, "WeaponChips");
-
-        // Blood Stats section
-        _bloodSynergyLabel = UIFactory.CreateTextElement(card, "BloodLabel", reference, ChipFontScale, FontStyles.Bold);
-        if (_bloodSynergyLabel != null)
+        foreach (ClassRowUI row in _classRows)
         {
-            _bloodSynergyLabel.text = "BLOOD STATS (1.5x)";
-            _bloodSynergyLabel.color = new Color(1f, 1f, 1f, 0.55f);
+            bool isActive = row.PlayerClass == currentClass;
+
+            if (row.StatusText != null)
+            {
+                row.StatusText.text = isActive ? "ACTIVE" : "";
+            }
+
+            if (row.Background != null)
+            {
+                row.Background.color = isActive ? ActiveRowBackgroundColor : RowBackgroundColor;
+            }
         }
-
-        _bloodSynergyChips = CreateChipContainer(card, "BloodChips");
-
-        return card;
     }
 
-    private Transform CreateChipContainer(Transform parent, string name)
+    private void UpdateClassSpells()
+    {
+        // Update toggle button state
+        bool isShiftEnabled = _classShiftSlotEnabled;
+        if (_shiftToggleText != null)
+        {
+            _shiftToggleText.text = isShiftEnabled ? "ON" : "OFF";
+        }
+        if (_shiftToggleImage != null)
+        {
+            if (isShiftEnabled)
+            {
+                _shiftToggleImage.color = new Color(0.2f, 0.7f, 0.2f, 1f); // Bright green for ON
+            }
+            else
+            {
+                _shiftToggleImage.color = new Color(0.6f, 0.2f, 0.2f, 1f); // Dark red for OFF
+            }
+        }
+
+        if (_shiftSlotText != null)
+        {
+            bool hasShift = _shiftSpellIndex >= 0;
+            string statusColor = hasShift ? "#9ef2b5" : "#ffffff";
+            string statusText = hasShift ? "Equipped" : isShiftEnabled ? "Ready" : "Disabled";
+            _shiftSlotText.text = $"Shift Slot: <color={statusColor}>{statusText}</color>";
+        }
+
+        // Get spells for current class
+        List<int> classSpells = null;
+        if (_classSpells != null && _classType != PlayerClass.None)
+        {
+            _classSpells.TryGetValue(_classType, out classSpells);
+        }
+
+        int spellCount = classSpells?.Count ?? 0;
+        int unlockCount = _classSpellUnlockLevels?.Count ?? 0;
+
+        for (int i = 0; i < _spellRows.Count; i++)
+        {
+            SpellRowUI row = _spellRows[i];
+            bool hasSpell = classSpells != null && i < spellCount;
+
+            if (row.NameText != null)
+            {
+                if (hasSpell)
+                {
+                    int spellId = classSpells[i];
+                    string spellName = ResolveSpellName(spellId);
+                    row.NameText.text = spellName;
+                }
+                else
+                {
+                    row.NameText.text = "---";
+                }
+            }
+
+            if (row.ReqText != null)
+            {
+                if (i < unlockCount && _classSpellUnlockLevels != null)
+                {
+                    int req = _classSpellUnlockLevels[i];
+                    row.ReqText.text = req > 0 ? $"(P{req})" : "";
+                }
+                else
+                {
+                    row.ReqText.text = "";
+                }
+            }
+
+            if (row.Background != null)
+            {
+                bool isSelected = i == _shiftSpellIndex;
+                row.Background.color = isSelected ? ActiveRowBackgroundColor : RowBackgroundColor;
+            }
+        }
+    }
+
+    private void UpdateStatSynergies()
+    {
+        // Get synergies for current class
+        (List<WeaponStatType> WeaponStats, List<BloodStatType> BloodStats) synergies = (null, null);
+        bool hasSynergies = _classStatSynergies != null && _classType != PlayerClass.None
+            && _classStatSynergies.TryGetValue(_classType, out synergies);
+
+        if (_weaponSynergyText != null)
+        {
+            if (hasSynergies && synergies.WeaponStats != null && synergies.WeaponStats.Count > 0)
+            {
+                var statNames = synergies.WeaponStats.Select(s => HudUtilities.SplitPascalCase(s.ToString()));
+                _weaponSynergyText.text = $"Weapon Stats (1.5x): {string.Join(", ", statNames)}";
+            }
+            else
+            {
+                _weaponSynergyText.text = "Weapon Stats: None";
+            }
+        }
+
+        if (_bloodSynergyText != null)
+        {
+            if (hasSynergies && synergies.BloodStats != null && synergies.BloodStats.Count > 0)
+            {
+                var statNames = synergies.BloodStats.Select(s => HudUtilities.SplitPascalCase(s.ToString()));
+                _bloodSynergyText.text = $"Blood Stats (1.5x): {string.Join(", ", statNames)}";
+            }
+            else
+            {
+                _bloodSynergyText.text = "Blood Stats: None";
+            }
+        }
+    }
+
+    private static string ResolveSpellName(int spellId)
+    {
+        if (spellId == 0)
+        {
+            return "None";
+        }
+
+        Stunlock.Core.PrefabGUID spellGuid = new(spellId);
+        string spellName = spellGuid.GetLocalizedName();
+        if (string.IsNullOrEmpty(spellName) || spellName.Equals("LocalizationKey.Empty"))
+        {
+            spellName = spellGuid.GetPrefabName();
+        }
+
+        if (string.IsNullOrEmpty(spellName))
+        {
+            return $"Spell {spellId}";
+        }
+
+        var match = HudData.AbilitySpellRegex.Match(spellName);
+        if (match.Success)
+        {
+            return match.Value.Replace('_', ' ');
+        }
+
+        return spellName;
+    }
+
+    #endregion
+
+    #region UI Helpers
+
+    private static RectTransform CreateCard(Transform parent, string name)
     {
         RectTransform rectTransform = CreateRectTransformObject(name, parent);
         if (rectTransform == null)
@@ -760,16 +747,25 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             return null;
         }
 
-        UIFactory.ConfigureTopLeftAnchoring(rectTransform);
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
 
-        // Use GridLayoutGroup for chip wrapping
-        GridLayoutGroup gridLayout = rectTransform.gameObject.AddComponent<GridLayoutGroup>();
-        gridLayout.cellSize = new Vector2(100f, 20f); // Will adjust based on content
-        gridLayout.spacing = new Vector2(4f, 4f);
-        gridLayout.startAxis = GridLayoutGroup.Axis.Horizontal;
-        gridLayout.startCorner = GridLayoutGroup.Corner.UpperLeft;
-        gridLayout.childAlignment = TextAnchor.UpperLeft;
-        gridLayout.constraint = GridLayoutGroup.Constraint.Flexible;
+        Image background = rectTransform.gameObject.AddComponent<Image>();
+        ApplySprite(background, CardSpriteNames);
+        background.color = CardBackgroundColor;
+        background.raycastTarget = false;
+
+        VerticalLayoutGroup layout = rectTransform.gameObject.AddComponent<VerticalLayoutGroup>();
+        layout.childAlignment = TextAnchor.UpperLeft;
+        layout.spacing = CardInnerSpacing;
+        layout.padding = CreatePadding(CardPadding, CardPadding, CardPadding, CardPadding);
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
 
         ContentSizeFitter fitter = rectTransform.gameObject.AddComponent<ContentSizeFitter>();
         fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
@@ -778,172 +774,209 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         return rectTransform;
     }
 
-    private void CreateChip(Transform parent, string text)
+    private static RectTransform CreateCardHeader(Transform parent, TextMeshProUGUI reference, string title)
     {
-        RectTransform rectTransform = CreateRectTransformObject("Chip", parent);
-        if (rectTransform == null || _referenceText == null)
+        RectTransform rectTransform = CreateRectTransformObject("CardHeader", parent);
+        if (rectTransform == null)
         {
-            return;
+            return null;
         }
+
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
 
         Image background = rectTransform.gameObject.AddComponent<Image>();
-        background.color = new Color(0f, 0f, 0f, 0.35f);
+        ApplySprite(background, HeaderSpriteNames);
+        background.color = HeaderBackgroundColor;
         background.raycastTarget = false;
 
-        TextMeshProUGUI chipText = UIFactory.CreateTextElement(rectTransform, "ChipText", _referenceText, ChipFontScale, FontStyles.Normal);
-        if (chipText != null)
+        LayoutElement layoutElement = rectTransform.gameObject.AddComponent<LayoutElement>();
+        layoutElement.minHeight = 28f;
+        layoutElement.preferredHeight = 28f;
+
+        // Create child text element that fills the header
+        RectTransform textRect = CreateRectTransformObject("HeaderText", rectTransform);
+        if (textRect != null)
         {
-            chipText.text = text;
-            chipText.color = new Color(1f, 1f, 1f, 0.75f);
-            chipText.alignment = TextAlignmentOptions.Center;
-            
-            RectTransform textRect = chipText.GetComponent<RectTransform>();
-            if (textRect != null)
+            // Stretch to fill parent
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI text = textRect.gameObject.AddComponent<TextMeshProUGUI>();
+            if (text != null)
             {
-                textRect.anchorMin = Vector2.zero;
-                textRect.anchorMax = Vector2.one;
-                textRect.offsetMin = new Vector2(ChipPadding, ChipPadding);
-                textRect.offsetMax = new Vector2(-ChipPadding, -ChipPadding);
+                if (reference != null)
+                {
+                    UIFactory.CopyTextStyle(reference, text);
+                }
+                text.text = title;
+                text.fontSize = reference != null ? reference.fontSize * 0.7f : 12f;
+                text.fontStyle = FontStyles.Bold;
+                text.alignment = TextAlignmentOptions.Center;
+                text.color = new Color(0.95f, 0.9f, 0.85f, 1f);
+                text.enableWordWrapping = false;
+                text.overflowMode = TextOverflowModes.Ellipsis;
             }
         }
+
+        return rectTransform;
     }
 
-    private void UpdateStatSynergies()
+    private static TextMeshProUGUI CreateTextRow(Transform parent, TextMeshProUGUI reference, string text, float fontScale, FontStyles style, Color color)
     {
-        // Clear existing chips
-        if (_weaponSynergyChips != null)
+        RectTransform rectTransform = CreateRectTransformObject("TextRow", parent);
+        if (rectTransform == null || reference == null)
         {
-            UIFactory.ClearChildren(_weaponSynergyChips);
-        }
-        if (_bloodSynergyChips != null)
-        {
-            UIFactory.ClearChildren(_bloodSynergyChips);
+            return null;
         }
 
-        // Get synergies for current class from DataService
-        PlayerClass currentClass = _classType;
-        
-        if (currentClass == PlayerClass.None || !_classStatSynergies.TryGetValue(currentClass, out var synergies))
-        {
-            if (_weaponSynergyLabel != null)
-            {
-                _weaponSynergyLabel.text = "No class selected";
-            }
-            if (_bloodSynergyLabel != null)
-            {
-                _bloodSynergyLabel.gameObject.SetActive(false);
-            }
-            return;
-        }
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
 
-        // Show weapon synergies
-        if (_weaponSynergyLabel != null)
-        {
-            float multiplier = _classStatMultiplier > 0 ? _classStatMultiplier : 1.5f;
-            _weaponSynergyLabel.text = $"WEAPON STATS ({multiplier:0.#}x)";
-        }
+        TextMeshProUGUI textComponent = rectTransform.gameObject.AddComponent<TextMeshProUGUI>();
+        UIFactory.CopyTextStyle(reference, textComponent);
+        textComponent.text = text;
+        textComponent.fontSize = reference.fontSize * fontScale;
+        textComponent.fontStyle = style;
+        textComponent.alignment = TextAlignmentOptions.Left;
+        textComponent.color = color;
+        textComponent.enableWordWrapping = true;
+        textComponent.overflowMode = TextOverflowModes.Ellipsis;
 
-        if (synergies.WeaponStats != null)
-        {
-            foreach (WeaponStatType stat in synergies.WeaponStats)
-            {
-                string statName = HudUtilities.SplitPascalCase(stat.ToString());
-                CreateChip(_weaponSynergyChips, statName);
-            }
-        }
+        float height = textComponent.fontSize * 1.4f;
+        LayoutElement layout = rectTransform.gameObject.AddComponent<LayoutElement>();
+        layout.minHeight = height;
+        layout.preferredHeight = height;
 
-        // Show blood synergies
-        if (_bloodSynergyLabel != null)
-        {
-            _bloodSynergyLabel.gameObject.SetActive(true);
-            float multiplier = _classStatMultiplier > 0 ? _classStatMultiplier : 1.5f;
-            _bloodSynergyLabel.text = $"BLOOD STATS ({multiplier:0.#}x)";
-        }
-
-        if (synergies.BloodStats != null)
-        {
-            foreach (BloodStatType stat in synergies.BloodStats)
-            {
-                string statName = HudUtilities.SplitPascalCase(stat.ToString());
-                CreateChip(_bloodSynergyChips, statName);
-            }
-        }
+        return textComponent;
     }
 
-    private void CreateDefaultWeaponSynergyChips()
+    private static TextMeshProUGUI CreateRowText(Transform parent, TextMeshProUGUI reference, string text, float fontScale, FontStyles style)
     {
-        if (_weaponSynergyChips == null)
+        RectTransform rectTransform = CreateRectTransformObject("RowText", parent);
+        if (rectTransform == null || reference == null)
         {
-            return;
+            return null;
         }
 
-        // Default weapon synergies per class
-        var synergies = _classType switch
+        TextMeshProUGUI textComponent = rectTransform.gameObject.AddComponent<TextMeshProUGUI>();
+        UIFactory.CopyTextStyle(reference, textComponent);
+        textComponent.text = text;
+        textComponent.fontSize = reference.fontSize * fontScale;
+        textComponent.fontStyle = style;
+        textComponent.alignment = TextAlignmentOptions.Left;
+        textComponent.color = Color.white;
+        textComponent.enableWordWrapping = false;
+        textComponent.overflowMode = TextOverflowModes.Ellipsis;
+
+        // Add layout element so text gets proper size in layout groups
+        float height = textComponent.fontSize * 1.3f;
+        LayoutElement layout = rectTransform.gameObject.AddComponent<LayoutElement>();
+        layout.preferredHeight = height;
+        layout.minHeight = height;
+
+        return textComponent;
+    }
+
+    private static Transform CreateListRoot(Transform parent, string name, float spacing)
+    {
+        RectTransform rectTransform = CreateRectTransformObject(name, parent);
+        if (rectTransform == null)
         {
-            PlayerClass.BloodKnight => new[] { "Physical Power", "Primary Leech", "Phys Crit Dmg" },
-            PlayerClass.DemonHunter => new[] { "Spell Power", "Attack Speed", "Movement Speed" },
-            PlayerClass.VampireLord => new[] { "Spell Power", "Spell Crit Dmg", "Cooldown Reduction" },
-            PlayerClass.ShadowBlade => new[] { "Physical Power", "Attack Speed", "Phys Crit Chance" },
-            PlayerClass.ArcaneSorcerer => new[] { "Spell Power", "Spell Crit Chance", "Cooldown Reduction" },
-            PlayerClass.DeathMage => new[] { "Spell Power", "Spell Leech", "Spell Crit Dmg" },
-            _ => Array.Empty<string>()
+            return null;
+        }
+
+        rectTransform.anchorMin = new Vector2(0f, 1f);
+        rectTransform.anchorMax = new Vector2(1f, 1f);
+        rectTransform.pivot = new Vector2(0f, 1f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        VerticalLayoutGroup layout = rectTransform.gameObject.AddComponent<VerticalLayoutGroup>();
+        layout.childAlignment = TextAnchor.UpperLeft;
+        layout.spacing = spacing;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+
+        ContentSizeFitter fitter = rectTransform.gameObject.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        return rectTransform;
+    }
+
+    private static RectTransform CreateDivider(Transform parent)
+    {
+        RectTransform rectTransform = CreateRectTransformObject("Divider", parent);
+        if (rectTransform == null)
+        {
+            return null;
+        }
+
+        Image image = rectTransform.gameObject.AddComponent<Image>();
+        image.color = new Color(1f, 1f, 1f, 0.15f);
+        image.raycastTarget = false;
+
+        LayoutElement layout = rectTransform.gameObject.AddComponent<LayoutElement>();
+        layout.preferredHeight = 1f;
+        layout.flexibleWidth = 1f;
+
+        return rectTransform;
+    }
+
+    private static RectOffset CreatePadding(int left, int right, int top, int bottom)
+    {
+        RectOffset padding = new()
+        {
+            left = left,
+            right = right,
+            top = top,
+            bottom = bottom
         };
-
-        foreach (string s in synergies)
-        {
-            CreateChip(_weaponSynergyChips, s);
-        }
+        return padding;
     }
 
-    private void CreateDefaultBloodSynergyChips()
+    private static void EnsureVerticalLayout(Transform root, float spacing = 0f)
     {
-        if (_bloodSynergyChips == null)
+        if (root == null)
         {
             return;
         }
 
-        // Default blood synergies per class
-        var synergies = _classType switch
+        VerticalLayoutGroup layout = root.GetComponent<VerticalLayoutGroup>();
+        if (layout == null)
         {
-            PlayerClass.BloodKnight => new[] { "Healing Received", "Dmg Reduction", "Phys Resistance" },
-            PlayerClass.DemonHunter => new[] { "Movement Speed", "Attack Speed", "Crit Chance" },
-            PlayerClass.VampireLord => new[] { "Spell Power", "Cooldown Reduction", "Spell Resistance" },
-            PlayerClass.ShadowBlade => new[] { "Physical Power", "Crit Damage", "Attack Speed" },
-            PlayerClass.ArcaneSorcerer => new[] { "Spell Power", "Max Health", "Spell Resistance" },
-            PlayerClass.DeathMage => new[] { "Spell Leech", "Spell Power", "Cooldown Reduction" },
-            _ => Array.Empty<string>()
-        };
-
-        foreach (string s in synergies)
-        {
-            CreateChip(_bloodSynergyChips, s);
+            layout = root.gameObject.AddComponent<VerticalLayoutGroup>();
         }
+
+        layout.childAlignment = TextAnchor.UpperLeft;
+        layout.spacing = spacing;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+
+        ContentSizeFitter fitter = root.gameObject.GetComponent<ContentSizeFitter>();
+        if (fitter == null)
+        {
+            fitter = root.gameObject.AddComponent<ContentSizeFitter>();
+        }
+        fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
     }
-
-    #endregion
-
-    #region Helpers
 
     private static RectTransform CreateRectTransformObject(string name, Transform parent)
         => UIFactory.CreateRectTransformObject(name, parent);
-
-    private static void ApplySprite(Image image, params string[] spriteNames)
-    {
-        if (image == null)
-        {
-            return;
-        }
-
-        Sprite sprite = ResolveSprite(spriteNames);
-        if (sprite == null)
-        {
-            image.sprite = null;
-            return;
-        }
-
-        image.sprite = sprite;
-        image.type = Image.Type.Sliced;
-    }
 
     private static Sprite ResolveSprite(params string[] spriteNames)
     {
@@ -952,8 +985,9 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             return null;
         }
 
-        foreach (string name in spriteNames)
+        for (int i = 0; i < spriteNames.Length; i++)
         {
+            string name = spriteNames[i];
             if (string.IsNullOrWhiteSpace(name))
             {
                 continue;
@@ -968,48 +1002,21 @@ internal class ClassTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         return null;
     }
 
-    #endregion
-
-    #region UI Data Classes
-
-    private sealed class ClassRowUI
+    private static void ApplySprite(Image image, params string[] spriteNames)
     {
-        public GameObject Root { get; }
-        public PlayerClass PlayerClass { get; }
-        public Image Icon { get; }
-        public TextMeshProUGUI NameText { get; }
-        public TextMeshProUGUI StatusText { get; }
-        public Image Background { get; }
-
-        public ClassRowUI(GameObject root, PlayerClass playerClass, Image icon, TextMeshProUGUI nameText, TextMeshProUGUI statusText, Image background)
+        if (image == null)
         {
-            Root = root;
-            PlayerClass = playerClass;
-            Icon = icon;
-            NameText = nameText;
-            StatusText = statusText;
-            Background = background;
+            return;
         }
-    }
 
-    private sealed class SpellRowUI
-    {
-        public GameObject Root { get; }
-        public int Index { get; }
-        public TextMeshProUGUI NameText { get; }
-        public TextMeshProUGUI RequirementText { get; }
-        public TextMeshProUGUI IndexText { get; }
-        public Image Background { get; }
-
-        public SpellRowUI(GameObject root, int index, TextMeshProUGUI nameText, TextMeshProUGUI reqText, TextMeshProUGUI indexText, Image background)
+        Sprite sprite = ResolveSprite(spriteNames);
+        if (sprite == null)
         {
-            Root = root;
-            Index = index;
-            NameText = nameText;
-            RequirementText = reqText;
-            IndexText = indexText;
-            Background = background;
+            return;
         }
+
+        image.sprite = sprite;
+        image.type = Image.Type.Sliced;
     }
 
     #endregion
