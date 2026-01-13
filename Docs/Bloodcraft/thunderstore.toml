@@ -16,3 +16,12 @@ versionNumber = "1.12.17"
 description = "Leveling, expertise, legacies, professions, familiars, classes, quests!"
 websiteUrl = "https://github.com/DiNaSoR/Bloodcraftplus"
 containsNsfwContent = false
+
+[build]
+icon = "./icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./bin/Release/net6.0/Bloodcraftplus.dll"
+target = "/BepInEx/plugins/"
