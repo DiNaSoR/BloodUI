@@ -80,7 +80,6 @@ internal static class CharacterMenuService
     static int lastKnownTabIndex = -1;
     static bool initialized;
     static bool manualActive;
-    static bool subTabDiagnosticsLogged;
     static float lastSubTabWidth;
     static float lastSubTabHeight;
     static int lastSubTabCount;
@@ -271,7 +270,6 @@ internal static class CharacterMenuService
         subTabReferenceFontSize = 0f;
         initialized = false;
         manualActive = false;
-        subTabDiagnosticsLogged = false;
     }
 
     /// <summary>
@@ -1072,8 +1070,6 @@ internal static class CharacterMenuService
             }
         }
 
-        DebugService.LogBloodcraftSubTabSetup(buttonObject, label, primaryLabel, labels, localizedLabels, usedFallbackLabel);
-
         StretchSubTabGraphics(buttonObject);
 
         RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
@@ -1447,11 +1443,6 @@ internal static class CharacterMenuService
             }
         }
 
-        if (!subTabDiagnosticsLogged && DebugService.BloodcraftDebugEnabled)
-        {
-            DebugService.DumpBloodcraftSubTabs("selection");
-            subTabDiagnosticsLogged = true;
-        }
     }
 
     /// <summary>

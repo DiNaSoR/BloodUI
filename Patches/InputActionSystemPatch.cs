@@ -44,44 +44,12 @@ internal static class InputActionSystemPatch
     [HarmonyPostfix]
     static void OnUpdatePostfix(InputActionSystem __instance)
     {
-       _isGamepad = __instance.UsingGamepad;
-
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            DebugService.DumpCharacterUi();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            DebugService.DumpCharacterTabComponents();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            DebugService.ToggleBloodcraftDebug();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F4))
-        {
-            DebugService.DumpBloodcraftSubTabs("manual");
-        }
-
-        if (Input.GetKeyDown(KeyCode.F5))
-        {
-            DebugService.DumpEquipmentTabHierarchy();
-        }
+        _isGamepad = __instance.UsingGamepad;
 
         if (Input.GetKeyDown(KeyCode.F6))
         {
             AssetDumpService.DumpMenuAssets();
         }
 
-        if (Input.GetKeyDown(KeyCode.F7))
-        {
-            VAuctionPopupService.TogglePopup();
-        }
-
-        // Check for Ctrl+Click on inventory items
-        InventoryClickInterceptor.CheckForCtrlClick();
     }
 }

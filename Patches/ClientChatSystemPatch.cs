@@ -55,13 +55,7 @@ internal static class ClientChatSystemPatch
         PrestigeLeaderboardToClient,
         ExoFormDataToClient,
         FamiliarBattleDataToClient,
-        WeaponStatBonusDataToClient,
-        AuctionPageToClient,
-        AuctionDetailToClient,
-        AuctionMyListingsToClient,
-        AuctionMyBidsToClient,
-        AuctionEscrowToClient,
-        AuctionNotificationToClient
+        WeaponStatBonusDataToClient
     }
 
     public static BufferLookup<ModifyUnitStatBuff_DOTS> ModifyUnitStatBuffLookup => _modifyUnitStatBuffLookup;
@@ -214,17 +208,11 @@ internal static class ClientChatSystemPatch
                     case (int)NetworkEventSubType.WeaponStatBonusDataToClient:
                         DataService.ParseWeaponStatBonusData(_regexExtract.Replace(message, ""));
                         break;
-                    case (int)NetworkEventSubType.AuctionPageToClient:
-                        DataService.ParseAuctionPageData(_regexExtract.Replace(message, ""));
-                        break;
-                    case (int)NetworkEventSubType.AuctionDetailToClient:
-                        DataService.ParseAuctionDetailData(_regexExtract.Replace(message, ""));
-                        break;
                 }
             }
             catch (Exception ex)
             {
-                Core.Log.LogError($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] failed to handle message after parsing event type - {ex}");
+                Core.Log.LogError($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] failed to handle message after parsing event type - {ex}");       
             }
         }
         else

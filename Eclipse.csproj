@@ -34,10 +34,9 @@
 		<EmbeddedResource Include="Resources\Localization\English.json" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Compile Remove="Docs\**\*.cs" />
-		<Compile Remove="VAuction\**\*.cs" />
-	</ItemGroup>
+        <ItemGroup>
+                <Compile Remove="Docs\**\*.cs" />
+        </ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
