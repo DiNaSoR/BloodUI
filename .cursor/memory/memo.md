@@ -107,6 +107,7 @@ Last updated: 2026-01-14
 - Optional debug tooling lives in a separate plugin:
   - Debug plugin: `Tools/VDebug` (GUID: `com.dinasor.vdebug`)
   - EclipsePlus calls it via reflection: `Services/DebugToolsBridge.cs` (safe no-op when not installed)
+  - Debug-only Info logs (registration payload, Bloodcraft stats, chat command echo) go to VDebug and are silent without it
 
 - Il2Cpp constraints to remember:
   - Avoid ambiguous `Object.Destroy()` → prefer `UnityEngine.Object.Destroy()`. 

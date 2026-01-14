@@ -11,6 +11,16 @@ public static class VDebugApi
 {
     public const int ApiVersion = 1;
 
+    public static void LogInfo(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        VDebugLog.Log.LogInfo(message);
+    }
+
     public static void DumpMenuAssets()
     {
         try

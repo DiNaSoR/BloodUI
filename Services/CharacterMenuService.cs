@@ -185,7 +185,7 @@ internal static class CharacterMenuService
         TryInitializeStatsSummary(tabs);
 
         initialized = true;
-        Core.Log.LogInfo("[Bloodcraft Tab] Initialized Bloodcraft tab in Character menu.");
+        DebugToolsBridge.TryLogInfo("[Bloodcraft Tab] Initialized Bloodcraft tab in Character menu.");
     }
 
     /// <summary>
@@ -291,11 +291,11 @@ internal static class CharacterMenuService
         }
 
         // Log the Equipment tab structure for debugging
-        Core.Log.LogInfo($"[Bloodcraft Stats] Equipment tab name: {equipmentTab.name}");
+        DebugToolsBridge.TryLogInfo($"[Bloodcraft Stats] Equipment tab name: {equipmentTab.name}");
         for (int i = 0; i < equipmentTab.childCount; i++)
         {
             Transform child = equipmentTab.GetChild(i);
-            Core.Log.LogInfo($"[Bloodcraft Stats]   Child[{i}]: {child.name}");
+            DebugToolsBridge.TryLogInfo($"[Bloodcraft Stats]   Child[{i}]: {child.name}");
         }
 
         // Find a reference text element for styling from the Equipment tab
@@ -306,7 +306,7 @@ internal static class CharacterMenuService
             return;
         }
 
-        Core.Log.LogInfo($"[Bloodcraft Stats] Reference text: '{referenceText.text}' font={referenceText.font?.name}");
+        DebugToolsBridge.TryLogInfo($"[Bloodcraft Stats] Reference text: '{referenceText.text}' font={referenceText.font?.name}");
 
         // Find GearLevelParent first to check for existing summary
         Transform gearLevelParentCheck = equipmentTab.Find("GearLevelParent");
@@ -321,7 +321,7 @@ internal static class CharacterMenuService
         if (existingSummary != null)
         {
             bloodcraftStatsSummary = existingSummary.GetComponent<TextMeshProUGUI>();
-            Core.Log.LogInfo("[Bloodcraft Stats] Found existing stats summary.");
+            DebugToolsBridge.TryLogInfo("[Bloodcraft Stats] Found existing stats summary.");
             return;
         }
 
@@ -349,7 +349,7 @@ internal static class CharacterMenuService
         rectTransform.anchoredPosition = new Vector2(0f, -5f); // 5px below bottom edge of GearLevelParent
         rectTransform.sizeDelta = new Vector2(300f, 20f);
 
-        Core.Log.LogInfo("[Bloodcraft Stats] Initialized stats summary in EquipmentTab.");
+        DebugToolsBridge.TryLogInfo("[Bloodcraft Stats] Initialized stats summary in EquipmentTab.");
     }
 
     /// <summary>

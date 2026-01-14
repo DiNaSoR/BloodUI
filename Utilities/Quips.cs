@@ -3,6 +3,7 @@ using ProjectM;
 using ProjectM.Network;
 using Unity.Collections;
 using Unity.Entities;
+using Eclipse.Services;
 
 namespace Eclipse.Utilities;
 internal static class Quips
@@ -48,6 +49,6 @@ internal static class Quips
         networkEvent.Write(_networkEventType);
         networkEvent.Write(chatMessage);
 
-        Core.Log.LogInfo($"{command}");
+        DebugToolsBridge.TryLogInfo(command);
     }
 }

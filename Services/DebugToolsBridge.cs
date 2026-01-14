@@ -15,6 +15,7 @@ internal static class DebugToolsBridge
 
     static bool _loggedMissing;
     static MethodInfo _dumpMenuAssets;
+    static MethodInfo _logInfo;
 
     public static void TryDumpMenuAssets()
     {
@@ -34,7 +35,32 @@ internal static class DebugToolsBridge
         }
     }
 
+    public static void TryLogInfo(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        if (!TryResolveStaticMethod(nameof(TryLogInfo), "LogInfo", new[] { typeof(string) }, ref _logInfo, out MethodInfo method, logFailures: false))
+        {
+            return;
+        }
+
+        try
+        {
+            method.Invoke(null, new object[] { message });
+        }
+        catch (Exception ex)
+        {
+            Core.Log.LogWarning($"[VDebug] Failed invoking LogInfo: {ex.Message}");
+        }
+    }
+
     static bool TryResolveStaticMethod(string callSite, string methodName, ref MethodInfo cache, out MethodInfo method)
+        => TryResolveStaticMethod(callSite, methodName, Type.EmptyTypes, ref cache, out method, logFailures: true);
+
+    static bool TryResolveStaticMethod(string callSite, string methodName, Type[] parameterTypes, ref MethodInfo cache, out MethodInfo method, bool logFailures)
     {
         if (cache != null)
         {
@@ -53,14 +79,22 @@ internal static class DebugToolsBridge
         Type apiType = apiAssembly.GetType(DebugToolsApiTypeName, throwOnError: false);
         if (apiType == null)
         {
-            Core.Log.LogWarning($"[VDebug] Found assembly '{DebugToolsAssemblyName}', but '{DebugToolsApiTypeName}' was not found (callsite: {callSite}).");
+            if (logFailures)
+            {
+                Core.Log.LogWarning($"[VDebug] Found assembly '{DebugToolsAssemblyName}', but '{DebugToolsApiTypeName}' was not found (callsite: {callSite}).");
+            }
+
             return false;
         }
 
-        method = apiType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
+        method = apiType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static, null, parameterTypes, null);
         if (method == null)
         {
-            Core.Log.LogWarning($"[VDebug] Found '{DebugToolsApiTypeName}', but method '{methodName}' was not found (callsite: {callSite}).");
+            if (logFailures)
+            {
+                Core.Log.LogWarning($"[VDebug] Found '{DebugToolsApiTypeName}', but method '{methodName}' was not found (callsite: {callSite}).");
+            }
+
             return false;
         }
 

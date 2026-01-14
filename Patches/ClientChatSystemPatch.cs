@@ -159,7 +159,7 @@ internal static class ClientChatSystemPatch
         networkEntity.Write(_networkEventType);
         networkEntity.Write(chatMessageEvent);
 
-        Core.Log.LogInfo($"Registration payload sent to server ({DateTime.Now}) - {messageWithMAC}");
+        DebugToolsBridge.TryLogInfo($"Registration payload sent to server ({DateTime.Now}) - {messageWithMAC}");
     }
     static void HandleServerMessage(string message)
     {
