@@ -261,6 +261,15 @@ internal class CanvasService
             {
                 Core.Log.LogError($"Error updating Bloodcraft tab: {e}");
             }
+            // VAuctionMenuService removed - using popup instead
+            try
+            {
+                VAuctionPopupService.Update();
+            }
+            catch (Exception e)
+            {
+                Core.Log.LogError($"Error updating VAuction popup: {e}");
+            }
             // if (_killSwitch) yield break;
 
             try
@@ -338,6 +347,7 @@ internal class CanvasService
     {
         // Reset the modular HUD system
         HudIntegration.Reset();
+        VAuctionPopupService.Reset();
 
         foreach (GameObject gameObject in ObjectStates.Keys)
         {

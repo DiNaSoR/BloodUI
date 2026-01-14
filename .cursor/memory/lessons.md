@@ -67,6 +67,72 @@
   - `Services/HUD/Shared/HudData.cs`
 ---
 
+## L-014 — Do not resolve Server World in static initializers (plugin load order)
+
+### Status
+- Active
+
+### Tags
+- [Server] [Init] [Reliability]
+
+### Introduced
+- 2026-01-14
+
+### Symptom
+- Server fails to load plugin with `System.TypeInitializationException` and `There is no Server world!`.
+
+### Root cause
+- Plugin type initializer accessed `World.s_AllWorlds` too early (static property initializer), before the Server world existed.
+
+### Wrong approach (DO NOT REPEAT)
+- `public static World Server { get; } = GetServerWorld() ?? throw ...;` in a type initializer for server mods.
+
+### Correct approach
+- Use lazy resolution and/or delayed initialization:
+  - Poll until the Server world exists, then initialize services and register commands.
+
+### Rule
+> Any initialization that depends on Unity/ProjectM world availability must be deferred (lazy or delayed), not done in static initializers.
+
+### References
+- Files:
+  - `VAuction/Core.cs`
+  - `VAuction/Plugin.cs`
+
+---
+
+## L-015 — IL2CPP: AddComponent<T> on custom managed MonoBehaviours can crash during plugin load
+
+### Status
+- Active
+
+### Tags
+- [IL2CPP] [Unity] [Init] [Reliability]
+
+### Introduced
+- 2026-01-14
+
+### Symptom
+- Server plugin fails to load with a `System.TypeInitializationException` for `MethodInfoStoreGeneric_AddComponent_Public_T_0`1`.
+
+### Root cause
+- `GameObject.AddComponent<T>()` was called with a custom managed `MonoBehaviour` type that was not injected/registered for IL2CPP.
+
+### Wrong approach (DO NOT REPEAT)
+- Using `new GameObject(...).AddComponent<MyManagedMonoBehaviour>()` as a coroutine runner in IL2CPP without type injection.
+
+### Correct approach
+- Use a known IL2CPP component type as the coroutine runner (pattern used in this repo):
+  - `new GameObject(...).AddComponent<IgnorePhysicsDebugSystem>()`
+- Or, if you truly need a custom managed MonoBehaviour, register it via the established IL2CPP type injection mechanism before use.
+
+### Rule
+> In IL2CPP mods, do not `AddComponent<T>` for custom managed `MonoBehaviour` types unless they are explicitly injected/registered.
+
+### References
+- Files:
+  - `VAuction/Core.cs`
+
 ## L-003 — Visual dividers must participate in layout (avoid overlap/drift)
 
 ### Status

@@ -4,20 +4,20 @@ overview: Create a standalone `VAuction/` server mod (commands + persistence + e
 todos:
   - id: define-protocol
     content: Finalize VAuction ↔ EclipsePlus protocol (event IDs, payload schemas, size limits, encoding, error/notification semantics).
-    status: pending
+    status: completed
   - id: server-project
     content: Create `VAuction/` server project skeleton (csproj/plugin/core/config/persistence/services/commands/systems) modeled after `Docs/Bloodcraft/` patterns.
-    status: pending
+    status: completed
     dependencies:
       - define-protocol
   - id: auction-domain
     content: Implement auction domain + persistence + escrow + timer resolution and wire to player/admin commands.
-    status: pending
+    status: completed
     dependencies:
       - server-project
   - id: client-ui
     content: Add EclipsePlus VAuction top-level character menu tab + DataService parsing + ClientChatSystemPatch routing.
-    status: pending
+    status: completed
     dependencies:
       - define-protocol
 ---

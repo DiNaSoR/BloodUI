@@ -36,6 +36,7 @@
 
 	<ItemGroup>
 		<Compile Remove="Docs\**\*.cs" />
+		<Compile Remove="VAuction\**\*.cs" />
 	</ItemGroup>
 	
 	<ItemGroup>

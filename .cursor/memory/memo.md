@@ -1,6 +1,6 @@
 ﻿# Project Memo
 
-Last updated: 2026-01-02
+Last updated: 2026-01-14
 
 ## V Rising Mod – Familiars (current truth)
 
@@ -110,3 +110,26 @@ Last updated: 2026-01-02
 
 - Old monolithic sources are archived at:
   - `Docs/Archive/OldServices/*`
+
+---
+
+## VAuction (current truth)
+
+- Ownership:
+  - **Server mod**: `VAuction/*` (new standalone project)
+  - **Client UI (EclipsePlus)**: `Services/VAuctionMenuService.cs`
+  - **Client data cache/parsing**: `Services/DataService.cs` (`ParseAuctionPageData`, `ParseAuctionDetailData`)
+  - **Client transport routing**: `Patches/ClientChatSystemPatch.cs` (new `NetworkEventSubType.*Auction*`)
+  - **Client lifecycle wiring**:
+    - Initialize: `Patches/InitializationPatches.cs` (`VAuctionMenuService.TryInitialize`)
+    - Update loop: `Services/CanvasService.cs` (`VAuctionMenuService.Update`)
+    - Reset: `Patches/InitializationPatches.cs` (`VAuctionMenuService.Reset`)
+
+- Protocol:
+  - Defined at `VAuction/EclipseBridge/Protocol.md`
+  - Server builds payloads in `VAuction/EclipseBridge/EclipseAuctionPayloads.cs`
+  - Payloads are MAC-signed in `VAuction/EclipseBridge/MacSigner.cs`
+
+- Notes:
+  - Server-to-client payload size is limited by `FixedString512Bytes`, so VAuction uses page-based sync.
+  - `Resources/secrets.json` is intentionally not committed (filtered); VAuction Eclipse sync is disabled if the key resource is missing.

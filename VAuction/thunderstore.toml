@@ -1,0 +1,16 @@
+[package]
+namespace = "dinasor"
+name = "VAuction"
+versionNumber = "0.1.0"
+description = "Server-side auction house with EclipsePlus UI integration."
+websiteUrl = ""
+containsNsfwContent = false
+
+[build]
+icon = "../icon.png"
+readme = "../Docs/VAuction/plan.md"
+outdir = "../bin"
+
+[dependencies]
+"BepInEx-BepInExPack" = "5.4.2100"
+

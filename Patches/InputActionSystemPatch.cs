@@ -75,5 +75,13 @@ internal static class InputActionSystemPatch
         {
             AssetDumpService.DumpMenuAssets();
         }
+
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            VAuctionPopupService.TogglePopup();
+        }
+
+        // Check for Ctrl+Click on inventory items
+        InventoryClickInterceptor.CheckForCtrlClick();
     }
 }

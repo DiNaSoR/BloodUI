@@ -55,7 +55,13 @@ internal static class ClientChatSystemPatch
         PrestigeLeaderboardToClient,
         ExoFormDataToClient,
         FamiliarBattleDataToClient,
-        WeaponStatBonusDataToClient
+        WeaponStatBonusDataToClient,
+        AuctionPageToClient,
+        AuctionDetailToClient,
+        AuctionMyListingsToClient,
+        AuctionMyBidsToClient,
+        AuctionEscrowToClient,
+        AuctionNotificationToClient
     }
 
     public static BufferLookup<ModifyUnitStatBuff_DOTS> ModifyUnitStatBuffLookup => _modifyUnitStatBuffLookup;
@@ -207,6 +213,12 @@ internal static class ClientChatSystemPatch
                         break;
                     case (int)NetworkEventSubType.WeaponStatBonusDataToClient:
                         DataService.ParseWeaponStatBonusData(_regexExtract.Replace(message, ""));
+                        break;
+                    case (int)NetworkEventSubType.AuctionPageToClient:
+                        DataService.ParseAuctionPageData(_regexExtract.Replace(message, ""));
+                        break;
+                    case (int)NetworkEventSubType.AuctionDetailToClient:
+                        DataService.ParseAuctionDetailData(_regexExtract.Replace(message, ""));
                         break;
                 }
             }

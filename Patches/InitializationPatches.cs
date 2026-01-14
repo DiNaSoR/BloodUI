@@ -57,6 +57,8 @@ internal static class InitializationPatches
     {
         _inventorySubMenu ??= menu;
         CharacterMenuService.TryInitialize(menu);
+        // VAuction tab removed - now using F7 popup (VAuctionPopupService)
+        // VAuctionMenuService.TryInitialize(menu);
     }
     public static void TryInitializeAttributeValues()
     {
@@ -96,6 +98,8 @@ internal static class InitializationPatches
         _inventorySubMenu = null;
 
         CharacterMenuService.Reset();
+        // VAuction tab removed - now using F7 popup
+        // VAuctionMenuService.Reset();
         CanvasService.ResetState();
         Core.Reset();
     }
