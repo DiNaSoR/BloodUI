@@ -61,6 +61,7 @@ internal static class VAuctionPopupService
     static TextMeshProUGUI _selectedItemText;
     static int _selectedPrefabGuid;
     static int _selectedQuantity;
+    static string _selectedItemName;
     static SimpleStunButton _listItemButton;
 
     /// <summary>
@@ -96,6 +97,7 @@ internal static class VAuctionPopupService
     {
         _selectedPrefabGuid = prefabGuid;
         _selectedQuantity = quantity;
+        _selectedItemName = displayName;
 
         if (_selectedItemText != null)
         {
@@ -719,7 +721,8 @@ internal static class VAuctionPopupService
 
     static void OnListItemClicked()
     {
-        if (_selectedPrefabGuid == 0)
+        // Allow listing if we have either a GUID or item name
+        if (_selectedPrefabGuid == 0 && string.IsNullOrEmpty(_selectedItemName))
         {
             Core.Log.LogWarning("[VAuctionPopup] No item selected to list.");
             return;
@@ -730,12 +733,26 @@ internal static class VAuctionPopupService
         int buyNow = 0;
         int hours = 24;
 
-        string command = $".auction sellitem {_selectedPrefabGuid} {quantity} {startBid} {buyNow} {hours}";
+        // Use name-based command if we don't have a GUID
+        string command;
+        if (_selectedPrefabGuid != 0)
+        {
+            command = $".auction sellitem {_selectedPrefabGuid} {quantity} {startBid} {buyNow} {hours}";
+        }
+        else
+        {
+            // Use item name - put in quotes if it contains spaces
+            string safeName = _selectedItemName.Contains(" ") ? $"\"{_selectedItemName}\"" : _selectedItemName;
+            command = $".auction sellitem {safeName} {quantity} {startBid} {buyNow} {hours}";
+        }
+        
+        Core.Log.LogInfo($"[VAuctionPopup] Sending: {command}");
         Quips.SendCommand(command);
 
         // Reset selection after listing
         _selectedPrefabGuid = 0;
         _selectedQuantity = 0;
+        _selectedItemName = null;
         if (_selectedItemText != null)
         {
             _selectedItemText.text = "No item selected.";
