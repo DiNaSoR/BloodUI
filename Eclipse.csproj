@@ -36,6 +36,8 @@
 
         <ItemGroup>
                 <Compile Remove="Docs\**\*.cs" />
+				<Compile Remove="Server\**\*.cs" />
+				<Compile Remove="Tools\**\*.cs" />
         </ItemGroup>
 	
 	<ItemGroup>
