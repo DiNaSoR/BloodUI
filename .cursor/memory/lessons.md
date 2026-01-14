@@ -291,8 +291,8 @@
 ### References
 - Files:
   - `Services/CharacterMenu/Tabs/ClassTab.cs`
-  - `Docs/Bloodcraft/Commands/ClassCommands.cs`
-  - `Docs/Bloodcraft/Utilities/Classes.cs`
+  - `Server/Bloodcraft/Commands/ClassCommands.cs`
+  - `Server/Bloodcraft/Utilities/Classes.cs`
 
 ---
 
@@ -348,7 +348,7 @@
 - GitHub release assets are keyed by asset name; `action-gh-release` uses the file basename as the asset name, so two different paths with the same basename collide.
 
 ### Wrong approach (DO NOT REPEAT)
-- Listing both `CHANGELOG.md` and `Docs/Bloodcraft/CHANGELOG.md` under `files:` (same asset name).
+- Listing both `CHANGELOG.md` and `Server/Bloodcraft/CHANGELOG.md` under `files:` (same asset name).
 
 ### Correct approach
 - Ensure each uploaded asset has a unique filename (copy/rename before uploading).
@@ -433,8 +433,8 @@
 ### References
 - Files:
   - `Eclipse.csproj`
-  - `Docs/Bloodcraft/Bloodcraft.csproj`
-  - `Docs/Bloodcraft/.codex/install.sh`
+  - `Server/Bloodcraft/Bloodcraft.csproj`
+  - `Server/Bloodcraft/.codex/install.sh`
   - `Services/HUD/Shared/*`
 ---
 

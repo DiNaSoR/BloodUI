@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Services.DataService;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu.Tabs;
 
@@ -329,7 +330,7 @@ internal class ProgressionTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Progression Tab] Failed to configure vertical layout: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Progression Tab] Failed to configure vertical layout: {ex.Message}");
         }
     }
 
@@ -354,7 +355,7 @@ internal class ProgressionTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         ApplySubTabVisibility();
         UpdateSubTabSelection();
 
-        Core.Log.LogInfo($"[Progression Tab] Switched to sub-tab: {_activeSubTab}");
+        DebugToolsBridge.TryLogInfo($"[Progression Tab] Switched to sub-tab: {_activeSubTab}");
     }
 
     private void ApplySubTabVisibility()

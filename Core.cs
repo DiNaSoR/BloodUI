@@ -101,11 +101,11 @@ internal static class Core
         try
         {
             EntityDebuggingUtility.DumpEntity(world, entity, true, sb);
-            Log.LogInfo($"Entity Dump:\n{sb.ToString()}");
+            DebugToolsBridge.TryLogInfo($"Entity Dump:\n{sb.ToString()}");
         }
         catch (Exception e)
         {
-            Log.LogWarning($"Error dumping entity: {e.Message}");
+            DebugToolsBridge.TryLogWarning($"Error dumping entity: {e.Message}");
         }
     }
     static AssetGuid GetAssetGuid(string textString)
@@ -127,7 +127,7 @@ internal static class Core
         }
         else
         {
-            Log.LogWarning("Stunlock.Localization not initialized yet!");
+            DebugToolsBridge.TryLogWarning("Stunlock.Localization not initialized yet!");
         }
 
         return LocalizationKey.Empty;
@@ -142,17 +142,17 @@ internal static class Core
     ComponentSystemBase systemBase = kvp.Value;
     if (systemBase.EntityQueries.Length == 0) continue;
 
-    Core.Log.LogInfo("=============================");
-    Core.Log.LogInfo(systemType.FullName);
+    DebugToolsBridge.TryLogInfo("=============================");
+    DebugToolsBridge.TryLogInfo(systemType.FullName);
     foreach (EntityQuery query in systemBase.EntityQueries)
     {
     EntityQueryDesc entityQueryDesc = query.GetEntityQueryDesc();
-    Core.Log.LogInfo($" All: {string.Join(",", entityQueryDesc.All)}");
-    Core.Log.LogInfo($" Any: {string.Join(",", entityQueryDesc.Any)}");
-    Core.Log.LogInfo($" Absent: {string.Join(",", entityQueryDesc.Absent)}");
-    Core.Log.LogInfo($" None: {string.Join(",", entityQueryDesc.None)}");
+    DebugToolsBridge.TryLogInfo($" All: {string.Join(",", entityQueryDesc.All)}");
+    DebugToolsBridge.TryLogInfo($" Any: {string.Join(",", entityQueryDesc.Any)}");
+    DebugToolsBridge.TryLogInfo($" Absent: {string.Join(",", entityQueryDesc.Absent)}");
+    DebugToolsBridge.TryLogInfo($" None: {string.Join(",", entityQueryDesc.None)}");
     }
-    Core.Log.LogInfo("=============================");
+    DebugToolsBridge.TryLogInfo("=============================");
     }
     }
     */

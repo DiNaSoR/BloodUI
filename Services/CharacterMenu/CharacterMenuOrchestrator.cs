@@ -7,6 +7,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using static Eclipse.Services.DataService;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu;
 
@@ -137,7 +138,7 @@ internal class CharacterMenuOrchestrator
 
         if (tabs == null || tabButtons == null || tabs.Length == 0 || tabButtons.Length == 0)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to read existing tabs.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to read existing tabs.");
             return;
         }
 
@@ -146,7 +147,7 @@ internal class CharacterMenuOrchestrator
 
         if (templateButton == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to locate tab button template.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to locate tab button template.");
             return;
         }
 
@@ -164,12 +165,12 @@ internal class CharacterMenuOrchestrator
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Failed to initialize tab {tab.TabId}: {e}");
+                DebugToolsBridge.TryLogError($"Failed to initialize tab {tab.TabId}: {e}");
             }
         }
 
         _initialized = true;
-        Core.Log.LogInfo("[Bloodcraft Tab] CharacterMenuOrchestrator initialized.");
+        DebugToolsBridge.TryLogInfo("[Bloodcraft Tab] CharacterMenuOrchestrator initialized.");
     }
 
     #endregion
@@ -200,7 +201,7 @@ internal class CharacterMenuOrchestrator
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Error updating tab {activeTab.TabId}: {e}");
+                DebugToolsBridge.TryLogError($"Error updating tab {activeTab.TabId}: {e}");
             }
         }
     }
@@ -252,7 +253,7 @@ internal class CharacterMenuOrchestrator
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Error resetting tab {tab.TabId}: {e}");
+                DebugToolsBridge.TryLogError($"Error resetting tab {tab.TabId}: {e}");
             }
         }
 

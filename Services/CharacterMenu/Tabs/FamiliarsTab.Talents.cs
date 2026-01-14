@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Services.DataService;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu.Tabs;
 
@@ -644,19 +645,19 @@ internal partial class FamiliarsTab
         // Check if we have points AND meet prerequisites
         if (remainingPoints <= 0)
         {
-            Core.Log.LogInfo($"[FamiliarsTab] No talent points available. Spent: {spentPoints}/{availablePoints}");
+            DebugToolsBridge.TryLogInfo($"[FamiliarsTab] No talent points available. Spent: {spentPoints}/{availablePoints}");
             return; // Don't send command or update UI
         }
 
         if (!CanAllocateTalent(talentId, GetAllocatedTalents()))
         {
-            Core.Log.LogInfo($"[FamiliarsTab] Cannot allocate talent {talentId} - prerequisites not met or already allocated");
+            DebugToolsBridge.TryLogInfo($"[FamiliarsTab] Cannot allocate talent {talentId} - prerequisites not met or already allocated");
             return;
         }
 
         // Send command to server to allocate talent
         string command = $".fam talent allocate {talentId}";
-        Core.Log.LogInfo($"[FamiliarsTab] Talent node clicked: {talentId}, sending command: {command}");
+        DebugToolsBridge.TryLogInfo($"[FamiliarsTab] Talent node clicked: {talentId}, sending command: {command}");
 
         // Optimistic update - only if validation passed
         _cachedAllocatedTalents.Add(talentId);

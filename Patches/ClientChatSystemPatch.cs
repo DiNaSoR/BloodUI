@@ -1,4 +1,4 @@
-﻿using Eclipse.Services;
+using Eclipse.Services;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
 using ProjectM;
@@ -86,7 +86,7 @@ internal static class ClientChatSystemPatch
             }
             catch (Exception ex)
             {
-                Core.Log.LogError($"Failed sending registration payload to server! Error - {ex}");
+                DebugToolsBridge.TryLogError($"Failed sending registration payload to server! Error - {ex}");
             }
         }
 
@@ -212,12 +212,12 @@ internal static class ClientChatSystemPatch
             }
             catch (Exception ex)
             {
-                Core.Log.LogError($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] failed to handle message after parsing event type - {ex}");       
+                DebugToolsBridge.TryLogError($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] failed to handle message after parsing event type - {ex}");       
             }
         }
         else
         {
-            Core.Log.LogWarning($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] failed to parse event type after MAC verification - {message}");
+            DebugToolsBridge.TryLogWarning($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] failed to parse event type after MAC verification - {message}");
         }
     }
     static bool CheckMAC(string receivedMessage, out string originalMessage)
@@ -237,7 +237,7 @@ internal static class ClientChatSystemPatch
             }
             else
             {
-                Core.Log.LogInfo($"MAC verification failed for matched RegEx message - {receivedMessage}");
+                DebugToolsBridge.TryLogInfo($"MAC verification failed for matched RegEx message - {receivedMessage}");
             }
         }
 
@@ -266,7 +266,7 @@ internal static class ClientChatSystemPatch
     }
     static void OnInputChange()
     {
-        // Core.Log.LogWarning($"[OnInputChange]");
+        // DebugToolsBridge.TryLogWarning($"[OnInputChange]");
     }
     public static void Reset()
     {

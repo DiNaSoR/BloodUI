@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Services.CanvasService.ToggleHUD;
 using static Eclipse.Utilities.GameObjects;
+using Eclipse.Services;
 
 namespace Eclipse.Services.HUD.Configurators;
 
@@ -103,7 +104,7 @@ internal static class ShiftSlotConfigurator
         }
         else
         {
-            Core.Log.LogWarning("AbilityBarEntry_Dummy is null!");
+            DebugToolsBridge.TryLogWarning("AbilityBarEntry_Dummy is null!");
         }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using UnityEngine;
+using Eclipse.Services;
 
 namespace Eclipse.Services;
 
@@ -63,7 +64,7 @@ internal static class LayoutService
             DefaultLayouts[key] = LayoutEntry.FromRect(rect);
         
         ApplySavedLayout(key, rect);
-        Core.Log.LogInfo($"[Layout] Registered: {key}");
+        DebugToolsBridge.TryLogInfo($"[Layout] Registered: {key}");
     }
 
     public static void Reset()
@@ -85,11 +86,11 @@ internal static class LayoutService
         {
             string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(LayoutPath, json);
-            Core.Log.LogInfo($"[Layout] Saved layout to: {LayoutPath}");
+            DebugToolsBridge.TryLogInfo($"[Layout] Saved layout to: {LayoutPath}");
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Layout] Failed to save: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Layout] Failed to save: {ex.Message}");
         }
     }
 
@@ -107,12 +108,12 @@ internal static class LayoutService
                 SavedLayouts = config.Layouts ?? new();
                 Options = config.Options ?? new();
                 ApplyAllLayouts();
-                Core.Log.LogInfo($"[Layout] Loaded layout from: {LayoutPath}");
+                DebugToolsBridge.TryLogInfo($"[Layout] Loaded layout from: {LayoutPath}");
             }
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Layout] Failed to load: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Layout] Failed to load: {ex.Message}");
         }
     }
 
@@ -122,7 +123,7 @@ internal static class LayoutService
         {
             File.Delete(LayoutPath);
             SavedLayouts.Clear();
-            Core.Log.LogInfo($"[Layout] Deleted layout file");
+            DebugToolsBridge.TryLogInfo($"[Layout] Deleted layout file");
         }
     }
 
@@ -137,7 +138,7 @@ internal static class LayoutService
             if (DefaultLayouts.TryGetValue(kvp.Key, out var defaultEntry))
                 ApplyLayoutEntry(kvp.Value.Rect, defaultEntry);
         }
-        Core.Log.LogInfo($"[Layout] Reset to defaults");
+        DebugToolsBridge.TryLogInfo($"[Layout] Reset to defaults");
     }
 
     static void ApplyAllLayouts()
@@ -210,7 +211,7 @@ internal static class LayoutService
             if (Input.GetKeyDown(KeyCode.F8))
             {
                 _active = !_active;
-                Core.Log.LogInfo($"[Layout] {WindowTitle}: {(_active ? "ON" : "OFF")} - {Elements.Count} elements registered");
+                DebugToolsBridge.TryLogInfo($"[Layout] {WindowTitle}: {(_active ? "ON" : "OFF")} - {Elements.Count} elements registered");
                 ResetState();
             }
 
@@ -449,7 +450,7 @@ internal static class LayoutService
             _dragStartMouse = Input.mousePosition;
             _dragStartPos = _draggingRect.anchoredPosition;
             
-            Core.Log.LogInfo($"[Layout] Started dragging: {_draggingKey}");
+            DebugToolsBridge.TryLogInfo($"[Layout] Started dragging: {_draggingKey}");
         }
 
         void DragElement()
@@ -480,7 +481,7 @@ internal static class LayoutService
 
             float factor = 1f + scroll * 0.1f;
             element.Rect.localScale *= factor;
-            Core.Log.LogInfo($"[Layout] Resized: {_hoveredKey} scale={element.Rect.localScale}");
+            DebugToolsBridge.TryLogInfo($"[Layout] Resized: {_hoveredKey} scale={element.Rect.localScale}");
         }
 
         bool IsPointerOverWindow()

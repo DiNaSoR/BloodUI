@@ -1,4 +1,4 @@
-﻿using Eclipse.Patches;
+using Eclipse.Patches;
 using Eclipse.Resources;
 using Eclipse.Utilities;
 using Il2CppInterop.Runtime;
@@ -32,6 +32,7 @@ using Eclipse.Services.HUD.Configurators;
 using Eclipse.Services.HUD.Shared;
 using Image = UnityEngine.UI.Image;
 using InputAdaptiveElement = Eclipse.Services.HUD.InputAdaptiveManager.InputAdaptiveElement;
+using Eclipse.Services;
 
 namespace Eclipse.Services;
 internal class CanvasService
@@ -81,7 +82,7 @@ internal class CanvasService
         }
         catch (Exception ex)
         {
-            Core.Log.LogError($"Failed to initialize UI elements: {ex}");
+            DebugToolsBridge.TryLogError($"Failed to initialize UI elements: {ex}");
         }
     }
 
@@ -108,7 +109,7 @@ internal class CanvasService
         }
         catch (Exception ex)
         {
-            Core.Log.LogError($"Failed to rebuild UI elements: {ex}");
+            DebugToolsBridge.TryLogError($"Failed to rebuild UI elements: {ex}");
         }
 
         _ready = true;
@@ -136,7 +137,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating experience bar: {e}");
+                    DebugToolsBridge.TryLogError($"Error updating experience bar: {e}");
                 }
             }
 
@@ -151,7 +152,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating legacy bar: {e}");
+                    DebugToolsBridge.TryLogError($"Error updating legacy bar: {e}");
                 }
             }
 
@@ -164,7 +165,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating expertise bar: {e}");
+                    DebugToolsBridge.TryLogError($"Error updating expertise bar: {e}");
                 }
             }
 
@@ -177,7 +178,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating stats buff: {e}");
+                    DebugToolsBridge.TryLogError($"Error updating stats buff: {e}");
                 }
             }
 
@@ -190,7 +191,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating familiar bar: {e}");
+                    DebugToolsBridge.TryLogError($"Error updating familiar bar: {e}");
                 }
             }
             if (_questTracker)
@@ -202,7 +203,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating quest tracker: {e}");
+                    DebugToolsBridge.TryLogError($"Error updating quest tracker: {e}");
                 }
             }
             if (_professionBars)
@@ -216,7 +217,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating professions(1): {e}");
+                    DebugToolsBridge.TryLogError($"Error updating professions(1): {e}");
                 }
 
                 try
@@ -228,7 +229,7 @@ internal class CanvasService
                 }
                 catch (Exception e)
                 {
-                    Core.Log.LogError($"Error updating professions(2): {e}");
+                    DebugToolsBridge.TryLogError($"Error updating professions(2): {e}");
                 }
             }
 
@@ -239,7 +240,7 @@ internal class CanvasService
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Error updating Bloodcraft tab: {e}");       
+                DebugToolsBridge.TryLogError($"Error updating Bloodcraft tab: {e}");       
             }
             // if (_killSwitch) yield break;
 
@@ -260,7 +261,7 @@ internal class CanvasService
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Error updating ability bar: {e}");
+                DebugToolsBridge.TryLogError($"Error updating ability bar: {e}");
             }
 
             SyncInputHUD();
@@ -514,7 +515,7 @@ internal class CanvasService
                 // inventorySubMenu.PreInstantiatedAttributeEntries
                 // inventorySubMenu.AttributeSections
                 // inventorySubMenu.AttributeSettings
-                Core.Log.LogError("InventorySubMenu is null!");
+                DebugToolsBridge.TryLogError("InventorySubMenu is null!");
                 return false;
             }
 
@@ -530,12 +531,12 @@ internal class CanvasService
 
                 foreach (var attributeEntry in preInstantiated)
                 {
-                    Core.Log.LogWarning($"{attributeEntry.CurrentData.AttributeUIType}, {attributeEntry.CurrentData.TextKey.ToString}, {attributeEntry.CurrentData.TooltipDesc}");
+                    DebugToolsBridge.TryLogWarning($"{attributeEntry.CurrentData.AttributeUIType}, {attributeEntry.CurrentData.TextKey.ToString}, {attributeEntry.CurrentData.TooltipDesc}");
                 }
 
                 foreach (var attributeSetting in attributeSettings.Settings)
                 {
-                    Core.Log.LogWarning($"{attributeSetting.Header.ToString}, {attributeSetting.Tooltip.ToString}, {attributeSetting.UnitStatType}");
+                    DebugToolsBridge.TryLogWarning($"{attributeSetting.Header.ToString}, {attributeSetting.Tooltip.ToString}, {attributeSetting.UnitStatType}");
                 }
 
                 // UIDataSystem._BottomBar_Keyboard, UIDataSystem._BottomBar_Gamepad
@@ -546,7 +547,7 @@ internal class CanvasService
             }
             catch (Exception ex)
             {
-                Core.Log.LogError($"Failed to dump attributes: {ex}");
+                DebugToolsBridge.TryLogError($"Failed to dump attributes: {ex}");
             }
             */
 
@@ -555,7 +556,7 @@ internal class CanvasService
                 .GetComponentsInChildren<CharacterAttributeSection>(false).Take(1)
                 .Concat(attributeSectionsParent.GetComponentsInChildren<CharacterAttributeSection>(false).Skip(2));
 
-            // Core.Log.LogWarning($"Found {attributeSections.Count()} attribute sections!");
+            // DebugToolsBridge.TryLogWarning($"Found {attributeSections.Count()} attribute sections!");
 
             foreach (CharacterAttributeSection section in attributeSections)
             {
@@ -563,7 +564,7 @@ internal class CanvasService
                 var attributeEntries = attributesContainer.transform.GetComponentsInChildren<CharacterAttributeEntry>(false);
                 int index = 0;
 
-                // Core.Log.LogWarning($"Found {attributeEntries.Length} attribute entries!");
+                // DebugToolsBridge.TryLogWarning($"Found {attributeEntries.Length} attribute entries!");
                 if (!attributeEntries.Any())
                     return false;
 
@@ -604,7 +605,7 @@ internal class CanvasService
                 }
                 catch (Exception ex)
                 {
-                    Core.Log.LogError($"Failed to initialize attribute values for section {section.name}: {ex}");
+                    DebugToolsBridge.TryLogError($"Failed to initialize attribute values for section {section.name}: {ex}");
                 }
             }
 
@@ -1191,7 +1192,7 @@ internal class CanvasService
                 AttributeObjects.Add(attributeValueClone);
                 // _attributeObjects.Add(attributeTypeClone);
 
-                Core.Log.LogWarning($"Registered Blood Attribute: {unitStatType}");
+                DebugToolsBridge.TryLogWarning($"Registered Blood Attribute: {unitStatType}");
                 isValidStat = true;
             }
 
@@ -1210,7 +1211,7 @@ internal class CanvasService
                 AttributeObjects.Add(attributeValueClone);
                 // _attributeObjects.Add(attributeTypeClone);
 
-                Core.Log.LogWarning($"Registered Weapon Attribute: {unitStatType}");
+                DebugToolsBridge.TryLogWarning($"Registered Weapon Attribute: {unitStatType}");
                 isValidStat = true;
             }
 

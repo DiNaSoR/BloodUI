@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Eclipse.Services;
 
 namespace Eclipse.Services;
 
@@ -16,6 +17,8 @@ internal static class DebugToolsBridge
     static bool _loggedMissing;
     static MethodInfo _dumpMenuAssets;
     static MethodInfo _logInfo;
+    static MethodInfo _logWarning;
+    static MethodInfo _logError;
 
     public static void TryDumpMenuAssets()
     {
@@ -31,18 +34,36 @@ internal static class DebugToolsBridge
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[VDebug] Failed invoking DumpMenuAssets: {ex.Message}");
+            TryLogWarning($"[VDebug] Failed invoking DumpMenuAssets: {ex.Message}");
         }
     }
 
     public static void TryLogInfo(string message)
+    {
+        TryLog(nameof(TryLogInfo), "LogInfo", message, ref _logInfo);
+    }
+
+    public static void TryLogWarning(string message)
+    {
+        TryLog(nameof(TryLogWarning), "LogWarning", message, ref _logWarning);
+    }
+
+    public static void TryLogError(string message)
+    {
+        TryLog(nameof(TryLogError), "LogError", message, ref _logError);
+    }
+
+    static bool TryResolveStaticMethod(string callSite, string methodName, ref MethodInfo cache, out MethodInfo method)
+        => TryResolveStaticMethod(callSite, methodName, Type.EmptyTypes, ref cache, out method, logFailures: true);
+
+    static void TryLog(string callSite, string methodName, string message, ref MethodInfo cache)
     {
         if (string.IsNullOrWhiteSpace(message))
         {
             return;
         }
 
-        if (!TryResolveStaticMethod(nameof(TryLogInfo), "LogInfo", new[] { typeof(string) }, ref _logInfo, out MethodInfo method, logFailures: false))
+        if (!TryResolveStaticMethod(callSite, methodName, new[] { typeof(string) }, ref cache, out MethodInfo method, logFailures: false))
         {
             return;
         }
@@ -51,14 +72,11 @@ internal static class DebugToolsBridge
         {
             method.Invoke(null, new object[] { message });
         }
-        catch (Exception ex)
+        catch
         {
-            Core.Log.LogWarning($"[VDebug] Failed invoking LogInfo: {ex.Message}");
+            // Swallow logging failures to keep VDebug optional and silent.
         }
     }
-
-    static bool TryResolveStaticMethod(string callSite, string methodName, ref MethodInfo cache, out MethodInfo method)
-        => TryResolveStaticMethod(callSite, methodName, Type.EmptyTypes, ref cache, out method, logFailures: true);
 
     static bool TryResolveStaticMethod(string callSite, string methodName, Type[] parameterTypes, ref MethodInfo cache, out MethodInfo method, bool logFailures)
     {
@@ -79,22 +97,12 @@ internal static class DebugToolsBridge
         Type apiType = apiAssembly.GetType(DebugToolsApiTypeName, throwOnError: false);
         if (apiType == null)
         {
-            if (logFailures)
-            {
-                Core.Log.LogWarning($"[VDebug] Found assembly '{DebugToolsAssemblyName}', but '{DebugToolsApiTypeName}' was not found (callsite: {callSite}).");
-            }
-
             return false;
         }
 
         method = apiType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static, null, parameterTypes, null);
         if (method == null)
         {
-            if (logFailures)
-            {
-                Core.Log.LogWarning($"[VDebug] Found '{DebugToolsApiTypeName}', but method '{methodName}' was not found (callsite: {callSite}).");
-            }
-
             return false;
         }
 
@@ -163,6 +171,5 @@ internal static class DebugToolsBridge
         }
 
         _loggedMissing = true;
-        Core.Log.LogInfo("[VDebug] Debug plugin not installed; skipping.");
     }
 }

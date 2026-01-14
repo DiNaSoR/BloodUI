@@ -1,9 +1,10 @@
-﻿using Stunlock.Core;
+using Stunlock.Core;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using static Eclipse.Services.CanvasService.DataHUD;
+using Eclipse.Services;
 
 namespace Eclipse.Services;
 internal static class DataService
@@ -550,12 +551,12 @@ internal static class DataService
             }
             catch (Exception ex)
             {
-                Core.Log.LogWarning($"Failed to modify recipes: {ex}");
+                DebugToolsBridge.TryLogWarning($"Failed to modify recipes: {ex}");
             }
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"Failed to parse config data: {ex}");
+            DebugToolsBridge.TryLogWarning($"Failed to parse config data: {ex}");
         }
     }
     public static void ParseClassData(string classData)
@@ -576,7 +577,7 @@ internal static class DataService
             string[] baseFields = segments[0].Split(',');
             if (baseFields.Length < 6)
             {
-                Core.Log.LogWarning("Class data payload is missing required base fields.");
+                DebugToolsBridge.TryLogWarning("Class data payload is missing required base fields.");
                 return;
             }
 
@@ -625,7 +626,7 @@ internal static class DataService
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"Failed to parse class data: {ex}");
+            DebugToolsBridge.TryLogWarning($"Failed to parse class data: {ex}");
         }
     }
     /// <summary>
@@ -650,7 +651,7 @@ internal static class DataService
             string[] baseFields = segments[0].Split(new[] { ',' }, 2);
             if (baseFields.Length < 2)
             {
-                Core.Log.LogWarning("Prestige leaderboard payload is missing required base fields.");
+                DebugToolsBridge.TryLogWarning("Prestige leaderboard payload is missing required base fields.");
                 return;
             }
 
@@ -702,7 +703,7 @@ internal static class DataService
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"Failed to parse prestige leaderboard data: {ex}");
+            DebugToolsBridge.TryLogWarning($"Failed to parse prestige leaderboard data: {ex}");
         }
     }
     /// <summary>
@@ -727,7 +728,7 @@ internal static class DataService
             string[] baseFields = segments[0].Split(new[] { ',' }, 6);
             if (baseFields.Length < 6)
             {
-                Core.Log.LogWarning("Exoform payload is missing required base fields.");
+                DebugToolsBridge.TryLogWarning("Exoform payload is missing required base fields.");
                 return;
             }
 
@@ -797,7 +798,7 @@ internal static class DataService
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"Failed to parse exoform data: {ex}");
+            DebugToolsBridge.TryLogWarning($"Failed to parse exoform data: {ex}");
         }
     }
     /// <summary>
@@ -822,7 +823,7 @@ internal static class DataService
             string[] baseFields = segments[0].Split(new[] { ',' }, 3);
             if (baseFields.Length < 3)
             {
-                Core.Log.LogWarning("Familiar battle payload is missing required base fields.");
+                DebugToolsBridge.TryLogWarning("Familiar battle payload is missing required base fields.");
                 return;
             }
 
@@ -884,7 +885,7 @@ internal static class DataService
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"Failed to parse familiar battle data: {ex}");
+            DebugToolsBridge.TryLogWarning($"Failed to parse familiar battle data: {ex}");
         }
     }
 
@@ -1118,7 +1119,7 @@ internal static class DataService
         if (payload.Equals("NONE", StringComparison.OrdinalIgnoreCase))
         {
             // No active familiar - don't mark as ready, need to retry when familiar is bound
-            Core.Log.LogInfo("[DataService] Familiar talents: no active familiar, will retry");
+            DebugToolsBridge.TryLogInfo("[DataService] Familiar talents: no active familiar, will retry");
             return true; // Parsed successfully, but don't set ready flag
         }
 
@@ -1126,7 +1127,7 @@ internal static class DataService
         {
             // Active familiar exists but has no talents - this is valid data
             _familiarTalentsDataReady = true;
-            Core.Log.LogInfo("[DataService] Familiar talents synced: none allocated");
+            DebugToolsBridge.TryLogInfo("[DataService] Familiar talents synced: none allocated");
             return true;
         }
 
@@ -1141,7 +1142,7 @@ internal static class DataService
         }
 
         _familiarTalentsDataReady = true;
-        Core.Log.LogInfo($"[DataService] Familiar talents synced: {string.Join(",", _familiarAllocatedTalents)}");
+        DebugToolsBridge.TryLogInfo($"[DataService] Familiar talents synced: {string.Join(",", _familiarAllocatedTalents)}");
         return true;
     }
 
@@ -1322,7 +1323,7 @@ internal static class DataService
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"Failed to parse stat bonus data: {ex}");
+            DebugToolsBridge.TryLogWarning($"Failed to parse stat bonus data: {ex}");
         }
     }
 

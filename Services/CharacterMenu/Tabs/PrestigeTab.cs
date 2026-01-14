@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using static Eclipse.Services.DataService;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu.Tabs;
 
@@ -952,7 +953,7 @@ internal class PrestigeTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Prestige Tab] Failed to configure vertical layout: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Prestige Tab] Failed to configure vertical layout: {ex.Message}");
         }
     }
 

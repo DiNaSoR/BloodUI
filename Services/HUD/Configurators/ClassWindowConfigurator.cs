@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Utilities.GameObjects;
+using Eclipse.Services;
 
 namespace Eclipse.Services.HUD.Configurators;
 
@@ -170,7 +171,7 @@ internal static class ClassWindowConfigurator
         string layoutKey,
         string reason)
     {
-        Core.Log.LogWarning($"Failed to configure {layoutKey}, {reason}.");
+        DebugToolsBridge.TryLogWarning($"Failed to configure {layoutKey}, {reason}.");
         if (classObject != null)
         {
             classObject.SetActive(false);
@@ -191,7 +192,7 @@ internal static class ClassWindowConfigurator
     {
         if (localizedText == null)
         {
-            Core.Log.LogWarning($"{context}: LocalizedText missing.");
+            DebugToolsBridge.TryLogWarning($"{context}: LocalizedText missing.");
             return false;
         }
 
@@ -208,14 +209,14 @@ internal static class ClassWindowConfigurator
         Type targetType = property?.PropertyType ?? field?.FieldType;
         if (targetType == null)
         {
-            Core.Log.LogWarning($"{context}: Unable to resolve text type.");
+            DebugToolsBridge.TryLogWarning($"{context}: Unable to resolve text type.");
             return false;
         }
 
         Component textComponent = ResolveTextComponent(localizedText, targetType);
         if (textComponent == null)
         {
-            Core.Log.LogWarning($"{context}: Missing text component for {targetType.Name}.");
+            DebugToolsBridge.TryLogWarning($"{context}: Missing text component for {targetType.Name}.");
             return false;
         }
 
@@ -235,11 +236,11 @@ internal static class ClassWindowConfigurator
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"{context}: Failed to bind text component ({ex.GetType().Name}).");
+            DebugToolsBridge.TryLogWarning($"{context}: Failed to bind text component ({ex.GetType().Name}).");
             return false;
         }
 
-        Core.Log.LogWarning($"{context}: Unable to bind text component.");
+        DebugToolsBridge.TryLogWarning($"{context}: Unable to bind text component.");
         return false;
     }
 
@@ -275,7 +276,7 @@ internal static class ClassWindowConfigurator
     {
         if (target == null)
         {
-            Core.Log.LogWarning($"{context}: Target missing for graphic setup.");
+            DebugToolsBridge.TryLogWarning($"{context}: Target missing for graphic setup.");
             return;
         }
 
@@ -287,7 +288,7 @@ internal static class ClassWindowConfigurator
 
         if (graphic == null)
         {
-            Core.Log.LogWarning($"{context}: Graphic component missing.");
+            DebugToolsBridge.TryLogWarning($"{context}: Graphic component missing.");
             return;
         }
 

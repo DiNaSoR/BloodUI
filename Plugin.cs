@@ -5,6 +5,7 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
+using Eclipse.Services;
 
 namespace Eclipse;
 
@@ -50,13 +51,13 @@ internal class Plugin : BasePlugin
 
         if (Application.productName == "VRisingServer")
         {
-            Core.Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] is a client mod! ({Application.productName})");
+            DebugToolsBridge.TryLogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] is a client mod! ({Application.productName})");
             return;
         }
 
         _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
         InitConfig();
-        Core.Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] loaded on client!");
+        DebugToolsBridge.TryLogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] loaded on client!");
     }
     static void InitConfig()
     {

@@ -15,6 +15,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Services.DataService;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu.Tabs;
 
@@ -2579,7 +2580,7 @@ internal partial class FamiliarsTab : CharacterMenuTabBase, ICharacterMenuTabWit
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Bloodcraft Tab] Failed to configure vertical layout: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Bloodcraft Tab] Failed to configure vertical layout: {ex.Message}");
         }
     }
 

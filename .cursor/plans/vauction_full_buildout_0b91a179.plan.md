@@ -6,7 +6,7 @@ todos:
     content: Finalize VAuction ↔ EclipsePlus protocol (event IDs, payload schemas, size limits, encoding, error/notification semantics).
     status: completed
   - id: server-project
-    content: Create `VAuction/` server project skeleton (csproj/plugin/core/config/persistence/services/commands/systems) modeled after `Docs/Bloodcraft/` patterns.
+    content: Create `VAuction/` server project skeleton (csproj/plugin/core/config/persistence/services/commands/systems) modeled after `Server/Bloodcraft/` patterns.
     status: completed
     dependencies:
       - define-protocol
@@ -50,7 +50,7 @@ todos:
   - Use `UnityEngine.Object.Destroy()` explicitly
   - Avoid Unity EventSystems pointer handler interfaces
   - Non-interactive TMP text: `raycastTarget = false` and ensure alpha is visible
-- **Network payload size**: server-to-client system chat uses `FixedString512Bytes` (`Docs/Bloodcraft/Services/LocalizationService.cs`), so **auction sync must be page-based and compact**.
+- **Network payload size**: server-to-client system chat uses `FixedString512Bytes` (`Server/Bloodcraft/Services/LocalizationService.cs`), so **auction sync must be page-based and compact**.
 
 ## High-level architecture
 
@@ -222,7 +222,7 @@ Notes:
 
 ### `Plugin.cs` + `Core.cs`
 
-- Follow Bloodcraft server plugin pattern (`Docs/Bloodcraft/Plugin.cs`):
+- Follow Bloodcraft server plugin pattern (`Server/Bloodcraft/Plugin.cs`):
   - Only load when `Application.productName == "VRisingServer"`
   - `Harmony.CreateAndPatchAll`
   - Config init (`VAuctionConfigService.InitializeConfig()`)

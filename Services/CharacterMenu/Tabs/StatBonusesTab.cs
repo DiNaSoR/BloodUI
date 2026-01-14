@@ -12,6 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using static Eclipse.Services.DataService;
 using static Eclipse.Services.CanvasService.DataHUD;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu.Tabs;
 
@@ -573,7 +574,7 @@ internal class StatBonusesTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
             EnsureRows(mockEntries.Count);
             int rowCount = Math.Min(mockEntries.Count, _rows.Count);
 
-            Action<int> onMockClicked = (statIndex) => Core.Log.LogInfo($"[Mock] Clicked weapon stat index: {statIndex}");
+            Action<int> onMockClicked = (statIndex) => DebugToolsBridge.TryLogInfo($"[Mock] Clicked weapon stat index: {statIndex}");
             for (int i = 0; i < rowCount; i++)
             {
                 UpdateRow(_rows[i], mockEntries[i], entry => FormatWeaponStatValue(entry.StatIndex, entry.Value), onMockClicked);
@@ -1014,7 +1015,7 @@ internal class StatBonusesTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[StatBonuses Tab] Failed to configure vertical layout: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[StatBonuses Tab] Failed to configure vertical layout: {ex.Message}");
         }
     }
 

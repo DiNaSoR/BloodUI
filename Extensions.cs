@@ -314,7 +314,7 @@ internal static class Extensions
 
         if (!isValid)
         {
-            // Core.Log.LogWarning($"Entity index out of range! ({index}>{capacity})");
+            // DebugToolsBridge.TryLogWarning($"Entity index out of range! ({index}>{capacity})");
         }
 
         return isValid;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Stunlock.Core;
 using UnityEngine;
+using Eclipse.Services;
 
 namespace Eclipse.Services;
 
@@ -38,11 +39,11 @@ public static class PrefabCache
             }
 
             _initialized = true;
-            Core.Log.LogInfo($"[PrefabCache] Initialized with {count} prefabs.");
+            DebugToolsBridge.TryLogInfo($"[PrefabCache] Initialized with {count} prefabs.");
         }
         catch (Exception ex)
         {
-            Core.Log.LogError($"[PrefabCache] Failed to initialize: {ex.Message}");
+            DebugToolsBridge.TryLogError($"[PrefabCache] Failed to initialize: {ex.Message}");
         }
     }
 
@@ -88,7 +89,7 @@ public static class PrefabCache
         // Threshold: Must match at least 2 significant tokens or be a very strong single match
         if (bestScore >= 20) // Arbitrary score threshold
         {
-            Core.Log.LogInfo($"[PrefabCache] Fuzzy Match: '{spriteName}' -> '{bestMatchKey}' (Score: {bestScore})");
+            DebugToolsBridge.TryLogInfo($"[PrefabCache] Fuzzy Match: '{spriteName}' -> '{bestMatchKey}' (Score: {bestScore})");
             return bestMatchGuid;
         }
 

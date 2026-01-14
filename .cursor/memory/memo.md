@@ -35,8 +35,8 @@ Last updated: 2026-01-14
 - Ownership:
   - UI: `Services/CharacterMenu/Tabs/StatBonusesTab.cs` (created/updated via `Services/CharacterMenuService.cs`)
   - Data payload + parsing:
-    - Weapon Expertise stats: `Docs/Bloodcraft/Interfaces/EclipseInterface.cs` → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParseWeaponStatBonusData`)
-    - Blood Legacies stats: `Docs/Bloodcraft/Interfaces/EclipseInterface.cs` (ProgressToClient / LegacyData) → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParsePlayerData`) → `Services/CanvasService.cs` (`DataHUD._legacy*`)
+    - Weapon Expertise stats: `Server/Bloodcraft/Interfaces/EclipseInterface.cs` → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParseWeaponStatBonusData`)
+    - Blood Legacies stats: `Server/Bloodcraft/Interfaces/EclipseInterface.cs` (ProgressToClient / LegacyData) → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParsePlayerData`) → `Services/CanvasService.cs` (`DataHUD._legacy*`)
   - Sprite allowlist: `Services/HUD/Shared/HudData.cs`
 
 - Stat Bonuses UI is owned by `Services/CharacterMenu/Tabs/StatBonusesTab.cs` (single owner; avoid parallel UI implementations).
@@ -51,7 +51,7 @@ Last updated: 2026-01-14
 
 - Ownership:
   - UI: `Services/CharacterMenu/Tabs/ExoformTab.cs` (panel-based; created/updated via `Services/CharacterMenuService.cs`)
-  - Data payload + parsing: `Docs/Bloodcraft/Interfaces/EclipseInterface.cs` (`ExoFormDataToClient`) → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParseExoFormData`)
+  - Data payload + parsing: `Server/Bloodcraft/Interfaces/EclipseInterface.cs` (`ExoFormDataToClient`) → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParseExoFormData`)
   - Sprite allowlist: `Services/HUD/Shared/HudData.cs`
 
 - Notes:
@@ -67,7 +67,7 @@ Last updated: 2026-01-14
 
 - Ownership:
   - UI: `Services/CharacterMenu/Tabs/PrestigeTab.cs` (panel-based; created/updated via `Services/CharacterMenuService.cs`)
-  - Data payload + parsing: `Docs/Bloodcraft/Interfaces/EclipseInterface.cs` (`PrestigeLeaderboardToClient`) → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParsePrestigeLeaderboardData`)
+  - Data payload + parsing: `Server/Bloodcraft/Interfaces/EclipseInterface.cs` (`PrestigeLeaderboardToClient`) → `Patches/ClientChatSystemPatch.cs` → `Services/DataService.cs` (`ParsePrestigeLeaderboardData`)
 
 - Notes:
   - Prestige tab is now click-only and panel-based (no legacy text-entry rendering).
@@ -107,7 +107,7 @@ Last updated: 2026-01-14
 - Optional debug tooling lives in a separate plugin:
   - Debug plugin: `Tools/VDebug` (GUID: `com.dinasor.vdebug`)
   - EclipsePlus calls it via reflection: `Services/DebugToolsBridge.cs` (safe no-op when not installed)
-  - Debug-only Info logs (registration payload, Bloodcraft stats, chat command echo) go to VDebug and are silent without it
+  - All EclipsePlus logs route to VDebug (Info/Warning/Error) and are silent without it
 
 - Il2Cpp constraints to remember:
   - Avoid ambiguous `Object.Destroy()` → prefer `UnityEngine.Object.Destroy()`. 

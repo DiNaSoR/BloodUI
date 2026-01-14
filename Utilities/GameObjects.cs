@@ -1,8 +1,9 @@
-﻿using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using TMPro;
 using UnityEngine;
 using StringComparison = System.StringComparison;
+using Eclipse.Services;
 
 namespace Eclipse.Utilities;
 internal static class GameObjects
@@ -13,7 +14,7 @@ internal static class GameObjects
         var spriteAsset = ScriptableObject.CreateInstance<TMP_SpriteAsset>();
         spriteAsset.name = sprite.name;
 
-        // Assign the atlas (can still be null in edge cases; that’s okay but warn/log if needed)
+        // Assign the atlas (can still be null in edge cases; that�s okay but warn/log if needed)
         spriteAsset.spriteSheet = sprite.texture;
 
         // Ensure list exists before using it
@@ -74,7 +75,7 @@ internal static class GameObjects
             //string indent = new('|', indentLevel);
 
             // Print the current GameObject's name and some basic info
-            //Core.Log.LogInfo($"{indent}{current.gameObject.name} ({current.gameObject.scene.name})");
+            //DebugToolsBridge.TryLogInfo($"{indent}{current.gameObject.name} ({current.gameObject.scene.name})");
 
             // Add all children to the stack
             foreach (Transform child in transforms)
@@ -86,16 +87,16 @@ internal static class GameObjects
             }
         }
 
-        Core.Log.LogWarning($"GameObject with name '{targetName}' not found!");
+        DebugToolsBridge.TryLogWarning($"GameObject with name '{targetName}' not found!");
         return null;
     }
     public static void FindLoadedObjects<T>() where T : UnityEngine.Object
     {
         Il2CppReferenceArray<UnityEngine.Object> resources = UnityEngine.Resources.FindObjectsOfTypeAll(Il2CppType.Of<T>());
-        Core.Log.LogInfo($"Found {resources.Length} {Il2CppType.Of<T>().FullName}'s!");
+        DebugToolsBridge.TryLogInfo($"Found {resources.Length} {Il2CppType.Of<T>().FullName}'s!");
         foreach (UnityEngine.Object resource in resources)
         {
-            Core.Log.LogInfo($"Sprite: {resource.name}");
+            DebugToolsBridge.TryLogInfo($"Sprite: {resource.name}");
         }
     }
     public static void DeactivateChildrenExceptNamed(Transform root, string targetName)
@@ -144,7 +145,7 @@ internal static class GameObjects
         Il2CppArrayBase<Transform> children = root.GetComponentsInChildren<Transform>(includeInactive);
         List<Transform> transforms = [..children];
 
-        Core.Log.LogWarning($"Found {transforms.Count} GameObjects!");
+        DebugToolsBridge.TryLogWarning($"Found {transforms.Count} GameObjects!");
 
         if (string.IsNullOrEmpty(filePath))
         {
@@ -164,7 +165,7 @@ internal static class GameObjects
                 string indent = new('|', indentLevel);
 
                 // Write the current GameObject's name and some basic info to the file
-                Core.Log.LogInfo($"{indent}{current.gameObject.name} | {string.Join(",", objectComponents)} | [{current.gameObject.scene.name}]");
+                DebugToolsBridge.TryLogInfo($"{indent}{current.gameObject.name} | {string.Join(",", objectComponents)} | [{current.gameObject.scene.name}]");
 
                 // Add all children to the stack
                 foreach (Transform child in transforms)

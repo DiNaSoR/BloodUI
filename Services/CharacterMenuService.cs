@@ -1,4 +1,4 @@
-﻿using Eclipse.Utilities;
+using Eclipse.Utilities;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using ProjectM.UI;
@@ -21,6 +21,7 @@ using Eclipse.Services.CharacterMenu.Interfaces;
 using Eclipse.Services.CharacterMenu.Tabs;
 using Eclipse.Services.CharacterMenu.Shared;
 using Eclipse.Services.HUD.Shared;
+using Eclipse.Services;
 
 namespace Eclipse.Services;
 
@@ -146,7 +147,7 @@ internal static class CharacterMenuService
         Il2CppReferenceArray<SimpleStunButton> tabButtons = menu.TabButtons;
         if (tabs == null || tabButtons == null || tabs.Length == 0 || tabButtons.Length == 0)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to read existing tabs.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to read existing tabs.");
             return;
         }
 
@@ -154,7 +155,7 @@ internal static class CharacterMenuService
         SimpleStunButton templateButton = FindTemplateButton(tabButtonsRoot);
         if (templateButton == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to locate tab button template.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to locate tab button template.");
             return;
         }
 
@@ -169,7 +170,7 @@ internal static class CharacterMenuService
 
         if (bloodcraftTabButton == null || bloodcraftTab == null || entriesRoot == null || entryTemplate == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to build Bloodcraft tab UI.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to build Bloodcraft tab UI.");
             return;
         }
 
@@ -302,7 +303,7 @@ internal static class CharacterMenuService
         TextMeshProUGUI referenceText = equipmentTab.GetComponentInChildren<TextMeshProUGUI>();
         if (referenceText == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Stats] Could not find reference text in Equipment tab.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Stats] Could not find reference text in Equipment tab.");
             return;
         }
 
@@ -312,7 +313,7 @@ internal static class CharacterMenuService
         Transform gearLevelParentCheck = equipmentTab.Find("GearLevelParent");
         if (gearLevelParentCheck == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Stats] Could not find GearLevelParent for existing check.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Stats] Could not find GearLevelParent for existing check.");
             return;
         }
 
@@ -641,13 +642,13 @@ internal static class CharacterMenuService
 
         if (referenceText == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to find reference text.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to find reference text.");
             return tabRoot;
         }
 
         if (contentRoot == null)
         {
-            Core.Log.LogWarning("[Bloodcraft Tab] Failed to create content root.");
+            DebugToolsBridge.TryLogWarning("[Bloodcraft Tab] Failed to create content root.");
             return tabRoot;
         }
 
@@ -760,7 +761,7 @@ internal static class CharacterMenuService
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Bloodcraft Tab] Failed to configure vertical layout: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Bloodcraft Tab] Failed to configure vertical layout: {ex.Message}");
         }
     }
 

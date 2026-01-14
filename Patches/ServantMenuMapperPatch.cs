@@ -1,9 +1,10 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using ProjectM;
 using ProjectM.UI;
 using Stunlock.Core;
 using Unity.Entities;
 using UnityEngine;
+using Eclipse.Services;
 
 namespace Eclipse.Patches;
 
@@ -66,7 +67,7 @@ internal static class ServantMenuMapperPatch
                             _familiar = familiar;
                             var matchingBuff = ShinyBuffColorHexMap.FirstOrDefault(buff => _familiar.HasBuff(buff.Key));
                             string shinyBuff = matchingBuff.Value ?? "?";
-                            // Core.Log.LogWarning($"Servant shiny buff - {shinyBuff}|{matchingBuff.Key.GetPrefabName()}|{(_familiar.TryGetBuff(matchingBuff.Key, out Entity buffEntity) ? buffEntity.Read<Buff>().Stacks : -1)}");
+                            // DebugToolsBridge.TryLogWarning($"Servant shiny buff - {shinyBuff}|{matchingBuff.Key.GetPrefabName()}|{(_familiar.TryGetBuff(matchingBuff.Key, out Entity buffEntity) ? buffEntity.Read<Buff>().Stacks : -1)}");
                         }
                     }
                 }

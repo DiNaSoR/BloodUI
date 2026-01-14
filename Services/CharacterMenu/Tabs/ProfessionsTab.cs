@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Eclipse.Services.CanvasService.DataHUD;
 using static Eclipse.Services.DataService;
+using Eclipse.Services;
 
 namespace Eclipse.Services.CharacterMenu.Tabs;
 
@@ -643,7 +644,7 @@ internal class ProfessionsTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         }
         catch (Exception ex)
         {
-            Core.Log.LogWarning($"[Professions Tab] Failed to configure vertical layout: {ex.Message}");
+            DebugToolsBridge.TryLogWarning($"[Professions Tab] Failed to configure vertical layout: {ex.Message}");
         }
     }
 

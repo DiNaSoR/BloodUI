@@ -2,6 +2,7 @@ using Eclipse.Patches;
 using ProjectM;
 using System.Collections.Generic;
 using UnityEngine;
+using Eclipse.Services;
 
 namespace Eclipse.Services.HUD;
 
@@ -101,7 +102,7 @@ internal static class InputAdaptiveManager
     public static void SyncAdaptiveElements(bool isGamepad)
     {
         _inputDevice = isGamepad ? ControllerType.Gamepad : ControllerType.KeyboardAndMouse;
-        Core.Log.LogWarning($"[OnInputDeviceChanged] - ControllerType: {_inputDevice}");
+        DebugToolsBridge.TryLogWarning($"[OnInputDeviceChanged] - ControllerType: {_inputDevice}");
 
         foreach (InputAdaptiveElement adaptiveElement in AdaptiveElements)
         {

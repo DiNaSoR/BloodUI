@@ -29,7 +29,7 @@ jobs:
         id: extract_versions
         run: |
           eclipse_version=$(xmllint --xpath "string(//Project/PropertyGroup/Version)" "Eclipse.csproj")
-          bloodcraft_version=$(xmllint --xpath "string(//Project/PropertyGroup/Version)" "Docs/Bloodcraft/Bloodcraft.csproj")
+          bloodcraft_version=$(xmllint --xpath "string(//Project/PropertyGroup/Version)" "Server/Bloodcraft/Bloodcraft.csproj")
 
           echo "eclipse_version=$eclipse_version" >> $GITHUB_OUTPUT
           echo "bloodcraft_version=$bloodcraft_version" >> $GITHUB_OUTPUT
@@ -37,13 +37,13 @@ jobs:
       - name: Update thunderstore.toml versions
         run: |
           sed -i "s/versionNumber = \".*\"/versionNumber = \"${{ steps.extract_versions.outputs.eclipse_version }}\"/" thunderstore.toml
-          sed -i "s/versionNumber = \".*\"/versionNumber = \"${{ steps.extract_versions.outputs.bloodcraft_version }}\"/" Docs/Bloodcraft/thunderstore.toml
+          sed -i "s/versionNumber = \".*\"/versionNumber = \"${{ steps.extract_versions.outputs.bloodcraft_version }}\"/" Server/Bloodcraft/thunderstore.toml
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          if [ -n "$(git status --porcelain thunderstore.toml Docs/Bloodcraft/thunderstore.toml)" ]; then
-            git add thunderstore.toml Docs/Bloodcraft/thunderstore.toml
+          if [ -n "$(git status --porcelain thunderstore.toml Server/Bloodcraft/thunderstore.toml)" ]; then
+            git add thunderstore.toml Server/Bloodcraft/thunderstore.toml
             git commit -m "chore: sync thunderstore.toml versions (EclipsePlus ${{ steps.extract_versions.outputs.eclipse_version }}, Bloodcraftplus ${{ steps.extract_versions.outputs.bloodcraft_version }})"
             git push
           else
@@ -53,14 +53,14 @@ jobs:
       - name: Create secrets.json
         run: |
           mkdir -p "${{ github.workspace }}/Resources"
-          mkdir -p "${{ github.workspace }}/Docs/Bloodcraft/Resources"
+          mkdir -p "${{ github.workspace }}/Server/Bloodcraft/Resources"
           cat > "${{ github.workspace }}/Resources/secrets.json" <<EOF
           {
             "NEW_SHARED_KEY": "${NEW_SHARED_KEY}"
           }
           EOF
 
-          cat > "${{ github.workspace }}/Docs/Bloodcraft/Resources/secrets.json" <<EOF
+          cat > "${{ github.workspace }}/Server/Bloodcraft/Resources/secrets.json" <<EOF
           {
             "NEW_SHARED_KEY": "${NEW_SHARED_KEY}"
           }
@@ -69,13 +69,13 @@ jobs:
       - name: Restore
         run: |
           dotnet restore Eclipse.csproj
-          dotnet restore Docs/Bloodcraft/Bloodcraft.csproj
+          dotnet restore Server/Bloodcraft/Bloodcraft.csproj
           
       - name: Build EclipsePlus (Release)
         run: dotnet build Eclipse.csproj --configuration Release -p:Version=${{ steps.extract_versions.outputs.eclipse_version }} -p:RunGenerateREADME=false
 
       - name: Build Bloodcraftplus (Release)
-        run: dotnet build Docs/Bloodcraft/Bloodcraft.csproj --configuration Release -p:Version=${{ steps.extract_versions.outputs.bloodcraft_version }} -p:RunGenerateREADME=false
+        run: dotnet build Server/Bloodcraft/Bloodcraft.csproj --configuration Release -p:Version=${{ steps.extract_versions.outputs.bloodcraft_version }} -p:RunGenerateREADME=false
 
       - name: GH Release
         uses: softprops/action-gh-release@v1
@@ -129,7 +129,7 @@ jobs:
           generate_release_notes: false
           files: |
             ./bin/Release/net6.0/EclipsePlus.dll
-            ./Docs/Bloodcraft/bin/Release/net6.0/Bloodcraftplus.dll
+            ./Server/Bloodcraft/bin/Release/net6.0/Bloodcraftplus.dll
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -143,6 +143,6 @@ jobs:
 
       - name: Publish Bloodcraftplus to Thunderstore
         run: |
-          cd Docs/Bloodcraft
+          cd Server/Bloodcraft
           tcli publish --token "${{ secrets.THUNDERSTORE_KEY }}" --package-version "${{ steps.extract_versions.outputs.bloodcraft_version }}"
         continue-on-error: true

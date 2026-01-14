@@ -4,6 +4,7 @@ using ProjectM.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Eclipse.Services;
 
 namespace Eclipse.Services.HUD;
 
@@ -61,7 +62,7 @@ internal class HudOrchestrator
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Failed to initialize {component.ComponentId}: {e}");
+                DebugToolsBridge.TryLogError($"Failed to initialize {component.ComponentId}: {e}");
             }
         }
         _initialized = true;
@@ -83,7 +84,7 @@ internal class HudOrchestrator
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Error updating {component.ComponentId}: {e}");
+                DebugToolsBridge.TryLogError($"Error updating {component.ComponentId}: {e}");
             }
         }
     }
@@ -101,7 +102,7 @@ internal class HudOrchestrator
             }
             catch (Exception e)
             {
-                Core.Log.LogError($"Error resetting {component.ComponentId}: {e}");
+                DebugToolsBridge.TryLogError($"Error resetting {component.ComponentId}: {e}");
             }
         }
 

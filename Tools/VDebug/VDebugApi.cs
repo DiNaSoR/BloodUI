@@ -21,6 +21,26 @@ public static class VDebugApi
         VDebugLog.Log.LogInfo(message);
     }
 
+    public static void LogWarning(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        VDebugLog.Log.LogWarning(message);
+    }
+
+    public static void LogError(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        VDebugLog.Log.LogError(message);
+    }
+
     public static void DumpMenuAssets()
     {
         try
