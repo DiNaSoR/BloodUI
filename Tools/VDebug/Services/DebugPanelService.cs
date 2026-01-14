@@ -31,14 +31,23 @@ internal static class DebugPanelService
     /// </summary>
     public static void Initialize()
     {
-        if (_initialized)
+        if (_initialized && _panelObject != null)
             return;
 
         try
         {
             CreatePanel();
-            _initialized = true;
-            VDebugLog.Log.LogInfo("[VDebug] Debug panel initialized.");
+            
+            // Only mark as initialized if panel was actually created
+            if (_panelObject != null)
+            {
+                _initialized = true;
+                VDebugLog.Log.LogInfo("[VDebug] Debug panel initialized.");
+            }
+            else
+            {
+                VDebugLog.Log.LogWarning("[VDebug] Debug panel creation deferred - no canvas available yet.");
+            }
         }
         catch (Exception ex)
         {
