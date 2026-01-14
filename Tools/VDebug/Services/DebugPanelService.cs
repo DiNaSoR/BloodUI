@@ -159,7 +159,7 @@ internal static class DebugPanelService
 
         // Inspector section
         CreateSeparator(_panelObject.transform, "Inspector Tools");
-        CreateButton(_panelObject.transform, "🔍 UI Inspector", () => {
+        CreateButton(_panelObject.transform, "UI Inspector", () => {
             UIInspectorService.Initialize(canvas);
             UIInspectorService.Toggle();
         });
@@ -216,6 +216,8 @@ internal static class DebugPanelService
 
         TextMeshProUGUI tmp = headerGo.AddComponent<TextMeshProUGUI>();
         tmp.text = text;
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) tmp.font = font;
         tmp.fontSize = 16;
         tmp.fontStyle = FontStyles.Bold;
         tmp.color = new Color(0.9f, 0.7f, 0.2f);  // Gold color
@@ -269,6 +271,8 @@ internal static class DebugPanelService
 
         TextMeshProUGUI tmp = labelGo.AddComponent<TextMeshProUGUI>();
         tmp.text = label;
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) tmp.font = font;
         tmp.fontSize = 12;
         tmp.color = Color.white;
         tmp.alignment = TextAlignmentOptions.Center;
@@ -313,6 +317,8 @@ internal static class DebugPanelService
         labelLE.preferredWidth = 80;
         TextMeshProUGUI labelTmp = labelGo.AddComponent<TextMeshProUGUI>();
         labelTmp.text = label;
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) labelTmp.font = font;
         labelTmp.fontSize = 9;
         labelTmp.color = new Color(0.6f, 0.6f, 0.65f);
         labelTmp.alignment = TextAlignmentOptions.Center;

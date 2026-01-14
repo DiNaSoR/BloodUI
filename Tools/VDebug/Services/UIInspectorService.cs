@@ -558,7 +558,10 @@ internal static class UIInspectorService
 
         // Text
         TextMeshProUGUI text = contentGo.AddComponent<TextMeshProUGUI>();
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) text.font = font;
         text.fontSize = 11;
+
         text.color = Color.white;
         text.alignment = TextAlignmentOptions.TopLeft;
         text.enableWordWrapping = true;
@@ -578,6 +581,8 @@ internal static class UIInspectorService
 
         TextMeshProUGUI tmp = labelGo.AddComponent<TextMeshProUGUI>();
         tmp.text = text;
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) tmp.font = font;
         tmp.fontSize = fontSize;
         tmp.color = color;
         tmp.fontStyle = style;
@@ -643,6 +648,8 @@ internal static class UIInspectorService
 
         TextMeshProUGUI tmp = labelGo.AddComponent<TextMeshProUGUI>();
         tmp.text = label;
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) tmp.font = font;
         tmp.fontSize = 12;
         tmp.color = Color.white;
         tmp.alignment = TextAlignmentOptions.Center;
