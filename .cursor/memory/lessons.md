@@ -219,6 +219,7 @@
 
 ### Correct approach
 - Convert screen points to parent-local coordinates with `RectTransformUtility` using the root canvas camera, then apply deltas in `anchoredPosition` space.
+- For hover hit-tests/outlines, compute canvas-relative bounds via `RectTransformUtility.CalculateRelativeRectTransformBounds` and compare against the mouse converted with `ScreenPointToLocalPointInRectangle` (CanvasScaler-safe).
 - Ownership: `Services/LayoutService.cs`
 
 ### Rule

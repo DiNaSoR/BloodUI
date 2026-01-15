@@ -484,9 +484,12 @@ internal static class LayoutService
                         var r = kvp.Value.Rect;
                         if (r != null)
                         {
-                            // Get actual rect size (calculated after layout)
+                            // Get actual rect size (calculated after layout)   
                             Rect localRect = r.rect;
-                            string rectInfo = $"pos={r.anchoredPosition}, sizeDelta={r.sizeDelta}, actualSize={localRect.size}, scale={r.localScale}";
+                            string boundsInfo = "calcBounds=(none)";
+                            if (TryGetCanvasRelativeBoundsRect(r, out _, out var cam, out Rect boundsRect))
+                                boundsInfo = $"calcBounds={boundsRect.size}, cam={(cam != null ? cam.name : "null")}";
+                            string rectInfo = $"pos={r.anchoredPosition}, sizeDelta={r.sizeDelta}, actualSize={localRect.size}, {boundsInfo}, scale={r.localScale}";
                             DebugToolsBridge.TryLogInfo($"[Layout]   - {kvp.Key}: {rectInfo}");
                         }
                         else
@@ -593,41 +596,26 @@ internal static class LayoutService
         void CreateOutlineForElement(RectTransform targetRect, Color color, string key)
         {
             // Create outline as a child of the target's canvas
-            Canvas targetCanvas = targetRect.GetComponentInParent<Canvas>();
+            Canvas targetCanvas = targetRect.GetComponentInParent<Canvas>();    
             if (targetCanvas == null)
                 return;
 
             var outline = new GameObject($"LayoutOutline_{key}");
-            outline.transform.SetParent(targetCanvas.transform);
+            outline.transform.SetParent(targetCanvas.transform, false);
             _outlineObjects.Add(outline);
 
             var outlineRect = outline.AddComponent<RectTransform>();
 
-            RectTransform canvasRect = targetCanvas.transform as RectTransform;
-            Camera cam = GetCanvasCamera(targetRect);
             bool applied = false;
-            if (canvasRect != null && GetScreenRectFromWorldCorners(targetRect, out Rect screenRect))
+            if (TryGetCanvasRelativeBoundsRect(targetRect, out RectTransform canvasRect, out _, out Rect boundsRect))
             {
-                Vector2 localMin;
-                Vector2 localMax;
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                        canvasRect, new Vector2(screenRect.xMin, screenRect.yMin), cam, out localMin)
-                    && RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                        canvasRect, new Vector2(screenRect.xMax, screenRect.yMax), cam, out localMax))
-                {
-                    Vector2 center = (localMin + localMax) * 0.5f;
-                    Vector2 size = new Vector2(Mathf.Abs(localMax.x - localMin.x), Mathf.Abs(localMax.y - localMin.y));
-                    if (size.x > 1f && size.y > 1f)
-                    {
-                        outlineRect.anchorMin = canvasRect.pivot;
-                        outlineRect.anchorMax = canvasRect.pivot;
-                        outlineRect.pivot = new Vector2(0.5f, 0.5f);
-                        outlineRect.anchoredPosition = center;
-                        outlineRect.sizeDelta = size;
-                        outlineRect.localScale = Vector3.one;
-                        applied = true;
-                    }
-                }
+                outlineRect.anchorMin = canvasRect.pivot;
+                outlineRect.anchorMax = canvasRect.pivot;
+                outlineRect.pivot = new Vector2(0.5f, 0.5f);
+                outlineRect.anchoredPosition = boundsRect.center;
+                outlineRect.sizeDelta = boundsRect.size;
+                outlineRect.localScale = Vector3.one;
+                applied = true;
             }
 
             if (!applied)
@@ -720,7 +708,8 @@ internal static class LayoutService
                 return;
 
             Vector2 mousePos = Input.mousePosition;
-            _hoveredKey = string.Empty;
+            string hoveredKey = string.Empty;
+            float hoveredArea = float.MaxValue;
 
             foreach (var kvp in Elements)
             {
@@ -728,16 +717,32 @@ internal static class LayoutService
                 if (rect == null || !rect.gameObject.activeInHierarchy)
                     continue;
 
-                // Get the actual screen rect using world corners
-                if (GetScreenRectFromWorldCorners(rect, out Rect screenRect))
+                if (!TryGetCanvasRelativeBoundsRect(rect, out RectTransform canvasRect, out Camera cam, out Rect boundsRect))
+                    continue;
+
+                Vector2 localMouse;
+                if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePos, cam, out localMouse))
+                    continue;
+
+                // Slight padding so zero/edge cases are still selectable.
+                const float padding = 4f;
+                boundsRect.xMin -= padding;
+                boundsRect.yMin -= padding;
+                boundsRect.xMax += padding;
+                boundsRect.yMax += padding;
+
+                if (boundsRect.Contains(localMouse))
                 {
-                    if (screenRect.Contains(mousePos))
+                    float area = boundsRect.width * boundsRect.height;
+                    if (area < hoveredArea)
                     {
-                        _hoveredKey = kvp.Key;
-                        break;
+                        hoveredArea = area;
+                        hoveredKey = kvp.Key;
                     }
                 }
             }
+
+            _hoveredKey = hoveredKey;
         }
 
         Camera GetCanvasCamera(RectTransform rect)
@@ -759,6 +764,68 @@ internal static class LayoutService
                 return canvas.worldCamera;
 
             return Camera.main;
+        }
+
+        bool TryGetCanvasRelativeBoundsRect(
+            RectTransform targetRect,
+            out RectTransform canvasRect,
+            out Camera cam,
+            out Rect boundsRect)
+        {
+            canvasRect = null;
+            cam = null;
+            boundsRect = default;
+
+            if (targetRect == null)
+                return false;
+
+            Canvas canvas = targetRect.GetComponentInParent<Canvas>();
+            if (canvas == null)
+                return false;
+
+            canvasRect = canvas.transform as RectTransform;
+            if (canvasRect == null)
+                return false;
+
+            cam = GetCanvasCamera(targetRect);
+
+            try
+            {
+                Bounds bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvasRect, targetRect);
+                if (bounds.size.x > 1f && bounds.size.y > 1f)
+                {
+                    boundsRect = new Rect(
+                        new Vector2(bounds.min.x, bounds.min.y),
+                        new Vector2(bounds.size.x, bounds.size.y));
+                    return true;
+                }
+            }
+            catch
+            {
+                // IL2CPP method unstripping issue - fallback handles this gracefully
+            }
+
+            // Fallback to screen-rect conversion if bounds calc fails.
+            if (!GetScreenRectFromWorldCorners(targetRect, out Rect screenRect))
+                return false;
+
+            Vector2 localMin;
+            Vector2 localMax;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    canvasRect, new Vector2(screenRect.xMin, screenRect.yMin), cam, out localMin))
+                return false;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    canvasRect, new Vector2(screenRect.xMax, screenRect.yMax), cam, out localMax))
+                return false;
+
+            Vector2 min = new(Mathf.Min(localMin.x, localMax.x), Mathf.Min(localMin.y, localMax.y));
+            Vector2 max = new(Mathf.Max(localMin.x, localMax.x), Mathf.Max(localMin.y, localMax.y));
+            Vector2 size = max - min;
+            if (size.x <= 1f || size.y <= 1f)
+                return false;
+
+            boundsRect = new Rect(min, size);
+            return true;
         }
 
         bool GetScreenRectFromWorldCorners(RectTransform rect, out Rect screenRect)
