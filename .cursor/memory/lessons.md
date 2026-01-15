@@ -195,6 +195,40 @@
 ### References
 - Files:
   - `Services/CharacterMenu/Shared/UIFactory.cs`
+---
+
+## L-018 — Layout drag/hover must use canvas-local coordinates and root UI camera
+
+### Status
+- Active
+
+### Tags
+- [UI] [Layout] [Input]
+
+### Introduced
+- 2026-01-15
+
+### Symptom
+- Layout mode hover fails on progress bars and dragging moves elements away from the mouse.
+
+### Root cause
+- Screen-space mouse deltas and `Camera.main` were used for UI elements that live on scaled canvases and screen-space camera roots.
+
+### Wrong approach (DO NOT REPEAT)
+- Applying `Input.mousePosition` deltas directly to `anchoredPosition` or using `Camera.main` for screen-to-UI conversions.
+
+### Correct approach
+- Convert screen points to parent-local coordinates with `RectTransformUtility` using the root canvas camera, then apply deltas in `anchoredPosition` space.
+- Ownership: `Services/LayoutService.cs`
+
+### Rule
+> UI drag/hover math must use the correct canvas camera and parent-local coordinates; never mix screen pixels with `anchoredPosition`.
+
+### References
+- Files:
+  - `Services/LayoutService.cs`
+- Related journal entry:
+  - `journal/2026-01.md#2026-01-15`
 
 ---
 
@@ -566,3 +600,37 @@
 ### References
 - Files:
   - `Services/CharacterMenu/Shared/UIFactory.cs`
+---
+
+## L-019 — Layout hover/outline must handle zero-size root rects
+
+### Status
+- Active
+
+### Tags
+- [UI] [Layout]
+
+### Introduced
+- 2026-01-15
+
+### Symptom
+- Layout mode cannot hover or drag HUD bars; outlines never appear.
+
+### Root cause
+- Many HUD elements register a root `RectTransform` with a zero-size rect, and hover detection only used child `Graphic` bounds.
+
+### Wrong approach (DO NOT REPEAT)
+- Assuming the registered `RectTransform` has non-zero size or that `Graphic` components always exist.
+
+### Correct approach
+- Fall back to child `RectTransform` bounds when `Graphic` bounds are empty.
+- Ownership: `Services/LayoutService.cs`
+
+### Rule
+> Layout hit-tests must fall back to child `RectTransform` bounds when the root rect has no size or no `Graphic` components.
+
+### References
+- Files:
+  - `Services/LayoutService.cs`
+- Related journal entry:
+  - `journal/2026-01.md#2026-01-15`

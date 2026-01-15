@@ -21,7 +21,9 @@
       "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \".\\\\VDebug.csproj\")",
       "Bash(findstr:*)",
       "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \"h:\\\\My gits\\\\New folder\\\\BloodCraftPlus\\\\Eclipse.csproj\")",
-      "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build:*)"
+      "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build:*)",
+      "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"h:\\\\My gits\\\\New folder\\\\BloodCraftPlus\\\\Tools\\\\VDebug\\\\VDebug.csproj\" /p:Configuration=Release /v:m)",
+      "Bash(cmd.exe:*)"
     ]
   }
 }
