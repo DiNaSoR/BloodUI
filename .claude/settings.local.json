@@ -18,7 +18,10 @@
       "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release)",
       "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \"h:\\\\My gits\\\\Eclipse\\\\Eclipse.csproj\")",
       "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \"h:\\\\My gits\\\\Eclipse\\\\Docs\\\\Bloodcraft\\\\Bloodcraft.csproj\")",
-      "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \".\\\\VDebug.csproj\")"
+      "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \".\\\\VDebug.csproj\")",
+      "Bash(findstr:*)",
+      "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build -c Release \"h:\\\\My gits\\\\New folder\\\\BloodCraftPlus\\\\Eclipse.csproj\")",
+      "Bash(\"C:\\\\Users\\\\Asus\\\\.dotnet8\\\\dotnet.exe\" build:*)"
     ]
   }
 }

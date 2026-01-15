@@ -57,6 +57,7 @@ internal class Plugin : BasePlugin
 
         _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
         InitConfig();
+
         DebugToolsBridge.TryLogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] loaded on client!");
     }
     static void InitConfig()

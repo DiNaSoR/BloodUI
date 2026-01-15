@@ -20,7 +20,7 @@ internal static class DebugPanelService
 
     // Panel configuration
     const float PanelWidth = 200f;
-    const float PanelHeight = 280f;  // Increased to fit inspector section
+    const float PanelHeight = 280f;
 
     const float ButtonHeight = 28f;
     const float Padding = 8f;
