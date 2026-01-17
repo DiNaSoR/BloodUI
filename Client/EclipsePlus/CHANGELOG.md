@@ -49,6 +49,11 @@ FIXED:
   - Compilation issues with Professions -> Progression references
   - Improved logging framework
 
+REMOVED:
+  - Unnecessary Class UI and Tabs UI functionality
+  - Deprecated services from the codebase
+  - Unused UI elements (streamlined project)
+
 ## [1.3.14] - 2026-01-14
 ----------------------------------------
 
