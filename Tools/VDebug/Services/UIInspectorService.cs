@@ -25,11 +25,13 @@ internal static class UIInspectorService
     static Image _highlightImage;
     static RectTransform _currentTarget;
     static bool _initialized;
+    static bool _hoverInspectEnabled;
 
     // Inspector panel configuration
     const float PanelWidth = 450f;
     const float PanelHeight = 500f;
     const float Padding = 10f;
+    const float HoverInspectMinIntervalSeconds = 0.05f;
 
     public static bool IsActive => _inspectorActive;
 
@@ -144,6 +146,13 @@ internal static class UIInspectorService
         // Header
         CreateLabel(_inspectorPanel.transform, "UI Inspector", 16, new Color(0.9f, 0.7f, 0.2f), FontStyles.Bold);
         CreateLabel(_inspectorPanel.transform, "Click any UI element to inspect", 11, new Color(0.6f, 0.6f, 0.6f), FontStyles.Italic);
+
+        // Hover inspect toggle
+        CreateToggle(_inspectorPanel.transform, "Hover Inspect", defaultValue: false, onChanged: (enabled) =>
+        {
+            _hoverInspectEnabled = enabled;
+            VDebugLog.Log.LogInfo($"[VDebug] UI Inspector Hover: {(enabled ? "ENABLED" : "DISABLED")}");
+        });
 
         // Separator
         CreateSeparator(_inspectorPanel.transform);
@@ -1033,6 +1042,86 @@ internal static class UIInspectorService
         tmp.enableWordWrapping = false;
     }
 
+    static void CreateToggle(Transform parent, string label, bool defaultValue, Action<bool> onChanged)
+    {
+        GameObject rowGo = new GameObject($"ToggleRow_{label.Replace(" ", "")}");
+        rowGo.transform.SetParent(parent, false);
+
+        RectTransform rowRect = rowGo.AddComponent<RectTransform>();
+        rowRect.sizeDelta = new Vector2(0, 24f);
+
+        HorizontalLayoutGroup hlg = rowGo.AddComponent<HorizontalLayoutGroup>();
+        hlg.childAlignment = TextAnchor.MiddleLeft;
+        hlg.childControlWidth = false;
+        hlg.childControlHeight = true;
+        hlg.childForceExpandWidth = false;
+        hlg.childForceExpandHeight = false;
+        hlg.spacing = 8f;
+
+        // Toggle box
+        GameObject toggleGo = new GameObject("Toggle");
+        toggleGo.transform.SetParent(rowGo.transform, false);
+
+        RectTransform toggleRect = toggleGo.AddComponent<RectTransform>();
+        toggleRect.sizeDelta = new Vector2(18f, 18f);
+
+        Image bg = toggleGo.AddComponent<Image>();
+        bg.color = new Color(0.15f, 0.15f, 0.18f, 0.95f);
+
+        Toggle toggle = toggleGo.AddComponent<Toggle>();
+        toggle.isOn = defaultValue;
+        toggle.targetGraphic = bg;
+
+        // Checkmark
+        GameObject checkGo = new GameObject("Checkmark");
+        checkGo.transform.SetParent(toggleGo.transform, false);
+
+        RectTransform checkRect = checkGo.AddComponent<RectTransform>();
+        checkRect.anchorMin = new Vector2(0.5f, 0.5f);
+        checkRect.anchorMax = new Vector2(0.5f, 0.5f);
+        checkRect.pivot = new Vector2(0.5f, 0.5f);
+        checkRect.anchoredPosition = Vector2.zero;
+        checkRect.sizeDelta = new Vector2(10f, 10f);
+
+        Image checkImg = checkGo.AddComponent<Image>();
+        checkImg.color = new Color(0.2f, 0.9f, 0.6f, 1f);
+
+        toggle.graphic = checkImg;
+
+        toggle.onValueChanged.AddListener((UnityAction<bool>)(value =>
+        {
+            try
+            {
+                onChanged?.Invoke(value);
+            }
+            catch (Exception ex)
+            {
+                VDebugLog.Log.LogWarning($"[VDebug] Toggle '{label}' failed: {ex.Message}");
+            }
+        }));
+
+        // Label
+        GameObject labelGo = new GameObject("Label");
+        labelGo.transform.SetParent(rowGo.transform, false);
+
+        RectTransform labelRect = labelGo.AddComponent<RectTransform>();
+        labelRect.sizeDelta = new Vector2(0, 18f);
+
+        LayoutElement le = labelGo.AddComponent<LayoutElement>();
+        le.flexibleWidth = 1f;
+        le.preferredHeight = 18f;
+
+        TextMeshProUGUI tmp = labelGo.AddComponent<TextMeshProUGUI>();
+        tmp.text = label;
+        TMP_FontAsset font = FontService.GetFont();
+        if (font != null) tmp.font = font;
+        tmp.fontSize = 12;
+        tmp.color = new Color(0.85f, 0.85f, 0.9f);
+        tmp.alignment = TextAlignmentOptions.Left;
+        tmp.enableWordWrapping = false;
+        tmp.raycastTarget = false; // do not block toggle clicks
+    }
+
     static void AddDragHandler(GameObject panel)
     {
         if (!ClassInjector.IsTypeRegisteredInIl2Cpp(typeof(InspectorDragHandler)))
@@ -1084,6 +1173,9 @@ internal static class UIInspectorService
     /// </summary>
     class InspectorBehaviour : MonoBehaviour
     {
+        float _nextHoverInspectTime;
+        Vector3 _lastMousePos;
+
         void Update()
         {
             if (!_inspectorActive)
@@ -1111,6 +1203,34 @@ internal static class UIInspectorService
                 if (hit != null)
                 {
                     InspectElement(hit);
+                }
+            }
+
+            // Hover inspect (optional)
+            if (_hoverInspectEnabled)
+            {
+                // Don't inspect while hovering inspector panel itself (prevents self-selection and allows toggles/buttons).
+                if (_inspectorPanel != null)
+                {
+                    RectTransform panelRect = _inspectorPanel.GetComponent<RectTransform>();
+                    if (RectTransformUtility.RectangleContainsScreenPoint(panelRect, Input.mousePosition))
+                        return;
+                }
+
+                if (Time.unscaledTime >= _nextHoverInspectTime)
+                {
+                    Vector3 mousePos = Input.mousePosition;
+                    if ((mousePos - _lastMousePos).sqrMagnitude >= 1f)
+                    {
+                        _lastMousePos = mousePos;
+                        _nextHoverInspectTime = Time.unscaledTime + HoverInspectMinIntervalSeconds;
+
+                        RectTransform hit = RaycastUI();
+                        if (hit != null && hit != _currentTarget)
+                        {
+                            InspectElement(hit);
+                        }
+                    }
                 }
             }
 
