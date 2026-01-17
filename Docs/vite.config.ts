@@ -5,12 +5,19 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import { resolve } from 'path';
 
-// Determine base path for GitHub Pages deployment
-// Set VITE_BASE_PATH env var or it defaults to repo name pattern
-const basePath = process.env.VITE_BASE_PATH ?? '/BloodCraftPlus/';
+export default defineConfig(({ command }) => {
+  /**
+   * Base path rules:
+   * - Dev server (`vite`) should run at `/` for ergonomic local URLs.
+   * - Production build (GitHub Pages) needs `/<repo>/` (or an override).
+   */
+  const base =
+    command === 'serve'
+      ? '/'
+      : (process.env.VITE_BASE_PATH ?? '/BloodCraftPlus/');
 
-export default defineConfig({
-  base: basePath,
+  return {
+    base,
   plugins: [
     {
       enforce: 'pre',
@@ -31,4 +38,5 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
   },
+  };
 });

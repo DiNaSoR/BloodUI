@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types';
 import { CodeBlock } from './CodeBlock';
 import { Callout } from './Callout';
+import { PortraitShotPlaceholder } from './PortraitShotPlaceholder';
 
 /**
  * Custom MDX components that override default markdown rendering
@@ -24,6 +25,7 @@ export const mdxComponents: MDXComponents = {
   // Custom components available in MDX
   Callout,
   CodeBlock,
+  PortraitShotPlaceholder,
 
   // Style overrides for headings with anchor links
   h2: ({ children, id, ...props }) => (

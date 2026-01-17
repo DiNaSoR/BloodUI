@@ -1,0 +1,72 @@
+.portrait-shot {
+  margin: var(--space-4) 0 var(--space-6);
+}
+
+.portrait-shot-frame {
+  width: min(380px, 100%);
+  aspect-ratio: 9 / 16;
+  background:
+    radial-gradient(120% 80% at 30% 10%, rgba(196, 30, 58, 0.25), transparent 55%),
+    radial-gradient(120% 80% at 70% 90%, rgba(139, 92, 246, 0.18), transparent 55%),
+    linear-gradient(180deg, var(--bg2), var(--bg1));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  overflow: hidden;
+  position: relative;
+}
+
+.portrait-shot-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.06) 10px,
+      rgba(0, 0, 0, 0) 10px,
+      rgba(0, 0, 0, 0) 20px
+    );
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.portrait-shot-content {
+  position: relative;
+  height: 100%;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.portrait-shot-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--fg0);
+  margin-bottom: var(--space-2);
+}
+
+.portrait-shot-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--fg2);
+  margin-bottom: var(--space-4);
+}
+
+.portrait-shot-note {
+  font-size: var(--text-sm);
+  color: var(--fg1);
+  line-height: 1.5;
+}
+
+.portrait-shot-caption {
+  width: min(380px, 100%);
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--fg2);
+}
+
