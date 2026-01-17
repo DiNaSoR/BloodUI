@@ -9,60 +9,144 @@ namespace VDebug;
 /// </summary>
 public static class VDebugApi
 {
-    public const int ApiVersion = 2;
+    /// <summary>
+    /// API version. Increment when breaking changes are made to the public surface.
+    /// v3: Added source/category/context overloads and structured logging.
+    /// </summary>
+    public const int ApiVersion = 3;
 
-    #region Logging
+    #region Logging - Simple (legacy compatible)
 
+    /// <summary>
+    /// Log an info message (no source/category).
+    /// </summary>
     public static void LogInfo(string message)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
 
-        VDebugLog.Log.LogInfo(message);
+        StructuredLogging.Log(LogLevel.Info, message);
     }
 
-    public static void LogInfo(string source, string message)
-    {
-        if (string.IsNullOrWhiteSpace(message))
-            return;
-
-        // Use the main VDebug logger name to avoid duplicate tags like:
-        //   [Info :VDebug - Client] [Client] ...
-        // and instead produce:
-        //   [Info :VDebug] [Client] ...
-        VDebugLog.Log.LogInfo(Format(source, AnsiColors.VLevel.Info, message));
-    }
-
+    /// <summary>
+    /// Log a warning message (no source/category).
+    /// </summary>
     public static void LogWarning(string message)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
 
-        VDebugLog.Log.LogWarning(message);
+        StructuredLogging.Log(LogLevel.Warning, message);
     }
 
-    public static void LogWarning(string source, string message)
-    {
-        if (string.IsNullOrWhiteSpace(message))
-            return;
-
-        VDebugLog.Log.LogWarning(Format(source, AnsiColors.VLevel.Warning, message));
-    }
-
+    /// <summary>
+    /// Log an error message (no source/category).
+    /// </summary>
     public static void LogError(string message)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
 
-        VDebugLog.Log.LogError(message);
+        StructuredLogging.Log(LogLevel.Error, message);
     }
 
+    #endregion
+
+    #region Logging - Source only (v2 compatible)
+
+    /// <summary>
+    /// Log an info message with source identifier.
+    /// </summary>
+    /// <param name="source">Source identifier (e.g., "Client", "Server").</param>
+    /// <param name="message">The log message.</param>
+    public static void LogInfo(string source, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        StructuredLogging.Log(source, LogLevel.Info, message);
+    }
+
+    /// <summary>
+    /// Log a warning message with source identifier.
+    /// </summary>
+    public static void LogWarning(string source, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        StructuredLogging.Log(source, LogLevel.Warning, message);
+    }
+
+    /// <summary>
+    /// Log an error message with source identifier.
+    /// </summary>
     public static void LogError(string source, string message)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
 
-        VDebugLog.Log.LogError(Format(source, AnsiColors.VLevel.Error, message));
+        StructuredLogging.Log(source, LogLevel.Error, message);
+    }
+
+    #endregion
+
+    #region Logging - Source + Category (v3, recommended)
+
+    /// <summary>
+    /// Log an info message with source and category.
+    /// </summary>
+    /// <param name="source">Source identifier (e.g., "Client", "Server").</param>
+    /// <param name="category">Subsystem/category (e.g., "Layout", "EclipseSync").</param>
+    /// <param name="message">The log message.</param>
+    public static void LogInfo(string source, string category, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        StructuredLogging.Log(source, category, LogLevel.Info, message);
+    }
+
+    /// <summary>
+    /// Log a warning message with source and category.
+    /// </summary>
+    public static void LogWarning(string source, string category, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        StructuredLogging.Log(source, category, LogLevel.Warning, message);
+    }
+
+    /// <summary>
+    /// Log an error message with source and category.
+    /// </summary>
+    public static void LogError(string source, string category, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        StructuredLogging.Log(source, category, LogLevel.Error, message);
+    }
+
+    #endregion
+
+    #region Logging - Full structured (v3, with context)
+
+    /// <summary>
+    /// Log a fully structured message with source, category, and key-value context.
+    /// </summary>
+    /// <param name="source">Source identifier (e.g., "Client", "Server").</param>
+    /// <param name="category">Subsystem/category (e.g., "Layout", "EclipseSync").</param>
+    /// <param name="level">Log level (Info, Warning, Error).</param>
+    /// <param name="message">The log message.</param>
+    /// <param name="context">Optional key-value pairs for structured context.</param>
+    public static void Log(string source, string category, LogLevel level, string message, params (string Key, string Value)[] context)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        StructuredLogging.Log(source, category, level, message, context);
     }
 
     #endregion
@@ -169,24 +253,4 @@ public static class VDebugApi
     }
 
     #endregion
-
-    static string Format(string source, AnsiColors.VLevel level, string message)
-    {
-        try
-        {
-            if (Plugin.EnableAnsiColors != null && Plugin.EnableAnsiColors.Value && ConsoleAnsiSupport.IsEnabled)
-            {
-                string prefix = AnsiColors.FormatPrefix(source);
-                string body = AnsiColors.FormatMessage(level, message);
-                return $"{prefix} {body}";
-            }
-        }
-        catch
-        {
-            // Fall back to plain text if anything goes wrong (VDebug must never crash other plugins).
-        }
-
-        // Plain fallback
-        return string.IsNullOrWhiteSpace(source) ? message : $"[{source}] {message}";
-    }
 }

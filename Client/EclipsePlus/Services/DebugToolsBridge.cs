@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Eclipse.Services;
 
 namespace Eclipse.Services;
 
@@ -13,7 +12,9 @@ internal static class DebugToolsBridge
 {
     const string DebugToolsAssemblyName = "VDebug";
     const string DebugToolsApiTypeName = "VDebug.VDebugApi";
-    const string ClientLogSource = "VDebug - Client";
+
+    // Structured logging convention: source identifies client/server, category identifies subsystem.
+    const string Source = "Client";
 
     static bool _loggedMissing;
     static MethodInfo _dumpMenuAssets;
@@ -39,19 +40,43 @@ internal static class DebugToolsBridge
         }
     }
 
-    public static void TryLogInfo(string message)
+    /// <summary>
+    /// Log an info message via VDebug (if installed).
+    /// </summary>
+    public static void TryLogInfo(string message) => TryLogInfo(null, message);
+
+    /// <summary>
+    /// Log an info message with category via VDebug (if installed).
+    /// </summary>
+    public static void TryLogInfo(string category, string message)
     {
-        TryLogWithSource(nameof(TryLogInfo), "LogInfo", message, ClientLogSource, ref _logInfo);
+        TryLogWithSourceCategory(nameof(TryLogInfo), "LogInfo", message, Source, category, ref _logInfo);
     }
 
-    public static void TryLogWarning(string message)
+    /// <summary>
+    /// Log a warning message via VDebug (if installed).
+    /// </summary>
+    public static void TryLogWarning(string message) => TryLogWarning(null, message);
+
+    /// <summary>
+    /// Log a warning message with category via VDebug (if installed).
+    /// </summary>
+    public static void TryLogWarning(string category, string message)
     {
-        TryLogWithSource(nameof(TryLogWarning), "LogWarning", message, ClientLogSource, ref _logWarning);
+        TryLogWithSourceCategory(nameof(TryLogWarning), "LogWarning", message, Source, category, ref _logWarning);
     }
 
-    public static void TryLogError(string message)
+    /// <summary>
+    /// Log an error message via VDebug (if installed).
+    /// </summary>
+    public static void TryLogError(string message) => TryLogError(null, message);
+
+    /// <summary>
+    /// Log an error message with category via VDebug (if installed).
+    /// </summary>
+    public static void TryLogError(string category, string message)
     {
-        TryLogWithSource(nameof(TryLogError), "LogError", message, ClientLogSource, ref _logError);
+        TryLogWithSourceCategory(nameof(TryLogError), "LogError", message, Source, category, ref _logError);
     }
 
     static MethodInfo _togglePanel;
@@ -80,22 +105,46 @@ internal static class DebugToolsBridge
     static bool TryResolveStaticMethod(string callSite, string methodName, ref MethodInfo cache, out MethodInfo method)
         => TryResolveStaticMethod(callSite, methodName, Type.EmptyTypes, ref cache, out method, logFailures: true);
 
-    static void TryLogWithSource(string callSite, string methodName, string message, string source, ref MethodInfo cache)
+    static void TryLogWithSourceCategory(string callSite, string methodName, string message, string source, string category, ref MethodInfo cache)
     {
         if (string.IsNullOrWhiteSpace(message))
         {
             return;
         }
 
-        // Prefer newer API: LogX(string source, string message). Fall back to legacy LogX(string message).
-        if (!TryResolveStaticMethod(callSite, methodName, new[] { typeof(string), typeof(string) }, ref cache, out MethodInfo method, logFailures: false))
+        // Prefer v3 API: LogX(source, category, message)
+        if (TryResolveStaticMethod(callSite, methodName, new[] { typeof(string), typeof(string), typeof(string) }, ref cache, out MethodInfo method, logFailures: false))
         {
-            MethodInfo legacy = null;
-            if (!TryResolveStaticMethod(callSite, methodName, new[] { typeof(string) }, ref legacy, out MethodInfo legacyMethod, logFailures: false))
+            try
             {
+                method.Invoke(null, new object[] { source, category, message });
                 return;
             }
+            catch
+            {
+                // Fall through to older APIs.
+            }
+        }
 
+        // Fall back to v2 API: LogX(source, message)
+        MethodInfo v2Cache = null;
+        if (TryResolveStaticMethod(callSite, methodName, new[] { typeof(string), typeof(string) }, ref v2Cache, out MethodInfo v2Method, logFailures: false))
+        {
+            try
+            {
+                v2Method.Invoke(null, new object[] { source, message });
+                return;
+            }
+            catch
+            {
+                // Fall through to legacy.
+            }
+        }
+
+        // Fall back to v1 API: LogX(message)
+        MethodInfo legacy = null;
+        if (TryResolveStaticMethod(callSite, methodName, new[] { typeof(string) }, ref legacy, out MethodInfo legacyMethod, logFailures: false))
+        {
             try
             {
                 legacyMethod.Invoke(null, new object[] { message });
@@ -104,17 +153,6 @@ internal static class DebugToolsBridge
             {
                 // Swallow logging failures to keep VDebug optional and silent.
             }
-
-            return;
-        }
-
-        try
-        {
-            method.Invoke(null, new object[] { source, message });
-        }
-        catch
-        {
-            // Swallow logging failures to keep VDebug optional and silent.
         }
     }
 

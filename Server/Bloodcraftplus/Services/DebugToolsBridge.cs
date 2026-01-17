@@ -12,53 +12,106 @@ internal static class DebugToolsBridge
 {
     const string DebugToolsAssemblyName = "VDebug";
     const string DebugToolsApiTypeName = "VDebug.VDebugApi";
-    const string ServerLogSource = "VDebug - Server";
+
+    // Structured logging convention: source identifies client/server, category identifies subsystem.
+    const string Source = "Server";
 
     static MethodInfo _logInfo;
     static MethodInfo _logWarning;
     static MethodInfo _logError;
 
-    public static void TryLogInfo(string message) => TryLog("LogInfo", message, ref _logInfo, fallback: () => Core.Log.LogInfo(message));
-    public static void TryLogWarning(string message) => TryLog("LogWarning", message, ref _logWarning, fallback: () => Core.Log.LogWarning(message));
-    public static void TryLogError(string message) => TryLog("LogError", message, ref _logError, fallback: () => Core.Log.LogError(message));
+    /// <summary>
+    /// Log an info message via VDebug (if installed), or fall back to Core.Log.
+    /// </summary>
+    public static void TryLogInfo(string message) => TryLogInfo(null, message);
 
-    static void TryLog(string methodName, string message, ref MethodInfo cache, Action fallback)
+    /// <summary>
+    /// Log an info message with category via VDebug (if installed), or fall back to Core.Log.
+    /// </summary>
+    public static void TryLogInfo(string category, string message)
+    {
+        TryLogWithSourceCategory("LogInfo", message, Source, category, ref _logInfo, fallback: () => Core.Log.LogInfo(message));
+    }
+
+    /// <summary>
+    /// Log a warning message via VDebug (if installed), or fall back to Core.Log.
+    /// </summary>
+    public static void TryLogWarning(string message) => TryLogWarning(null, message);
+
+    /// <summary>
+    /// Log a warning message with category via VDebug (if installed), or fall back to Core.Log.
+    /// </summary>
+    public static void TryLogWarning(string category, string message)
+    {
+        TryLogWithSourceCategory("LogWarning", message, Source, category, ref _logWarning, fallback: () => Core.Log.LogWarning(message));
+    }
+
+    /// <summary>
+    /// Log an error message via VDebug (if installed), or fall back to Core.Log.
+    /// </summary>
+    public static void TryLogError(string message) => TryLogError(null, message);
+
+    /// <summary>
+    /// Log an error message with category via VDebug (if installed), or fall back to Core.Log.
+    /// </summary>
+    public static void TryLogError(string category, string message)
+    {
+        TryLogWithSourceCategory("LogError", message, Source, category, ref _logError, fallback: () => Core.Log.LogError(message));
+    }
+
+    static void TryLogWithSourceCategory(string methodName, string message, string source, string category, ref MethodInfo cache, Action fallback)
     {
         if (string.IsNullOrWhiteSpace(message))
         {
             return;
         }
 
-        // Prefer newer API: LogX(string source, string message). Fall back to legacy LogX(string message).
-        if (!TryResolveStaticMethod(methodName, new[] { typeof(string), typeof(string) }, ref cache, out MethodInfo method))
+        // Prefer v3 API: LogX(source, category, message)
+        if (TryResolveStaticMethod(methodName, new[] { typeof(string), typeof(string), typeof(string) }, ref cache, out MethodInfo method))
         {
-            MethodInfo legacyCache = null;
-            if (!TryResolveStaticMethod(methodName, new[] { typeof(string) }, ref legacyCache, out MethodInfo legacyMethod))
-            {
-                fallback?.Invoke();
-                return;
-            }
-
             try
             {
-                legacyMethod.Invoke(null, new object[] { message });
+                method.Invoke(null, new object[] { source, category, message });
+                return;
             }
             catch
             {
-                fallback?.Invoke();
+                // Fall through to older APIs.
             }
-
-            return;
         }
 
-        try
+        // Fall back to v2 API: LogX(source, message)
+        MethodInfo v2Cache = null;
+        if (TryResolveStaticMethod(methodName, new[] { typeof(string), typeof(string) }, ref v2Cache, out MethodInfo v2Method))
         {
-            method.Invoke(null, new object[] { ServerLogSource, message });
+            try
+            {
+                v2Method.Invoke(null, new object[] { source, message });
+                return;
+            }
+            catch
+            {
+                // Fall through to legacy.
+            }
         }
-        catch
+
+        // Fall back to v1 API: LogX(message)
+        MethodInfo legacy = null;
+        if (TryResolveStaticMethod(methodName, new[] { typeof(string) }, ref legacy, out MethodInfo legacyMethod))
         {
-            fallback?.Invoke();
+            try
+            {
+                legacyMethod.Invoke(null, new object[] { message });
+                return;
+            }
+            catch
+            {
+                // Fall through to built-in.
+            }
         }
+
+        // Final fallback to Core.Log
+        fallback?.Invoke();
     }
 
     static bool TryResolveStaticMethod(string methodName, Type[] parameterTypes, ref MethodInfo cache, out MethodInfo method)

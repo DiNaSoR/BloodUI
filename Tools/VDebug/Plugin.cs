@@ -23,6 +23,11 @@ internal class Plugin : BasePlugin
 
         CustomFontName = Config.Bind("General", "CustomFontName", "NotoSansMono-Regular", "Name of the font to use. Can be a font in vdebug.bundle or an in-game font.");
         EnableAnsiColors = Config.Bind("Logging", "EnableAnsiColors", true, "If true, VDebug will prefix its logs with ANSI color codes for easier scanning (client/server + warning/error). Disable if your console/log viewer shows escape codes.");
+
+        // Bind structured logging config (repeat suppression, etc.)
+        StructuredLogging.BindConfig(Config);
+        StructuredLogging.Initialize();
+
         if (EnableAnsiColors.Value)
         {
             ConsoleAnsiSupport.TryEnable();
