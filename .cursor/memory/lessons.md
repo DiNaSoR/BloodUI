@@ -635,3 +635,43 @@
   - `Services/LayoutService.cs`
 - Related journal entry:
   - `journal/2026-01.md#2026-01-15`
+
+---
+
+## L-020 — Documentation is part of the deliverable (update docs + changelog)
+
+### Status
+- Active
+
+### Tags
+- [Docs] [DX] [Process]
+
+### Introduced
+- 2026-01-17
+
+### Symptom
+- Features ship without documentation; users don't know how to use new features; changelog is outdated.
+
+### Root cause
+- Documentation updates were not treated as part of the implementation task.
+
+### Wrong approach (DO NOT REPEAT)
+- Implementing features without updating the relevant docs pages or changelog.
+
+### Correct approach
+- After ANY feature/fix:
+  1. Update the relevant content page in `Docs/src/content/`.
+  2. Add a `<ChangelogSection>` entry to `Docs/src/content/reference/changelog.mdx`.
+  3. If new commands: update `Docs/src/content/reference/commands.mdx`.
+  4. If new config: update `Docs/src/content/reference/config.mdx`.
+  5. If client UI changes: update `Docs/src/content/client/*.mdx` with screenshots.
+  6. If server system changes: update `Docs/src/content/server/*.mdx`.
+
+### Rule
+> Never ship a feature without documenting it. The docs site IS part of the deliverable.
+
+### References
+- Files:
+  - `Docs/src/content/**/*.mdx`
+  - `.cursor/memory/hot-rules.md`
+  - `.cursor/memory/memo.md`

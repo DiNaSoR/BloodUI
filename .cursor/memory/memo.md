@@ -89,15 +89,61 @@ BloodCraftPlus/
 - Tech: Vite + React + TypeScript + MDX
 - Theme: Dracula-vibes (dark, vampiric red accents, gothic typography)
 - Deployment: GitHub Pages via Actions (auto-deploy on push to main)
-- URL: `https://dinasor.github.io/BloodCraftPlus/`
+- URL: `https://dinasor.github.io/BloodCraftPlus/#/`
+- Router: HashRouter (URLs use `#/path` to survive refresh on GitHub Pages)
 - Navigation config: `Docs/src/docs.config.ts`
 - Content: `Docs/src/content/**/*.mdx`
-- Key components:
-  - `Docs/src/components/Layout.tsx` — Sidebar + header
-  - `Docs/src/components/Callout.tsx` — Info/warning boxes
-  - `Docs/src/components/CodeBlock.tsx` — Syntax highlighting
-  - `Docs/src/components/CommandCard.tsx` — Command reference cards
-  - `Docs/src/components/ConfigTable.tsx` — Searchable config table
+
+### Key Components
+- `Docs/src/components/Layout.tsx` — Sidebar + header (accordion nav)
+- `Docs/src/components/Callout.tsx` — Info/warning/tip boxes
+- `Docs/src/components/CodeBlock.tsx` — Syntax highlighting
+- `Docs/src/components/CommandCard.tsx` — Command reference cards
+- `Docs/src/components/ConfigTable.tsx` — Searchable config table
+- `Docs/src/components/ChangelogSection.tsx` — Expandable changelog entries
+- `Docs/src/components/PortraitShotPlaceholder.tsx` — 9:16 screenshot placeholders
+
+### Documentation Workflow (MANDATORY)
+1. **After ANY feature/fix**: Update the relevant content page in `Docs/src/content/`.
+2. **After ANY release-worthy change**: Add `<ChangelogSection>` entry to `Docs/src/content/reference/changelog.mdx`.
+3. **New commands**: Update `Docs/src/content/reference/commands.mdx`.
+4. **New config options**: Update `Docs/src/content/reference/config.mdx`.
+5. **Client UI changes**: Update `Docs/src/content/client/*.mdx` with screenshots.
+6. **Server system changes**: Update `Docs/src/content/server/*.mdx`.
+
+### Content Structure
+```
+Docs/src/content/
+├── index.mdx                  # Home page
+├── getting-started/
+│   ├── index.mdx
+│   ├── installation.mdx
+│   └── troubleshooting.mdx
+├── server/
+│   ├── index.mdx
+│   ├── leveling.mdx
+│   ├── expertise.mdx
+│   ├── legacies.mdx
+│   ├── classes.mdx
+│   ├── familiars.mdx
+│   ├── quests.mdx
+│   ├── professions.mdx
+│   └── prestige.mdx
+├── client/
+│   ├── index.mdx
+│   ├── hud.mdx
+│   ├── character-menu.mdx
+│   └── data-flow.mdx
+├── reference/
+│   ├── commands.mdx
+│   ├── config.mdx
+│   └── changelog.mdx          # ← Add entries here with <ChangelogSection>
+├── tools/
+│   ├── vdebug.mdx
+│   └── design-mock.mdx
+└── contributing/
+    └── index.mdx
+```
 
 ---
 
