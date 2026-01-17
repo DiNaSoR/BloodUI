@@ -9,16 +9,36 @@
 
 | Mod | Version | Type |
 |-----|---------|------|
-| **EclipsePlus** | `1.3.15` | 🖥️ Client |
-| **Bloodcraftplus** | `1.12.20` | 🗄️ Server |
+| **EclipsePlus** | `1.4.0` | 🖥️ Client |
+| **Bloodcraftplus** | `1.12.21` | 🗄️ Server |
 
 ---
 
-## 📅 January 2026 Update
+## 📅 January 2026 Updates
+
+### 🗓️ January 17, 2026 - v1.4.0 / v1.12.21 — Gear Level UI & Rift/Familiar Fixes
+
+#### 🖥️ EclipsePlus (Client)
+
+**Changed**
+- **Protocol**: bumped Eclipse sync to `1.4.x` (update client + server together).
+
+**Fixed**
+- **Familiar stats display**: HP/PP/SP no longer mis-parses when values exceed old fixed-width limits.
+
+#### 🗄️ Bloodcraftplus (Server)
+
+**Changed**
+- **Equipment Tab Gear Level**: now shows **Exp level only** (no longer adds weapon expertise and no hidden +1).
+
+**Fixed**
+- **Primal rifts**: `RiftFrequency <= 0` now disables rift scheduling (prevents 0-interval spam).
+- **Familiar stats sync**: Familiar HP/PP/SP now sent as `hp|pp|sp` to avoid overflow/misalignment.
+- **Documentation**: clarified that some config options (e.g., `ElitePrimalRifts`) are cached at startup and require a server restart.
+
+---
 
 ### 🗓️ January 15, 2026 - v1.3.15 / v1.12.20
-
----
 
 ## ✨ EclipsePlus (Client) Changes
 
@@ -167,8 +187,9 @@
 
 | Date | Eclipse | Bloodcraft | Notes |
 |------|---------|------------|-------|
-| Jan 15, 2026 | 1.3.15 | 1.12.20 | Current release |
-| Jan 15, 2026 | 1.3.14 | 1.12.19 | VDebug & Layout improvements |
+| Jan 17, 2026 | 1.4.0 | 1.12.21 | Current release - Gear Level UI & Rift fixes |
+| Jan 15, 2026 | 1.3.15 | 1.12.20 | Character Menu & Talents |
+| Jan 14, 2026 | 1.3.14 | 1.12.19 | VDebug & Layout improvements |
 | Jan 13, 2026 | 1.3.13 | 1.12.18 | Cleanup |
 
 ---
