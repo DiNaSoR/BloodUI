@@ -47,6 +47,8 @@ Inspect Unity UI elements in real-time:
 
 **New:** You can enable **Hover Inspect** from inside the inspector panel to inspect elements just by hovering (no click required). This is useful for quickly finding the right object path without disrupting gameplay.
 
+**Tip:** If the inspector can’t pick an element, it’s often because that UI uses `raycastTarget = false` (common for non-interactive HUD text/icons). VDebug includes a fallback picker so you can still inspect EclipsePlus + base game UI even when it’s not clickable.
+
 ### Layout Editor
 
 Adjust UI positions in real-time:

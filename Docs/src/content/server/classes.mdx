@@ -18,18 +18,23 @@ The class system provides unique playstyles with on-hit effects and shift spells
 | 🔴 **Blood Knight** | Tank / Life Steal | Leech → Blood Curse | Blood |
 | 🟡 **Demon Hunter** | Agile / Crits | Static → Lightning | Storm |
 | 🔵 **Vampire Lord** | Balanced / Frost | Chill → Freeze | Frost |
-| 🟣 **Shadow Blade** | Assassin / Illusion | Weaken → Phantasm | Illusion |
-| 🟢 **Arcane Sorcerer** | Burst / Chaos | Ignite → Burn | Chaos |
+| 🟣 **Shadow Blade** | Assassin / Chaos | Ignite → Heated | Chaos |
+| 🟦 **Arcane Sorcerer** | Burst / Illusion | Weaken → Shield | Illusion |
 | 🟩 **Death Mage** | Necro / Unholy | Condemn → Curse | Unholy |
 
 ---
+
+<Callout type="note" title="Why did Shadow Blade / Arcane Sorcerer change?">
+  The on-hit mapping is driven by the server code. Currently:
+  **Shadow Blade** procs **Ignite → Heated** (Chaos self-buff), while **Arcane Sorcerer** procs **Weaken → Shield** (Illusion self-buff).
+</Callout>
 
 ## On-Hit Effects
 
 When dealing damage, you have a chance to proc your class's debuff:
 
 1. **First effect** — Initial debuff (Leech, Static, Chill, etc.)
-2. **Second effect** — If target already has first debuff, apply stronger effect
+2. **Second effect** — If target already has first debuff, apply a follow-up effect (debuff or self-buff depending on class)
 
 The proc chance is configurable (default 7.5%).
 

@@ -1243,32 +1243,156 @@ internal static class UIInspectorService
 
         RectTransform RaycastUI()
         {
-            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            Vector2 screenPos = Input.mousePosition;
+
+            // 1) Primary path: Unity EventSystem raycast (fast, respects UI input rules).
+            // NOTE: This only hits elements whose underlying Graphics are raycast targets.
+            try
             {
-                position = Input.mousePosition
-            };
+                if (EventSystem.current != null)
+                {
+                    PointerEventData pointerData = new PointerEventData(EventSystem.current)
+                    {
+                        position = screenPos
+                    };
 
-            Il2CppSystem.Collections.Generic.List<RaycastResult> results = new Il2CppSystem.Collections.Generic.List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, results);
+                    Il2CppSystem.Collections.Generic.List<RaycastResult> results = new Il2CppSystem.Collections.Generic.List<RaycastResult>();
+                    EventSystem.current.RaycastAll(pointerData, results);
 
-            // Skip our own overlay and panel
-            for (int i = 0; i < results.Count; i++)
+                    for (int i = 0; i < results.Count; i++)
+                    {
+                        RaycastResult result = results[i];
+                        if (result.gameObject == null)
+                            continue;
+
+                        if (ShouldSkipGo(result.gameObject))
+                            continue;
+
+                        RectTransform rect = result.gameObject.GetComponent<RectTransform>();
+                        if (rect != null)
+                            return rect;
+                    }
+                }
+            }
+            catch
             {
-                RaycastResult result = results[i];
-                if (result.gameObject == null)
-                    continue;
-
-                // Skip VDebug elements
-                if (result.gameObject.name.StartsWith("VDebug"))
-                    continue;
-
-                RectTransform rect = result.gameObject.GetComponent<RectTransform>();
-                if (rect != null)
-                    return rect;
+                // Fall through to the fallback picker.
             }
 
+            // 2) Fallback path: hit-test RectTransforms directly.
+            // This allows inspecting UI that intentionally uses `raycastTarget = false` (common in EclipsePlus + base game UI)
+            // while still avoiding our own VDebug UI.
+            return FallbackPickRectTransform(screenPos);
+        }
+    }
+
+    static bool ShouldSkipGo(GameObject go)
+    {
+        if (go == null) return true;
+
+        // Skip VDebug UI (panel/overlay)
+        if (!string.IsNullOrEmpty(go.name) && go.name.StartsWith("VDebug", StringComparison.Ordinal))
+            return true;
+
+        return false;
+    }
+
+    static RectTransform FallbackPickRectTransform(Vector2 screenPos)
+    {
+        try
+        {
+            Canvas[] canvases = Resources.FindObjectsOfTypeAll<Canvas>();
+            if (canvases == null || canvases.Length == 0)
+                return null;
+
+            RectTransform best = null;
+            float bestArea = float.MaxValue;
+            int bestDepth = -1;
+            int bestSortingOrder = int.MinValue;
+
+            // Small local helper for area without allocations beyond the 4-corner array.
+            Vector3[] corners = new Vector3[4];
+
+            for (int c = 0; c < canvases.Length; c++)
+            {
+                Canvas canvas = canvases[c];
+                if (canvas == null) continue;
+
+                // Filter out non-scene / inactive canvases.
+                if (!canvas.isActiveAndEnabled) continue;
+                if (canvas.gameObject == null || !canvas.gameObject.activeInHierarchy) continue;
+                if (ShouldSkipGo(canvas.gameObject)) continue;
+
+                Camera cam = null;
+                if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                {
+                    cam = canvas.worldCamera;
+                    if (cam == null) cam = Camera.main;
+                }
+
+                // Iterate all rects under this canvas.
+                RectTransform[] rects = canvas.GetComponentsInChildren<RectTransform>(true);
+                if (rects == null || rects.Length == 0) continue;
+
+                for (int i = 0; i < rects.Length; i++)
+                {
+                    RectTransform rect = rects[i];
+                    if (rect == null) continue;
+                    if (rect.gameObject == null || !rect.gameObject.activeInHierarchy) continue;
+                    if (ShouldSkipGo(rect.gameObject)) continue;
+
+                    // Ignore zero-sized rects (common layout roots); those are rarely useful pick targets.
+                    Rect r = rect.rect;
+                    if (r.width <= 0.01f || r.height <= 0.01f) continue;
+
+                    // Screen hit-test against this rect.
+                    if (!RectTransformUtility.RectangleContainsScreenPoint(rect, screenPos, cam))
+                        continue;
+
+                    rect.GetWorldCorners(corners);
+                    float area = Mathf.Abs((corners[2].x - corners[0].x) * (corners[2].y - corners[0].y));
+                    if (area <= 0.01f) continue;
+
+                    int depth = GetHierarchyDepth(rect.transform);
+                    int sortingOrder = canvas.sortingOrder;
+
+                    // Prefer:
+                    // - higher sorting order canvas
+                    // - deeper element in hierarchy
+                    // - smaller on-screen area (more specific)
+                    bool better =
+                        (sortingOrder > bestSortingOrder) ||
+                        (sortingOrder == bestSortingOrder && depth > bestDepth) ||
+                        (sortingOrder == bestSortingOrder && depth == bestDepth && area < bestArea);
+
+                    if (better)
+                    {
+                        best = rect;
+                        bestArea = area;
+                        bestDepth = depth;
+                        bestSortingOrder = sortingOrder;
+                    }
+                }
+            }
+
+            return best;
+        }
+        catch
+        {
             return null;
         }
+    }
+
+    static int GetHierarchyDepth(Transform t)
+    {
+        int depth = 0;
+        Transform cur = t;
+        while (cur != null && depth < 128)
+        {
+            depth++;
+            cur = cur.parent;
+        }
+        return depth;
     }
 
     /// <summary>
