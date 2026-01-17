@@ -16,6 +16,7 @@ import FamiliarsPage from './content/server/familiars.mdx';
 import QuestsPage from './content/server/quests.mdx';
 import ProfessionsPage from './content/server/professions.mdx';
 import PrestigePage from './content/server/prestige.mdx';
+import WorldBossPage from './content/server/world-boss.mdx';
 
 import ClientOverviewPage from './content/client/index.mdx';
 import HudPage from './content/client/hud.mdx';
@@ -53,6 +54,7 @@ function App() {
         <Route path="/server/quests" element={<QuestsPage />} />
         <Route path="/server/professions" element={<ProfessionsPage />} />
         <Route path="/server/prestige" element={<PrestigePage />} />
+        <Route path="/server/world-boss" element={<WorldBossPage />} />
 
         {/* Client */}
         <Route path="/client" element={<ClientOverviewPage />} />

@@ -472,6 +472,29 @@ internal static class ConfigService
 
     static readonly Lazy<string> _deathMageSpells = new(() => GetConfigValue<string>("DeathMageSpells"));
     public static string DeathMageSpells => _deathMageSpells.Value;
+
+    // World Boss Settings
+    static readonly Lazy<bool> _worldBossSystem = new(() => GetConfigValue<bool>("WorldBossSystem"));
+    public static bool WorldBossSystem => _worldBossSystem.Value;
+
+    static readonly Lazy<bool> _worldBossEnableDynamicScaling = new(() => GetConfigValue<bool>("WorldBossEnableDynamicScaling"));
+    public static bool WorldBossEnableDynamicScaling => _worldBossEnableDynamicScaling.Value;
+
+    static readonly Lazy<float> _worldBossHealthPerPlayer = new(() => GetConfigValue<float>("WorldBossHealthPerPlayer"));
+    public static float WorldBossHealthPerPlayer => _worldBossHealthPerPlayer.Value;
+
+    static readonly Lazy<float> _worldBossDamagePerPlayer = new(() => GetConfigValue<float>("WorldBossDamagePerPlayer"));
+    public static float WorldBossDamagePerPlayer => _worldBossDamagePerPlayer.Value;
+
+    static readonly Lazy<int> _worldBossMaxPlayersForScaling = new(() => GetConfigValue<int>("WorldBossMaxPlayersForScaling"));
+    public static int WorldBossMaxPlayersForScaling => _worldBossMaxPlayersForScaling.Value;
+
+    static readonly Lazy<bool> _worldBossEnableProgressiveDifficulty = new(() => GetConfigValue<bool>("WorldBossEnableProgressiveDifficulty"));
+    public static bool WorldBossEnableProgressiveDifficulty => _worldBossEnableProgressiveDifficulty.Value;
+
+    static readonly Lazy<bool> _worldBossEnableMechanics = new(() => GetConfigValue<bool>("WorldBossEnableMechanics"));
+    public static bool WorldBossEnableMechanics => _worldBossEnableMechanics.Value;
+
     public static class ConfigInitialization
     {
         static readonly Regex _regex = new(@"^\[(.+)\]$");
@@ -510,7 +533,8 @@ internal static class ConfigService
             "Legacies",
             "Professions",
             "Familiars",
-            "Classes"
+            "Classes",
+            "WorldBoss"
         ];
         public class ConfigEntryDefinition(string section, string key, object defaultValue, string description)
         {
@@ -709,7 +733,16 @@ internal static class ConfigService
             new ConfigEntryDefinition("Classes", "VampireLordSpells", "78384915,295045820,-1000260252,91249849,1966330719", "Vampire Lord shift spells, granted at levels of prestige."),
             new ConfigEntryDefinition("Classes", "ShadowBladeSpells", "1019568127,1575317901,1112116762,-358319417,1174831223", "Shadow Blade shift spells, granted at levels of prestige."),
             new ConfigEntryDefinition("Classes", "ArcaneSorcererSpells", "247896794,268059675,-242769430,-2053450457,1650878435", "Arcane Sorcerer shift spells, granted at levels of prestige."),
-            new ConfigEntryDefinition("Classes", "DeathMageSpells", "-1204819086,481411985,1961570821,2138402840,-1781779733", "Death Mage shift spells, granted at levels of prestige.")
+            new ConfigEntryDefinition("Classes", "DeathMageSpells", "-1204819086,481411985,1961570821,2138402840,-1781779733", "Death Mage shift spells, granted at levels of prestige."),
+
+            // World Boss Settings
+            new ConfigEntryDefinition("WorldBoss", "WorldBossSystem", false, "Enable or disable the World Boss event system."),
+            new ConfigEntryDefinition("WorldBoss", "WorldBossEnableDynamicScaling", true, "Enable dynamic scaling based on online player count."),
+            new ConfigEntryDefinition("WorldBoss", "WorldBossHealthPerPlayer", 0.25f, "Health multiplier bonus per online player (e.g., 0.25 = +25% HP per player)."),
+            new ConfigEntryDefinition("WorldBoss", "WorldBossDamagePerPlayer", 0.15f, "Damage multiplier bonus per online player (e.g., 0.15 = +15% damage per player)."),
+            new ConfigEntryDefinition("WorldBoss", "WorldBossMaxPlayersForScaling", 10, "Maximum number of players to consider for scaling calculations."),
+            new ConfigEntryDefinition("WorldBoss", "WorldBossEnableProgressiveDifficulty", true, "Enable progressive difficulty - bosses become harder if not killed."),
+            new ConfigEntryDefinition("WorldBoss", "WorldBossEnableMechanics", true, "Enable boss combat mechanics (stun, AoE, etc.) at HP thresholds.")
         ];
         public static void InitializeConfig()
         {

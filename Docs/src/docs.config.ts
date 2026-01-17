@@ -56,6 +56,7 @@ export const docsConfig: DocsConfig = {
         { title: 'Quests', path: '/server/quests' },
         { title: 'Professions', path: '/server/professions' },
         { title: 'Prestige & Exoform', path: '/server/prestige' },
+        { title: 'World Boss', path: '/server/world-boss', badge: 'NEW' },
       ],
     },
     {

@@ -1,0 +1,150 @@
+# World Boss
+
+> **Credits:** This system is inspired by [BloodyBoss](https://github.com/oscarpedrero/BloodyBoss) by [@oscarpedrero](https://github.com/oscarpedrero). Full credit to oscarpedrero for the original concept!
+
+Create scheduled VBlood encounters with dynamic scaling, combat mechanics, and custom loot.
+
+## Overview
+
+- Spawn VBloods as world bosses on a schedule
+- HP/damage scales with online players
+- Configure custom loot rewards
+- Add combat mechanics (stun, AoE, enrage, slow)
+- Server-wide announcements for spawns and kills
+
+---
+
+## Quick Start
+
+1. Enable in config: `WorldBossSystem = true`
+2. Create a boss: `.wb create Dracula -327335305 90`
+3. Set spawn location: `.wb setloc Dracula`
+4. Test spawn: `.wb spawn Dracula`
+
+---
+
+## Commands
+
+### Boss Management
+
+| Command | Description |
+|---------|-------------|
+| `.wb create <name> <prefabGUID> [level]` | Create boss config |
+| `.wb delete <name>` | Delete boss config |
+| `.wb list` | List all bosses |
+| `.wb info <name>` | Show boss details |
+
+### Location & Scheduling
+
+| Command | Description |
+|---------|-------------|
+| `.wb setloc <name>` | Set spawn to your position |
+| `.wb settime <name> <HH:mm>` | Set daily spawn time |
+| `.wb pause <name>` | Toggle timer pause |
+
+### Spawning
+
+| Command | Description |
+|---------|-------------|
+| `.wb spawn <name>` | Force spawn now |
+| `.wb despawn <name>` | Force despawn |
+| `.wb tp <name>` | Teleport to boss |
+
+### Loot & Mechanics
+
+| Command | Description |
+|---------|-------------|
+| `.wb addloot <name> <itemGUID> <amount> [chance]` | Add loot drop |
+| `.wb addmech <name> <type> <hpThreshold>` | Add combat mechanic |
+
+---
+
+## VBlood Prefabs
+
+| Boss | PrefabGUID |
+|------|------------|
+| **Dracula** | `-327335305` |
+| Alpha Wolf | `-1905691330` |
+| Keely the Frost Archer | `1124739990` |
+| Grayson the Armourer | `1106149033` |
+| Quincey the Bandit King | `-1659822956` |
+
+---
+
+## Combat Mechanics
+
+Mechanics trigger when boss HP reaches threshold:
+
+| Mechanic | Description |
+|----------|-------------|
+| `stun` | Stuns random player for 3 seconds |
+| `aoe` | Damage zone around boss |
+| `enrage` | Buffs boss damage/attack speed |
+| `slow` | Slows nearby players |
+
+Example:
+```
+.wb addmech Dracula stun 75   # Triggers at 75% HP
+.wb addmech Dracula aoe 50    # Triggers at 50% HP
+.wb addmech Dracula enrage 25 # Triggers at 25% HP
+```
+
+---
+
+## Configuration
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `WorldBossSystem` | `false` | Enable the system |
+| `WorldBossEnableDynamicScaling` | `true` | Scale HP/damage by player count |
+| `WorldBossHealthPerPlayer` | `0.25` | HP bonus per player (+25%) |
+| `WorldBossDamagePerPlayer` | `0.15` | Damage bonus per player (+15%) |
+| `WorldBossMaxPlayersForScaling` | `10` | Max players for scaling |
+| `WorldBossEnableProgressiveDifficulty` | `true` | Harder on consecutive spawns |
+| `WorldBossEnableMechanics` | `true` | Enable HP-threshold mechanics |
+
+---
+
+## Example Setup
+
+```bash
+# Create boss at level 100 with 2x HP
+.wb create "Ancient Dracula" -327335305 100
+
+# Set location (stand where you want boss to spawn)
+.wb setloc "Ancient Dracula"
+
+# Schedule daily spawn at 8 PM
+.wb settime "Ancient Dracula" 20:00
+
+# Add loot rewards
+.wb addloot "Ancient Dracula" 862477668 100 1.0   # 100% drop
+.wb addloot "Ancient Dracula" -257494203 1 0.25   # 25% drop
+
+# Add combat mechanics
+.wb addmech "Ancient Dracula" stun 75
+.wb addmech "Ancient Dracula" aoe 50
+.wb addmech "Ancient Dracula" enrage 25
+
+# Spawn for testing
+.wb spawn "Ancient Dracula"
+```
+
+---
+
+## Server Implementation
+
+Key files:
+- `Systems/WorldBoss/WorldBossSystem.cs` — Main orchestrator
+- `Systems/WorldBoss/WorldBossFactory.cs` — Entity spawning
+- `Systems/WorldBoss/WorldBossTracker.cs` — Damage tracking & loot
+- `Systems/WorldBoss/WorldBossMechanics.cs` — Combat abilities
+- `Commands/WorldBossCommands.cs` — Admin commands
+
+---
+
+## Credits
+
+<Callout type="tip">
+For a dedicated, feature-rich world boss solution, check out **[BloodyBoss](https://github.com/oscarpedrero/BloodyBoss)** by **[@oscarpedrero](https://github.com/oscarpedrero)**!
+</Callout>
