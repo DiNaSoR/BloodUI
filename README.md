@@ -92,6 +92,27 @@ This is a **monorepo** containing three projects:
 
 ---
 
+## 🖼️ UI Preview (EclipsePlus)
+
+<p align="center">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Progression_tab_01.png" alt="Professions Tab" width="400">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Progression_tab_02.png" alt="Class Tab" width="400">
+</p>
+<p align="center">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Familiars_tab_01.png" alt="Familiars Tab" width="400">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Familiars_tab_02.png" alt="Familiars Management" width="400">
+</p>
+<p align="center">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Stat_bonuses_tab_01.png" alt="Weapon Expertise" width="400">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Stat_bonuses_tab_02.png" alt="Blood Legacies" width="400">
+</p>
+<p align="center">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Exoform_tab.png" alt="Exoform Tab" width="400">
+  <img src="https://dinasor.github.io/BloodCraftPlus/images/Prestige_tab.png" alt="Prestige Tab" width="400">
+</p>
+
+---
+
 ## 📥 Installation
 
 ### Client Setup (EclipsePlus)

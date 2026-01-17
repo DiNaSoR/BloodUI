@@ -14,7 +14,7 @@ namespace = "DiNaSoR"
 name = "Bloodcraftplus"
 versionNumber = "1.12.21"
 description = "Leveling, expertise, legacies, professions, familiars, classes, quests!"
-websiteUrl = "https://github.com/DiNaSoR/Bloodcraftplus"
+websiteUrl = "https://github.com/DiNaSoR/BloodCraftPlus"
 containsNsfwContent = false
 
 [build]

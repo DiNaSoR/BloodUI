@@ -13,7 +13,7 @@ namespace = "DiNaSoR"
 name = "EclipsePlus"
 versionNumber = "1.4.0"
 description = "Client UI for Bloodcraftplus!"
-websiteUrl = "https://github.com/DiNaSoR/Bloodcraftplus"
+websiteUrl = "https://github.com/DiNaSoR/BloodCraftPlus"
 containsNsfwContent = false
 
 [build]
