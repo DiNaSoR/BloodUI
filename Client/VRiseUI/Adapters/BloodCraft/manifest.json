@@ -1,0 +1,242 @@
+{
+    "version": "1.0",
+    "modId": "BloodCraft",
+    "modVersion": "1.12.x",
+    "author": "DiNaSoR",
+    "displayName": "BloodCraft HUD",
+    "description": "Complete HUD overlay for BloodCraft RPG mod - Experience, Expertise, Legacy, Familiars, Quests, and more",
+    "detection": {
+        "method": "command",
+        "command": ".bloodcraft",
+        "expectedResponse": "BloodCraft"
+    },
+    "hud": {
+        "elements": [
+            {
+                "id": "experience",
+                "type": "progressBar",
+                "label": "XP",
+                "position": {
+                    "x": 20,
+                    "y": 60,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 220,
+                    "height": 22
+                },
+                "style": {
+                    "backgroundColor": "#1a1a2e",
+                    "foregroundColor": "#4a9eff",
+                    "fontSize": 10
+                },
+                "icon": "assets/icons/xp.png",
+                "dataSource": {
+                    "command": ".xp",
+                    "pattern": "Level (\\d+) \\[(\\d+)/(\\d+)\\]",
+                    "mapping": {
+                        "level": "$1",
+                        "current": "$2",
+                        "max": "$3"
+                    },
+                    "refreshInterval": 5000,
+                    "cacheTime": 2000
+                }
+            },
+            {
+                "id": "expertise",
+                "type": "progressBar",
+                "label": "EXP",
+                "position": {
+                    "x": 20,
+                    "y": 86,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 220,
+                    "height": 22
+                },
+                "style": {
+                    "backgroundColor": "#1a1a2e",
+                    "foregroundColor": "#ff9f43",
+                    "fontSize": 10
+                },
+                "icon": "assets/icons/expertise.png",
+                "dataSource": {
+                    "command": ".expertise",
+                    "pattern": "(\\w+).*\\[(\\d+)%\\]",
+                    "mapping": {
+                        "weapon": "$1",
+                        "percent": "$2"
+                    },
+                    "refreshInterval": 5000,
+                    "cacheTime": 2000
+                }
+            },
+            {
+                "id": "legacy",
+                "type": "progressBar",
+                "label": "LEG",
+                "position": {
+                    "x": 20,
+                    "y": 112,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 220,
+                    "height": 22
+                },
+                "style": {
+                    "backgroundColor": "#1a1a2e",
+                    "foregroundColor": "#9b59b6",
+                    "fontSize": 10
+                },
+                "icon": "assets/icons/legacy.png",
+                "dataSource": {
+                    "command": ".legacy",
+                    "pattern": "(\\w+).*\\[(\\d+)%\\]",
+                    "mapping": {
+                        "blood": "$1",
+                        "percent": "$2"
+                    },
+                    "refreshInterval": 5000,
+                    "cacheTime": 2000
+                }
+            },
+            {
+                "id": "familiar",
+                "type": "progressBar",
+                "label": "FAM",
+                "position": {
+                    "x": 20,
+                    "y": 138,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 220,
+                    "height": 22
+                },
+                "style": {
+                    "backgroundColor": "#1a1a2e",
+                    "foregroundColor": "#2ecc71",
+                    "fontSize": 10
+                },
+                "icon": "assets/icons/familiar.png",
+                "dataSource": {
+                    "command": ".fam stats",
+                    "pattern": "Level (\\d+).*\\[(\\d+)/(\\d+)\\]",
+                    "mapping": {
+                        "level": "$1",
+                        "current": "$2",
+                        "max": "$3"
+                    },
+                    "refreshInterval": 10000,
+                    "cacheTime": 5000
+                }
+            },
+            {
+                "id": "daily_quest",
+                "type": "panel",
+                "label": "Daily Quest",
+                "position": {
+                    "x": 20,
+                    "y": 170,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 220,
+                    "height": 80
+                },
+                "style": {
+                    "backgroundColor": "#1a1a2e80",
+                    "fontSize": 10
+                },
+                "dataSource": {
+                    "command": ".quest daily",
+                    "pattern": "\\[Daily\\]\\s+(.+?)\\s+\\[(\\d+)/(\\d+)\\]",
+                    "mapping": {
+                        "name": "$1",
+                        "progress": "$2",
+                        "target": "$3"
+                    },
+                    "refreshInterval": 30000
+                }
+            },
+            {
+                "id": "weekly_quest",
+                "type": "panel",
+                "label": "Weekly Quest",
+                "position": {
+                    "x": 20,
+                    "y": 260,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 220,
+                    "height": 80
+                },
+                "style": {
+                    "backgroundColor": "#1a1a2e80",
+                    "fontSize": 10
+                },
+                "dataSource": {
+                    "command": ".quest weekly",
+                    "pattern": "\\[Weekly\\]\\s+(.+?)\\s+\\[(\\d+)/(\\d+)\\]",
+                    "mapping": {
+                        "name": "$1",
+                        "progress": "$2",
+                        "target": "$3"
+                    },
+                    "refreshInterval": 60000
+                }
+            },
+            {
+                "id": "class_label",
+                "type": "label",
+                "label": "Class",
+                "position": {
+                    "x": 250,
+                    "y": 60,
+                    "anchor": "topLeft"
+                },
+                "size": {
+                    "width": 100,
+                    "height": 20
+                },
+                "style": {
+                    "foregroundColor": "#e74c3c",
+                    "fontSize": 12
+                },
+                "dataSource": {
+                    "command": ".class",
+                    "pattern": "Class:\\s+(\\w+)",
+                    "mapping": {
+                        "name": "$1"
+                    },
+                    "refreshInterval": 30000
+                }
+            }
+        ]
+    },
+    "notifications": {
+        "patterns": [
+            {
+                "match": "You have leveled up!",
+                "style": "celebration",
+                "sound": "levelup"
+            },
+            {
+                "match": "Familiar .+ has leveled up",
+                "style": "info"
+            },
+            {
+                "match": "Quest .+ completed",
+                "style": "success"
+            },
+            {
+                "match": "You have been defeated",
+                "style": "warning"
+            }
+        ]
+    }
+}

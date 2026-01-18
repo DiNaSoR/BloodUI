@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>VRiseUI</RootNamespace>
+		<AssemblyName>VRiseUI</AssemblyName>
+		<Version>0.1.0</Version>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<RestoreSources>
+			https://api.nuget.org/v3/index.json;
+			https://nuget.bepinex.dev/v3/index.json;
+		</RestoreSources>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<BepInExPluginGuid>com.dinasor.vriseui</BepInExPluginGuid>
+		<LangVersion>preview</LangVersion>
+		<EnablePreviewFeatures>true</EnablePreviewFeatures>
+		<Authors>DiNaSoR</Authors>
+		<Description>Universal V Rising Mod UI Framework - Supports multiple mods via manifest-based adapters</Description>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ClientInstallPath Condition="Exists('$(MSBuildProjectDirectory)\..\..\VRising')">$(MSBuildProjectDirectory)\..\..\VRising</ClientInstallPath>
+		<ClientInstallPath Condition="'$(ClientInstallPath)'==''">C:\Program Files (x86)\Steam\steamapps\common\VRising</ClientInstallPath>
+		<ClientInteropPath>$(ClientInstallPath)\BepInEx\interop</ClientInteropPath>
+		<InteropPath Condition="Exists('$(ClientInteropPath)')">$(ClientInteropPath)</InteropPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+		<PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.733" />
+	</ItemGroup>
+
+	<ItemGroup Condition="!Exists('$(InteropPath)')">
+		<PackageReference Include="VRising.Unhollowed.Client" Version="1.1.9.9219901" />
+	</ItemGroup>
+
+	<ItemGroup Condition="Exists('$(InteropPath)')">
+		<ClientInteropAssemblies Include="$(InteropPath)\*.dll" />
+		<Reference Include="@(ClientInteropAssemblies)">
+			<HintPath>%(ClientInteropAssemblies.FullPath)</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<Target Name="BuildToClient" AfterTargets="Build" Condition="Exists('$(ClientInstallPath)\BepInEx\plugins')">
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ClientInstallPath)\BepInEx\plugins" ContinueOnError="true" />
+	</Target>
+
+</Project>

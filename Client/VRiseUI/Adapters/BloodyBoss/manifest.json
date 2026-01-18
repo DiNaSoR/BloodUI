@@ -1,0 +1,86 @@
+{
+    "version": "1.0",
+    "modId": "BloodyBoss",
+    "modVersion": "1.x",
+    "author": "DiNaSoR",
+    "displayName": "Bloody Boss HUD",
+    "description": "World boss timer and status overlay for BloodyBoss mod",
+    "detection": {
+        "method": "command",
+        "command": ".bb",
+        "expectedResponse": "BloodyBoss"
+    },
+    "hud": {
+        "elements": [
+            {
+                "id": "boss_timer",
+                "type": "panel",
+                "label": "Next World Boss",
+                "position": {
+                    "x": -250,
+                    "y": 60,
+                    "anchor": "topRight"
+                },
+                "size": {
+                    "width": 200,
+                    "height": 70
+                },
+                "style": {
+                    "backgroundColor": "#2d1f3d",
+                    "foregroundColor": "#e74c3c",
+                    "fontSize": 11
+                },
+                "dataSource": {
+                    "command": ".bb status",
+                    "pattern": "Next boss: (.+?) in (\\d+):(\\d+)",
+                    "mapping": {
+                        "name": "$1",
+                        "minutes": "$2",
+                        "seconds": "$3"
+                    },
+                    "refreshInterval": 10000
+                }
+            },
+            {
+                "id": "boss_active",
+                "type": "label",
+                "label": "",
+                "position": {
+                    "x": -250,
+                    "y": 140,
+                    "anchor": "topRight"
+                },
+                "size": {
+                    "width": 200,
+                    "height": 24
+                },
+                "style": {
+                    "foregroundColor": "#ff4444",
+                    "fontSize": 14
+                },
+                "dataSource": {
+                    "command": ".bb status",
+                    "pattern": "ACTIVE: (.+?) at (.+)",
+                    "mapping": {
+                        "name": "$1",
+                        "location": "$2"
+                    },
+                    "refreshInterval": 5000
+                }
+            }
+        ]
+    },
+    "notifications": {
+        "patterns": [
+            {
+                "match": "World Boss .+ has spawned",
+                "style": "alert",
+                "sound": "boss_spawn"
+            },
+            {
+                "match": "World Boss .+ has been defeated",
+                "style": "success"
+            }
+        ]
+    }
+}
