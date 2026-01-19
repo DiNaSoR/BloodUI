@@ -1,97 +1,87 @@
-# BloodCraftPlus
+# BloodUI
 
 <Callout type="tip" title="Welcome, Vampire!">
-  BloodCraftPlus transforms your V Rising server into a full-fledged RPG with experience levels, weapon expertise, blood legacies, classes, familiars, and much more!
+  BloodUI is a beautiful client-side UI companion for the BloodCraft server mod. It provides HUD overlays, character menus, and quest tracking — all designed to enhance your BloodCraft experience!
 </Callout>
 
 <div className="hero-banner">
-  <img src={`${import.meta.env.BASE_URL}images/banner.png`} alt="BloodCraftPlus Banner" />
+  <img src={`${import.meta.env.BASE_URL}images/banner.png`} alt="BloodUI Banner" />
 </div>
 
-## What is BloodCraftPlus?
+## What is BloodUI?
 
-BloodCraftPlus is a **monorepo** containing two required mods that work together:
+BloodUI is a **client-side mod** that displays beautiful UI elements for servers running [BloodCraft](https://thunderstore.io/c/v-rising/p/zfolmt/Bloodcraft/) by zfolmt.
 
-| Project | Type | Description |
-|---------|------|-------------|
-| **EclipsePlus** | 🖥️ Client | Beautiful UI overlay for players |
-| **Bloodcraftplus** | 🖧 Server | Core RPG systems and game logic |
-
-Both mods are **required** for the full experience — the server mod provides the features, and the client mod displays them!
-
----
-
-## Core Features
-
-### ⚔️ Combat & Progression
-
-- **Experience Leveling** — Level up by slaying enemies
-- **Weapon Expertise** — Master each weapon type
-- **Blood Legacies** — Gain power from feeding
-- **Prestige System** — Reset and grow stronger
-- **Gear Level (Equipment Tab)** — Shows Exp level; armor level hidden; expertise/class shown separately in EclipsePlus
-
-### 🎭 Classes & Abilities
-
-- **6 Unique Classes** — Each with special abilities
-- **Stat Synergies** — Class-specific bonuses
-- **On-Hit Effects** — Proc debuffs on enemies
-- **Shift Spells** — Unlock powerful abilities
-
-### 🐺 Familiars
-
-- **Unlock 100+ Familiars** — Capture defeated foes
-- **Talent Trees** — Speed, Power, Vitality paths
-- **Familiar Battles** — PvP battles with familiars
-- **Shiny Variants** — Rare cosmetic effects
-
-### 📜 Quests & Professions
-
-- **Daily & Weekly Quests** — Earn rewards
-- **8 Professions** — Mining, Fishing, Alchemy...
-- **Bonus Resources** — Scale with profession level
-- **Crafting Bonuses** — Enhanced gear stats
+| Component | Description |
+|-----------|-------------|
+| 📊 **HUD Bars** | Experience, Expertise, Legacy, Familiar progress |
+| 📋 **Character Menu** | Classes, Familiars, Professions tabs |
+| 🎯 **Quest Tracker** | Daily and weekly quest progress |
+| ⚔️ **Shift Slot** | Quick access to class abilities |
 
 ---
 
-## Classes Overview
+## Requirements
 
-| Class | Theme | On-Hit Effect |
-|:---:|:---|:---|
-| 🔴 **Blood Knight** | Tank / Life Steal | Leech → Blood Curse |
-| 🟡 **Demon Hunter** | Agile / Crits | Static → Lightning |
-| 🔵 **Vampire Lord** | Balanced / Frost | Chill → Freeze |
-| 🟣 **Shadow Blade** | Assassin / Chaos | Ignite → Heated |
-| 🟦 **Arcane Sorcerer** | Burst / Illusion | Weaken → Shield |
-| 🟩 **Death Mage** | Necro / Unholy | Condemn → Curse |
+| Requirement | Link |
+|-------------|------|
+| **BepInEx 6** | [Download](https://builds.bepinex.dev/projects/bepinex_be) |
+| **BloodCraft Server** | [Thunderstore](https://thunderstore.io/c/v-rising/p/zfolmt/Bloodcraft/) |
 
----
-
-## Quick Links
-
-- 📦 **Downloads**
-  - [EclipsePlus on Thunderstore](https://new.thunderstore.io/c/v-rising/p/DiNaSoR/EclipsePlus/)
-  - [Bloodcraftplus on Thunderstore](https://new.thunderstore.io/c/v-rising/p/DiNaSoR/Bloodcraftplus/)
-  - [GitHub Releases](https://github.com/DiNaSoR/BloodCraftPlus/releases)
-
-- 📖 **Getting Started**
-  - [Installation Guide](/getting-started/installation)
-  - [Quick Start Commands](/reference/commands)
-  - [Troubleshooting](/getting-started/troubleshooting)
+<Callout type="warning" title="Server Required">
+  BloodUI is a **client-side** display mod. You must join a server running BloodCraft for the UI elements to populate with data.
+</Callout>
 
 ---
 
-## Quick Start Commands
+## Features
 
-After installation, use these chat commands to get started:
+### 📊 HUD Bars
 
-```
-.lvl get          → Check your level
-.class l          → List available classes
-.class s BloodKnight  → Select a class
-.fam l            → List your familiars
-.quest d          → View daily quest
-```
+Beautiful progress bars showing your:
+- **Experience Level** — Current XP and progress to next level
+- **Weapon Expertise** — Mastery of your equipped weapon
+- **Blood Legacy** — Power gained from feeding
+- **Familiar Stats** — Your companion's health and level
+
+### 📋 Character Menu Integration
+
+BloodUI adds new tabs to the character menu:
+- **Classes** — View and select your class, see abilities
+- **Familiars** — Manage your familiar collection
+- **Professions** — Track your crafting skills
+- **Progression** — Exp, Expertise, Legacy details
+
+### 🎯 Quest Tracker
+
+Always know what to do next:
+- Daily quest objectives and progress
+- Weekly quest tracking
+- Reward previews
+
+---
+
+## Quick Start
+
+1. Install [BepInEx 6](https://builds.bepinex.dev/projects/bepinex_be) for V Rising
+2. Download `BloodUI.dll` from [Thunderstore](https://thunderstore.io/c/v-rising/p/DiNaSoR/BloodUI/)
+3. Copy to `BepInEx/plugins/`
+4. Join a server running BloodCraft
+5. Enjoy the enhanced UI!
+
+---
+
+## Configuration
+
+After first run, edit `BepInEx/config/com.dinasor.bloodui.cfg`:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| ExperienceBar | true | Show/hide XP bar |
+| LegacyBar | true | Show/hide blood legacy bar |
+| ExpertiseBar | true | Show/hide weapon expertise bar |
+| Familiars | true | Show/hide familiar bar |
+| QuestTrackers | true | Show/hide quest tracker |
 
 ---
 
@@ -99,11 +89,12 @@ After installation, use these chat commands to get started:
 
 | Role | Credit |
 |------|--------|
-| **Original Creator** | [mfoltz](https://github.com/mfoltz) |
-| **Fork Maintainer** | [DiNaSoR](https://github.com/DiNaSoR) |
+| **BloodUI Developer** | [DiNaSoR](https://github.com/DiNaSoR) |
+| **BloodCraft Creator** | [zfolmt](https://github.com/mfoltz) |
+| **V Rising Modding Community** | ❤️ |
 
 ---
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**.
+MIT License

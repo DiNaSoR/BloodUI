@@ -339,7 +339,7 @@ img {
   border-top: 0;
 }
 
-.changelog-codebox .changelog-plugin-header--eclipse {
+.changelog-codebox .changelog-plugin-header--BloodUI {
   background: rgba(139, 233, 253, 0.10);
   border-left-color: var(--cyan);
 }
@@ -404,13 +404,13 @@ img {
   opacity: 0.9;
 }
 
-.changelog-codebox .changelog-entry-header--eclipse .changelog-entry-version {
+.changelog-codebox .changelog-entry-header--BloodUI .changelog-entry-version {
   border-color: rgba(139, 233, 253, 0.35);
   background: rgba(139, 233, 253, 0.10);
   color: var(--cyan);
 }
 
-.changelog-codebox .changelog-entry-header--eclipse {
+.changelog-codebox .changelog-entry-header--BloodUI {
   --changelog-entry-accent: rgba(139, 233, 253, 0.75);
 }
 

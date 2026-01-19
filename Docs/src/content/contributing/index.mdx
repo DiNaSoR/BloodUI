@@ -6,7 +6,7 @@ Guidelines for contributing to BloodCraftPlus.
 
 BloodCraftPlus is a monorepo containing:
 - **Server mod** — `Server/Bloodcraftplus/`
-- **Client mod** — `Client/EclipsePlus/`
+- **Client mod** — `Client/BloodUI/`
 - **Debug tools** — `Tools/VDebug/`
 - **Documentation** — `Docs/`
 
@@ -32,7 +32,7 @@ cd BloodCraftPlus
 
 ```bash
 # Client mod
-dotnet build Client/EclipsePlus/EclipsePlus.csproj -c Release
+dotnet build Client/BloodUI/BloodUI.csproj -c Release
 
 # Server mod
 dotnet build Server/Bloodcraftplus/Bloodcraftplus.csproj -c Release
@@ -126,7 +126,7 @@ See `lessons.md` for complete list of IL2CPP pitfalls.
 - **Commands** define chat interface
 - **Patches** intercept game events
 
-### Client (EclipsePlus)
+### Client (BloodUI)
 
 - **HUD** — On-screen progress bars
 - **CharacterMenu** — Tabbed UI panels

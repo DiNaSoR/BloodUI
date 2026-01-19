@@ -15,21 +15,21 @@ export interface DocsConfig {
   description: string;
   repo: string;
   links: {
-    thunderstoreClient: string;
-    thunderstoreServer: string;
+    thunderstore: string;
     github: string;
+    bloodcraft: string;
   };
   nav: NavItem[];
 }
 
 export const docsConfig: DocsConfig = {
-  title: 'BloodCraftPlus',
-  description: 'The Ultimate V Rising RPG Experience',
-  repo: 'DiNaSoR/BloodCraftPlus',
+  title: 'BloodUI',
+  description: 'Client UI Companion for BloodCraft',
+  repo: 'DiNaSoR/BloodUI',
   links: {
-    thunderstoreClient: 'https://new.thunderstore.io/c/v-rising/p/DiNaSoR/EclipsePlus/',
-    thunderstoreServer: 'https://new.thunderstore.io/c/v-rising/p/DiNaSoR/Bloodcraftplus/',
-    github: 'https://github.com/DiNaSoR/BloodCraftPlus',
+    thunderstore: 'https://thunderstore.io/c/v-rising/p/DiNaSoR/BloodUI/',
+    github: 'https://github.com/DiNaSoR/BloodUI',
+    bloodcraft: 'https://thunderstore.io/c/v-rising/p/zfolmt/Bloodcraft/',
   },
   nav: [
     {
@@ -41,46 +41,25 @@ export const docsConfig: DocsConfig = {
       path: '/getting-started',
       children: [
         { title: 'Installation', path: '/getting-started/installation' },
+        { title: 'Configuration', path: '/getting-started/configuration' },
         { title: 'Troubleshooting', path: '/getting-started/troubleshooting' },
       ],
     },
     {
-      title: 'Server (Bloodcraftplus)',
-      path: '/server',
+      title: 'UI Features',
+      path: '/features',
       children: [
-        { title: 'Leveling System', path: '/server/leveling' },
-        { title: 'Weapon Expertise', path: '/server/expertise' },
-        { title: 'Blood Legacies', path: '/server/legacies' },
-        { title: 'Classes', path: '/server/classes' },
-        { title: 'Familiars', path: '/server/familiars' },
-        { title: 'Quests', path: '/server/quests' },
-        { title: 'Professions', path: '/server/professions' },
-        { title: 'Prestige & Exoform', path: '/server/prestige' },
-        { title: 'World Boss', path: '/server/world-boss', badge: 'NEW' },
-      ],
-    },
-    {
-      title: 'Client (EclipsePlus)',
-      path: '/client',
-      children: [
-        { title: 'HUD Components', path: '/client/hud' },
-        { title: 'Character Menu', path: '/client/character-menu' },
-        { title: 'Data Flow', path: '/client/data-flow' },
+        { title: 'HUD Bars', path: '/features/hud-bars' },
+        { title: 'Character Menu', path: '/features/character-menu' },
+        { title: 'Quest Tracker', path: '/features/quest-tracker' },
+        { title: 'Familiar Panel', path: '/features/familiars' },
       ],
     },
     {
       title: 'Reference',
       children: [
-        { title: 'Chat Commands', path: '/reference/commands' },
         { title: 'Configuration', path: '/reference/config' },
         { title: 'Changelog', path: '/reference/changelog' },
-      ],
-    },
-    {
-      title: 'Tools',
-      children: [
-        { title: 'VDebug', path: '/tools/vdebug' },
-        { title: 'Design Mock', path: '/tools/design-mock' },
       ],
     },
     {

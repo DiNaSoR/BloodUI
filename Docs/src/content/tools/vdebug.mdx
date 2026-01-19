@@ -4,14 +4,14 @@ VDebug is an optional debug plugin for modders and developers working with V Ris
 
 ## Overview
 
-VDebug provides debugging tools without cluttering the main EclipsePlus plugin:
+VDebug provides debugging tools without cluttering the main BloodUI plugin:
 - Asset dumping
 - UI inspection
 - Layout editing
 - Centralized logging
 
 <Callout type="info">
-  VDebug is **optional** — EclipsePlus works perfectly without it, just without debug features.
+  VDebug is **optional** — BloodUI works perfectly without it, just without debug features.
 </Callout>
 
 ---
@@ -47,7 +47,7 @@ Inspect Unity UI elements in real-time:
 
 **New:** You can enable **Hover Inspect** from inside the inspector panel to inspect elements just by hovering (no click required). This is useful for quickly finding the right object path without disrupting gameplay.
 
-**Tip:** If the inspector can’t pick an element, it’s often because that UI uses `raycastTarget = false` (common for non-interactive HUD text/icons). VDebug includes a fallback picker so you can still inspect EclipsePlus + base game UI even when it’s not clickable.
+**Tip:** If the inspector can’t pick an element, it’s often because that UI uses `raycastTarget = false` (common for non-interactive HUD text/icons). VDebug includes a fallback picker so you can still inspect BloodUI + base game UI even when it’s not clickable.
 
 ### Layout Editor
 
@@ -59,7 +59,7 @@ Adjust UI positions in real-time:
 ### Debug Logging
 
 Centralized log routing:
-- All EclipsePlus logs route through VDebug
+- All BloodUI logs route through VDebug
 - Without VDebug installed, logs are silent
 - Clean release builds without debug noise
 
@@ -92,7 +92,7 @@ And to the VDebug panel when visible.
 VDebug is designed for reflection-based integration:
 
 ```csharp
-// EclipsePlus calls VDebug via reflection
+// BloodUI calls VDebug via reflection
 // If VDebug isn't installed, calls are no-ops
 
 public static class DebugToolsBridge

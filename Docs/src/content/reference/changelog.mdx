@@ -1,36 +1,19 @@
 # Changelog
 
-All notable changes to BloodCraftPlus are documented here.
+All notable changes to BloodUI are documented here.
 
-Current versions:
-
-- **EclipsePlus**: `1.4.0` (Client)
-- **Bloodcraftplus**: `1.12.21` (Server)
-- **VDebug**: `0.1.0` (Tool)
-- **Veil**: `0.1.1` (Client Framework)
+Current version: **BloodUI** `1.0.0`
 
 ---
 
-<div className="changelog-plugin-header changelog-plugin-header--eclipse">EclipsePlus (Client)</div>
+<div className="changelog-plugin-header changelog-plugin-header--BloodUI">BloodUI (Client)</div>
 
-<div className="changelog-entry-header changelog-entry-header--eclipse">
-  <span className="changelog-entry-version">v1.4.0</span>
-  <span className="changelog-entry-title">Sync & Familiar UI Fixes</span>
+<div className="changelog-entry-header changelog-entry-header--BloodUI">
+  <span className="changelog-entry-version">v1.0.0</span>
+  <span className="changelog-entry-title">Initial Release</span>
 </div>
 
-<div className="changelog-entry-date">January 17, 2026</div>
-
-- **Changed**
-  - **Protocol**: bumped Eclipse sync to `1.4.x` (update client + server together).
-- **Fixed**
-  - **Familiar stats display**: HP/PP/SP no longer mis-parses when values exceed old fixed-width limits.
-
-<div className="changelog-entry-header changelog-entry-header--eclipse">
-  <span className="changelog-entry-version">v1.3.15</span>
-  <span className="changelog-entry-title">Character Menu & Talents</span>
-</div>
-
-<div className="changelog-entry-date">January 15, 2026</div>
+<div className="changelog-entry-date">January 19, 2026</div>
 
 - **Added**
   - **Character Menu System**
@@ -56,20 +39,15 @@ Current versions:
     - In-game layout editing mode for real-time UI adjustments
     - Canvas-relative bounds calculations for hit-testing
     - Enhanced drag/hover functionality with zero-size rect handling
-- **Improved**
-  - Renamed Professions tab to Progression for consistency
-  - Modular CSS structure split into separate files for maintainability
-  - Updated icons for better representation
-- **Fixed**
-  - Fixed compilation issues with Professions → Progression references
-  - Improved logging framework across multiple services and patches
 
-<div className="changelog-entry-header changelog-entry-header--eclipse">
-  <span className="changelog-entry-version">v1.3.14</span>
-  <span className="changelog-entry-title">Layout Improvements</span>
+---
+
+<div className="changelog-entry-header changelog-entry-header--BloodUI">
+  <span className="changelog-entry-version">v0.9.0</span>
+  <span className="changelog-entry-title">Pre-release (formerly EclipsePlus)</span>
 </div>
 
-<div className="changelog-entry-date">January 14, 2026</div>
+<div className="changelog-entry-date">January 15, 2026</div>
 
 - **Added**
   - VDebug integration bridge for development tools
@@ -82,153 +60,14 @@ Current versions:
   - Fixed layout persistence across game sessions
   - Resolved UI element overlap issues
 
-<div className="changelog-entry-header changelog-entry-header--eclipse">
-  <span className="changelog-entry-version">v1.3.13</span>
-  <span className="changelog-entry-title">Cleanup & Stabilization</span>
-</div>
+---
 
-<div className="changelog-entry-date">January 13, 2026</div>
+## Requirements
 
-- **Improved**
-  - Code cleanup and refactoring
-  - Removed deprecated components
-  - Improved type safety throughout
-- **Fixed**
-  - Various minor UI fixes
-  - Memory leak in HUD components resolved
+BloodUI requires a server running [BloodCraft](https://thunderstore.io/c/v-rising/p/zfolmt/Bloodcraft/) by zfolmt.
 
 ---
 
-<div className="changelog-plugin-header changelog-plugin-header--Veil">Veil (Client Framework)</div>
-
-<ChangelogSection version="v0.1.1" date="January 18, 2026" title="Canvas Recreate Fix" defaultOpen>
-- **Fixed**
-  - **Canvas lifecycle**: Veil now recreates its HUD canvas if it gets destroyed during scene changes (F1 toggle works reliably after joining a server).
-</ChangelogSection>
-
----
-
-<div className="changelog-plugin-header changelog-plugin-header--bloodcraft">Bloodcraftplus (Server)</div>
-
-<div className="changelog-entry-header changelog-entry-header--bloodcraft">
-  <span className="changelog-entry-version">v1.12.21</span>
-  <span className="changelog-entry-title">Gear Level & Rift/Familiar Fixes</span>
-</div>
-
-<div className="changelog-entry-date">January 17, 2026</div>
-
-- **Changed**
-  - **Equipment Tab Gear Level**: now shows **Exp level only** (no longer adds weapon expertise and no hidden +1).
-- **Fixed**
-  - **Primal rifts**: `RiftFrequency <= 0` now disables rift scheduling (prevents 0-interval spam).
-  - **Familiar stats sync**: Familiar HP/PP/SP now sent as `hp|pp|sp` to avoid overflow/misalignment.
-  - **Documentation**: clarified that some config options (e.g., `ElitePrimalRifts`) are cached at startup and require a server restart.
-
----
-
-<div className="changelog-entry-header changelog-entry-header--bloodcraft">
-  <span className="changelog-entry-version">v1.12.20</span>
-  <span className="changelog-entry-title">Familiar Talents & Gear Level</span>
-</div>
-
-<div className="changelog-entry-date">January 15, 2026</div>
-
-- **Added**
-  - **Familiar Talent System**
-    - Full talent tree UI with three paths: Speed, Power, and Vitality
-    - Talent allocation with prerequisites and keystone abilities
-    - Talent node types: Minor / Notable / Keystone (keystones cost 3 points)
-    - Talent points: 1 point per 10 familiar levels + 2 points per familiar prestige
-    - Stat bonuses (what they do):
-      - Physical Power: increases the familiar’s physical damage output
-      - Spell Power: increases the familiar’s spell/magic damage output
-      - Attack Speed: makes the familiar attack faster (more attacks per second)
-      - Movement Speed: makes the familiar move faster (better uptime/repositioning)
-      - Max Health: increases the familiar’s maximum HP
-      - Damage Reduction: reduces incoming damage taken by the familiar
-      - Crit Chance: increases how often the familiar lands critical hits
-      - Crit Damage: increases how hard the familiar’s critical hits deal damage
-    - Visual buff effects for allocated keystones
-    - Talent reset functionality for respeccing familiar builds
-    - Server-side persistence: stored per SteamID + familiarId in JSON
-    - Commands:
-      - Allocate: `.fam talent allocate <id>` (shortcut: `.fam ta <id>`)
-      - Reset: `.fam talent reset` (shortcut: `.fam tr`)
-      - Sync/list: `.fam talent list` (shortcut: `.fam tl`, returns `TALENTS:...` for client sync)
-  - **Gear Level (Equipment Tab)**
-    - Equipment Tab “Gear Level” repurposed to reflect Exp level (leveling system)
-    - Armor level hidden (set to 0)
-    - Expertise/class are shown separately in EclipsePlus (and “Gear Level” no longer implies weapon expertise)
-- **Improved**
-  - Standardized naming convention for Bloodcraftplus across all files
-  - GitHub Actions workflows standardized and updated
-  - BuildToServer target with SkipServerCopy variable for build flexibility
-  - Post-build targets refactored for builds without local dependencies
-- **Fixed**
-  - **Familiar Catch-Up Speed** — Dynamic speed boost when familiar is far from player (15+ units away), 2x speed multiplier with hysteresis system
-  - Fixed GitHub Actions to use bracket notation for secrets
-  - Fixed build output paths for release artifacts
-
----
-
-<div className="changelog-entry-header changelog-entry-header--bloodcraft">
-  <span className="changelog-entry-version">v1.12.19</span>
-  <span className="changelog-entry-title">Familiar/Quest/Prestige Fixes</span>
-</div>
-
-<div className="changelog-entry-date">January 14, 2026</div>
-
-- **Improved**
-  - Enhanced familiar AI behavior
-  - Better quest tracking accuracy
-- **Fixed**
-  - Fixed edge case in prestige calculations
-  - Resolved rare crash during familiar summoning
-
----
-
-<div className="changelog-entry-header changelog-entry-header--bloodcraft">
-  <span className="changelog-entry-version">v1.12.18</span>
-  <span className="changelog-entry-title">Cleanup & Stabilization</span>
-</div>
-
-<div className="changelog-entry-date">January 13, 2026</div>
-
-- **Improved**
-  - Database query optimizations
-  - Reduced server tick overhead
-- **Fixed**
-  - Fixed rare desync in familiar stats
-  - Corrected experience calculation edge cases
-
----
-
-<div className="changelog-plugin-header changelog-plugin-header--vdebug">VDebug (Tool)</div>
-
-<div className="changelog-entry-header changelog-entry-header--vdebug">
-  <span className="changelog-entry-version">v0.1.0</span>
-</div>
-
-<div className="changelog-entry-date">January 15, 2026</div>
-
-- **Added**
-  - New VDebug plugin with asset dumping and UI inspection
-  - UI Inspector Service with layout, sibling, and style info
-  - Export functionality for capturing UI component details
-  - Font Loading Service supporting asset bundles and in-game resources
-
----
-
-## Build & Infrastructure
-
-- **GitHub Actions**: Updated to use `dotnet build` instead of `dotnet build -t:Compile`
-- **Thunderstore**: Added build configuration with proper output directories
-- **Secrets**: Fixed bracket notation for accessing secrets
-- **Versioning**: Synchronized thunderstore.toml versions across projects
-- **Documentation**: Added Vite/React documentation site with GitHub Pages deployment
-
----
-
-<Callout type="warning">
-  Make sure both client (EclipsePlus) and server (Bloodcraftplus) mods match compatible versions.
+<Callout type="info">
+  BloodUI is a client-side mod that displays UI for BloodCraft server features.
 </Callout>

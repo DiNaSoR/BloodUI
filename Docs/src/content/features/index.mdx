@@ -1,0 +1,116 @@
+# Client (BloodUI)
+
+BloodUI is the client-side mod that provides the UI overlay for BloodCraftPlus.
+
+## Overview
+
+BloodUI displays all your progression data through:
+- **HUD Components** — On-screen progress bars
+- **Character Menu** — Full-featured tabbed interface
+- **Real-time sync** — Data updated from server
+
+<Callout type="warning">
+  BloodUI requires the Bloodcraftplus server mod to function!
+</Callout>
+
+---
+
+## Architecture Overview
+
+```
+Client/BloodUI/
+├── Services/
+│   ├── HUD/                    # On-screen progress bars
+│   │   ├── ExperienceBar/
+│   │   ├── ExpertiseBar/
+│   │   ├── FamiliarBar/
+│   │   ├── LegacyBar/
+│   │   └── QuestTracker/
+│   ├── CharacterMenu/          # Tabbed UI panels
+│   │   ├── Tabs/               # Individual tab implementations
+│   │   ├── Shared/             # Shared UI components
+│   │   └── Base/               # Base classes
+│   ├── DataService.cs          # Server data ingestion
+│   ├── CanvasService.cs        # UI lifecycle
+│   └── LayoutService.cs        # HUD positioning
+├── Patches/                    # Harmony patches
+└── Resources/                  # Assets & localization
+```
+
+---
+
+## Key Components
+
+### HUD Components
+
+Real-time progress bars displayed on screen:
+
+| Component | Purpose |
+|-----------|---------|
+| **Experience Bar** | Player XP progress |
+| **Expertise Bar** | Weapon mastery progress |
+| **Familiar Bar** | Active familiar health/level |
+| **Legacy Bar** | Blood legacy progress |
+| **Quest Tracker** | Active quest objectives |
+
+### Character Menu
+
+Press **F8** to open the full-featured Character Menu:
+
+| Tab | Contents |
+|-----|----------|
+| **Class** | Class selection and spells |
+| **Exoform** | Exoform transformation UI |
+| **Familiars** | Full familiar management |
+| **Prestige** | Prestige leaderboards |
+| **Professions** | Profession levels |
+| **Progression** | Combined overview |
+| **Stat Bonuses** | Expertise/Legacy stats |
+
+---
+
+## Data Flow
+
+Server → Client data sync:
+
+1. **Server generates events** — Kill, craft, level up, etc.
+2. **Progression updates** — Server calculates new values
+3. **Chat protocol** — Data encoded and sent to client
+4. **DataService parses** — Client extracts and caches data
+5. **UI renders** — HUD and menus update from cache
+
+See [Data Flow](/client/data-flow) for detailed architecture.
+
+---
+
+## Keybinds
+
+| Key | Action |
+|-----|--------|
+| **F8** | Toggle Character Menu |
+| **F9** | Toggle Layout Editor |
+
+---
+
+## Customization
+
+### HUD Layout
+
+Use the Layout Editor (F9) to:
+- Drag HUD elements to new positions
+- Save layout preferences
+- Reset to defaults
+
+### Localization
+
+BloodUI supports multiple languages:
+- Prefab names localized based on server setting
+- UI text matches game language
+
+---
+
+## Pages
+
+- [HUD Components](/client/hud) — Progress bar details
+- [Character Menu](/client/character-menu) — Tab breakdown
+- [Data Flow](/client/data-flow) — Server↔Client architecture
