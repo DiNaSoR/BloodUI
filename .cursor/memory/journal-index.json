@@ -1,0 +1,1334 @@
+[
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-28",
+        "Tags":  [
+                     "Refactor",
+                     "Architecture"
+                 ],
+        "Title":  "Modularized monolithic UI/services into component-based architecture with interfaces and orchestrators.",
+        "Files":  [
+                      "Services/HUD/*",
+                      "Services/CharacterMenu/*",
+                      "Services/HUD/Configurators/*"
+                  ]
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-28",
+        "Tags":  [
+                     "Metrics"
+                 ],
+        "Title":  "Reduced service size significantly.",
+        "Files":  [
+                      "CanvasService.cs",
+                      "CharacterMenuService.cs"
+                  ]
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-28",
+        "Tags":  [
+                     "Build",
+                     "Compat"
+                 ],
+        "Title":  "Applied Il2Cpp-safe fixes and ensured Release build output.",
+        "Files":  "Docs/Archive/OldServices/*"
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-28",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Saved full work log:",
+        "Files":  "Docs/WorkLogs/Eclipse-Modularization-2025-12-28.md"
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-30",
+        "Tags":  [
+                     "UI",
+                     "Familiars",
+                     "Design Mock"
+                 ],
+        "Title":  "Added a Familiars subtab mock layout.",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-30",
+        "Tags":  [
+                     "UI",
+                     "Familiars",
+                     "In-Game"
+                 ],
+        "Title":  "Implemented the Familiars tab UI layout in-game.",
+        "Files":  "Services/CharacterMenuService.cs"
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-31",
+        "Tags":  [
+                     "UI",
+                     "Familiars",
+                     "Sizing/Styling"
+                 ],
+        "Title":  "Tuned in-game layout to prevent overlap and better match game UI visuals.",
+        "Files":  "Services/CharacterMenuService.cs"
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-31",
+        "Tags":  [
+                     "UI",
+                     "Familiars",
+                     "Layout Iterations"
+                 ],
+        "Title":  "Migrated mock → in-game layout refinements.",
+        "Files":  [
+                      "Docs/DesignMock/index.html",
+                      "Services/CharacterMenuService.cs"
+                  ]
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-31",
+        "Tags":  [
+                     "Data",
+                     "Chat Parsing",
+                     "Familiars Box"
+                 ],
+        "Title":  "Added client-side parsing + live updates from chat replies.",
+        "Files":  [
+                      "Services/DataService.cs",
+                      "Patches/ClientChatSystemPatch.cs"
+                  ]
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-31",
+        "Tags":  [
+                     "Interaction",
+                     "Binding"
+                 ],
+        "Title":  "Improved binding reliability and usability.",
+        "Files":  {
+
+                  }
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-31",
+        "Tags":  [
+                     "Assets",
+                     "Sprites"
+                 ],
+        "Title":  "Eliminated missing sprite placeholders (white boxes).",
+        "Files":  "Services/HUD/Shared/HudData.cs"
+    },
+    {
+        "MonthFile":  "2025-12.md",
+        "Date":  "2025-12-31",
+        "Tags":  [
+                     "Build"
+                 ],
+        "Title":  "Built Release to produce updated `Eclipse.dll` after major UI/data changes.",
+        "Files":  {
+
+                  }
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Refactor"
+                 ],
+        "Title":  "Extracted Familiars panel into modular `FamiliarsTab`",
+        "Files":  [
+                      "Services/CharacterMenuService.cs",
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Fixed Bloodcraft header titles + Prestige type dropdown clicks",
+        "Files":  [
+                      "Services/CharacterMenu/Shared/UIFactory.cs",
+                      "Services/CharacterMenu/Tabs/PrestigeTab.cs",
+                      "Services/CharacterMenu/Tabs/ExoformTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Exoform/Prestige card headers: force title width in header layout",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/PrestigeTab.cs",
+                      "Services/CharacterMenu/Tabs/ExoformTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Reduced main-tab → subtab gap in Bloodcraft tab",
+        "Files":  [
+                      "Services/CharacterMenuService.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Tightened Bloodcraft top gap + forced Exoform/Prestige header titles",
+        "Files":  [
+                      "Services/CharacterMenuService.cs",
+                      "Services/CharacterMenu/Tabs/ExoformTab.cs",
+                      "Services/CharacterMenu/Tabs/PrestigeTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Implemented Exoform tab as a modular panel (no text-entry UI)",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/ExoformTab.cs",
+                      "Services/CharacterMenuService.cs",
+                      "Services/HUD/Shared/HudData.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Exoform panel: fixed wrapped hint/note text sizing (avoid clipping)",
+        "Files":  "Services/CharacterMenu/Tabs/ExoformTab.cs"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Exoform panel: fixed missing card header titles + avoided showing abilities when no form selected",
+        "Files":  "Services/CharacterMenu/Tabs/ExoformTab.cs"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Hid legacy “Familiar Battles” subtab (Battles are now only inside Familiars → Battle Groups)",
+        "Files":  "Services/CharacterMenuService.cs"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Refactor"
+                 ],
+        "Title":  "Extracted Professions panel into modular `ProfessionsTab`",
+        "Files":  [
+                      "Services/CharacterMenuService.cs",
+                      "Services/CharacterMenu/Tabs/ProfessionsTab.cs",
+                      ".cursor/memory/memo.md",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Redesigned Prestige tab into a card-based leaderboard panel (for approval before in-game implementation)",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Implemented Prestige tab as a modular panel (dropdown type selector + leaderboard rows)",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/PrestigeTab.cs",
+                      "Services/CharacterMenuService.cs",
+                      "Services/HUD/Shared/HudData.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Added Exoform tab mock UI (charge meter, taunt toggle, forms, abilities)",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Removed “Bind Familiar (1-10)” card from Familiars tab",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "Familiars",
+                     "UI"
+                 ],
+        "Title":  "Shiny box highlighting + toggle status indicators",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.cs",
+                      "Services/DataService.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Redesigned Stat Bonuses tab to support Weapon Expertise + Blood Legacies",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Removed blood/weapon type selector rows from Stat Bonuses mock",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Reduced header heights and redesigned for compactness",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Refactor"
+                 ],
+        "Title":  "Extracted Stat Bonuses panel into modular `StatBonusesTab`",
+        "Files":  [
+                      "Services/CharacterMenuService.cs",
+                      "Services/CharacterMenu/Tabs/StatBonusesTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Updated Stat Bonuses UI to match DesignMock styling",
+        "Files":  [
+                      "Docs/DesignMock/index.html",
+                      "Services/CharacterMenu/Tabs/StatBonusesTab.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Darkened header tint across tabs to match in-game headers",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Feature"
+                 ],
+        "Title":  "Added Blood Legacies view to Stat Bonuses",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/StatBonusesTab.cs",
+                      "Services/HUD/Shared/HudData.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "Bloodcraft",
+                     "Legacies"
+                 ],
+        "Title":  "Made `.bl cst` toggle add/remove (like Weapon Expertise)",
+        "Files":  [
+                      "Server/Bloodcraftplus/Systems/Legacies/BloodManager.cs",
+                      "Server/Bloodcraftplus/Commands/BloodCommands.cs",
+                      "Server/Bloodcraftplus/Bloodcraft.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "UI"
+                 ],
+        "Title":  "Removed Stat Bonuses bottom hint text",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/StatBonusesTab.cs",
+                      "Docs/DesignMock/index.html"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Redesigned Familiars mock into 2 internal sections (Familiars / Battle Groups)",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Removed command pills/labels from Familiars mock",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "DesignMock",
+                     "UI"
+                 ],
+        "Title":  "Familiars mock is now click-only (no typing)",
+        "Files":  "Docs/DesignMock/index.html"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Feature"
+                 ],
+        "Title":  "Fully implemented Familiars tab (click-only) with Battle Groups mode + overflow + shiny options",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.cs",
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.Battles.cs",
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.Overflow.cs",
+                      "Services/CharacterMenu/Tabs/FamiliarsTab.Settings.cs",
+                      "Services/DataService.cs",
+                      "Patches/ClientChatSystemPatch.cs",
+                      "Services/HUD/Shared/HudData.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-12",
+        "Tags":  [
+                     "Branding",
+                     "Fork"
+                 ],
+        "Title":  "Renamed fork identity to EclipsePlus + BloodCraftPlus and set maintainer to DiNaSoR",
+        "Files":  [
+                      "Eclipse.csproj",
+                      "Server/Bloodcraftplus/Bloodcraft.csproj",
+                      "Server/Bloodcraftplus/thunderstore.toml",
+                      "README.md",
+                      "Server/Bloodcraftplus/README.md",
+                      "Server/Bloodcraftplus/Plugin.cs",
+                      "Server/Bloodcraftplus/Properties/AssemblyInfo.cs"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Class"
+                 ],
+        "Title":  "Fix `.class csp` index mapping in Class tab",
+        "Files":  "Services/CharacterMenu/Tabs/ClassTab.cs"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "Build"
+                 ],
+        "Title":  "Release build verification (local dotnet SDK)",
+        "Files":  [
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Eclipse.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Server/Bloodcraftplus/Bloodcraft.csproj",
+                      "bin/Release/net6.0/EclipsePlus.dll",
+                      "Server/Bloodcraftplus/bin/Release/net6.0/Bloodcraftplus.dll"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "Docs",
+                     "DesignMock"
+                 ],
+        "Title":  "Split the mock into smaller source modules (CSS + HTML)",
+        "Files":  [
+                      "Docs/DesignMock/index.html",
+                      "Docs/DesignMock/design-mock.css",
+                      "Docs/DesignMock/design-mock.*.css",
+                      "Docs/DesignMock/src/index.template.html",
+                      "Docs/DesignMock/src/partials/*",
+                      "Docs/DesignMock/build.ps1",
+                      "Docs/DesignMock/build.ps1 -Check"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "Docs",
+                     "DesignMock"
+                 ],
+        "Title":  "Modularized UI mock by extracting CSS/JS out of `index.html`",
+        "Files":  [
+                      "Docs/DesignMock/index.html",
+                      "Docs/DesignMock/design-mock.css",
+                      "Docs/DesignMock/design-mock.js"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "Build",
+                     "MSBuild"
+                 ],
+        "Title":  "Made builds succeed without local deploy/runtime dependencies",
+        "Files":  [
+                      "Eclipse.csproj",
+                      "Server/Bloodcraftplus/Bloodcraft.csproj",
+                      "Server/Bloodcraftplus/.codex/install.sh",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release",
+                      "/p:RunGenerateREADME=true"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "CI",
+                     "GitHub Actions"
+                 ],
+        "Title":  "Fixed release artifact path by building (not compile-only)",
+        "Files":  [
+                      "bin/Release/...",
+                      "softprops/action-gh-release",
+                      ".github/workflows/build.yml",
+                      ".github/workflows/release.yml"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "EclipsePlus",
+                     "Tools",
+                     "Feature"
+                 ],
+        "Title":  "Add optional DebugTools plugin + reflection bridge (asset dumping)",
+        "Files":  [
+                      "Services/DebugToolsBridge.cs",
+                      "Patches/InputActionSystemPatch.cs",
+                      "Tools/EclipsePlusDebugTools/*",
+                      "Tools/EclipsePlusDebugTools/Services/AssetDumpService.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Eclipse.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Tools/EclipsePlusDebugTools/EclipsePlusDebugTools.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "EclipsePlus",
+                     "Tools",
+                     "Rename"
+                 ],
+        "Title":  "Rename debug plugin to VDebug (generic optional tool)",
+        "Files":  [
+                      "Services/DebugToolsBridge.cs",
+                      "Core.cs",
+                      "Plugin.cs",
+                      "Utilities/GameObjects.cs",
+                      "Utilities/Quips.cs",
+                      "Patches/ClientChatSystemPatch.cs",
+                      "Services/CharacterMenuService.cs",
+                      "Services/CanvasService.cs",
+                      "Services/DataService.cs",
+                      "Services/LayoutService.cs",
+                      "Tools/VDebug/VDebug.csproj",
+                      "Tools/VDebug/VDebugApi.cs",
+                      "Tools/VDebug/VDebugLog.cs",
+                      "Tools/VDebug/Services/AssetDumpService.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Eclipse.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Tools/VDebug/VDebug.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "EclipsePlus",
+                     "Cleanup"
+                 ],
+        "Title":  "Removed VAuction + UI tracing tools",
+        "Files":  [
+                      "Eclipse.csproj",
+                      "Patches/ClientChatSystemPatch.cs",
+                      "Patches/InputActionSystemPatch.cs",
+                      "Services/CanvasService.cs",
+                      "Services/CharacterMenuService.cs",
+                      "Services/DataService.cs",
+                      "VAuction/*",
+                      "Docs/VAuction/*",
+                      "Services/VAuctionPopupService.cs",
+                      "Services/InventoryClickInterceptor.cs",
+                      "Services/DebugService.cs",
+                      "Docs/Debug Report/Debug01.md",
+                      "Docs/DesignMock/assets/manifest4.txt",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Eclipse.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-13",
+        "Tags":  [
+                     "Build",
+                     "CharacterMenu"
+                 ],
+        "Title":  "Fixed Progression tab compilation regressions",
+        "Files":  [
+                      "Services/CharacterMenu/Tabs/ProgressionTab.cs",
+                      "Services/CharacterMenuService.cs",
+                      "Services/CharacterMenu/CharacterMenuIntegration.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Eclipse.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Server/Bloodcraftplus/Bloodcraft.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-14",
+        "Tags":  [
+                     "Docs",
+                     "VDebug"
+                 ],
+        "Title":  "Added README with usage and integration guidance",
+        "Files":  "Tools/VDebug/README.md"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "Layout",
+                     "UI"
+                 ],
+        "Title":  "Fix layout mode hover/drag for HUD bars",
+        "Files":  [
+                      "Services/LayoutService.cs",
+                      ".cursor/memory/lessons.md"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "Layout",
+                     "UI"
+                 ],
+        "Title":  "Expand hover/outline bounds for zero-size HUD roots",
+        "Files":  [
+                      "Services/LayoutService.cs",
+                      ".cursor/memory/lessons.md"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "Docs",
+                     "VDebug"
+                 ],
+        "Title":  "Enhanced README visuals and structure",
+        "Files":  "Tools/VDebug/README.md"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "VAuction",
+                     "Feature"
+                 ],
+        "Title":  "Added VAuction server project + EclipsePlus UI tab (phase 1: items/resources)",
+        "Files":  [
+                      "VAuction/Plugin.cs",
+                      "VAuction/Core.cs",
+                      "VAuction/VAuction.csproj",
+                      "VAuction/Services/AuctionService.cs",
+                      "VAuction/Persistence/*",
+                      "VAuction/EclipseBridge/*",
+                      "VAuction/Commands/*",
+                      "Services/VAuctionMenuService.cs",
+                      "Services/DataService.cs",
+                      "Patches/ClientChatSystemPatch.cs",
+                      "Patches/InitializationPatches.cs",
+                      "Services/CanvasService.cs",
+                      "VAuction/EclipseBridge/Protocol.md",
+                      "Resources/secrets.json"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "VAuction",
+                     "Fix"
+                 ],
+        "Title":  "Defer VAuction initialization until Server World exists",
+        "Files":  [
+                      "VAuction/Core.cs",
+                      "VAuction/Plugin.cs",
+                      "Eclipse.csproj",
+                      "VAuction/**",
+                      "dotnet build -c Release Eclipse.csproj",
+                      "dotnet build -c Release VAuction/VAuction.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "VAuction",
+                     "Fix"
+                 ],
+        "Title":  "IL2CPP-safe coroutine runner for delayed init",
+        "Files":  [
+                      "VAuction/Core.cs",
+                      "dotnet build -c Release VAuction/VAuction.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "VAuction",
+                     "Fix"
+                 ],
+        "Title":  "Reliable VCF command registration (server update hook)",
+        "Files":  [
+                      "VAuction/Patches/ServerBootstrapSystemPatch.cs",
+                      "VAuction/Plugin.cs",
+                      "dotnet build -c Release VAuction/VAuction.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "VAuction",
+                     "Fix"
+                 ],
+        "Title":  "Remove coroutine timer (server StartCoroutine NRE)",
+        "Files":  [
+                      "VAuction/Core.cs",
+                      "VAuction/Patches/ServerBootstrapSystemPatch.cs",
+                      "dotnet build -c Release VAuction/VAuction.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "CI",
+                     "GitHub Releases"
+                 ],
+        "Title":  "Fixed duplicate `CHANGELOG.md` asset upload",
+        "Files":  [
+                      "CHANGELOG.md",
+                      "softprops/action-gh-release",
+                      ".github/workflows/build.yml",
+                      "Server/Bloodcraftplus/CHANGELOG.md",
+                      "Bloodcraftplus-CHANGELOG.md"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-02",
+        "Tags":  [
+                     "CharacterMenu",
+                     "Fix"
+                 ],
+        "Title":  "StatBonusesTab Asset Fix",
+        "Files":  {
+
+                  }
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-15",
+        "Tags":  [
+                     "VDebug",
+                     "Feature"
+                 ],
+        "Title":  "UI Inspector Enhancements",
+        "Files":  {
+
+                  }
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "Feature"
+                 ],
+        "Title":  "Added Vite+React documentation site with GitHub Pages deployment",
+        "Files":  [
+                      "Docs/package.json",
+                      "Docs/vite.config.ts",
+                      "Docs/src/main.tsx",
+                      "Docs/src/App.tsx",
+                      "Docs/src/docs.config.ts",
+                      "Docs/src/styles/tokens.css",
+                      "Docs/src/styles/globals.css",
+                      "Docs/src/components/Layout.tsx",
+                      "Docs/src/components/Callout.tsx",
+                      "Docs/src/components/CodeBlock.tsx",
+                      "Docs/src/components/CommandCard.tsx",
+                      "Docs/src/components/ConfigTable.tsx",
+                      "Docs/src/content/**/*.mdx",
+                      ".github/workflows/docs.yml",
+                      "Docs/scripts/generate-reference.ts",
+                      "Docs/README.md",
+                      "https://dinasor.github.io/BloodCraftPlus/"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "Fix"
+                 ],
+        "Title":  "Updated README banner image paths to match new docs assets location",
+        "Files":  [
+                      "Docs/Images/banner.png",
+                      "Docs/public/images/",
+                      "README.md",
+                      "Client/EclipsePlus/README.md",
+                      "Server/Bloodcraftplus/README.md"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "UX"
+                 ],
+        "Title":  "Added 9:16 screenshot placeholders for EclipsePlus Character Menu tabs",
+        "Files":  [
+                      "Docs/src/components/PortraitShotPlaceholder.tsx",
+                      "Docs/src/components/PortraitShotPlaceholder.css",
+                      "Docs/src/components/mdx-components.tsx",
+                      "Docs/src/content/client/character-menu.mdx"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "DX"
+                 ],
+        "Title":  "Make local dev base path `/` while keeping GitHub Pages base path `/\u003crepo\u003e/`",
+        "Files":  [
+                      "/",
+                      "/\u003crepo\u003e/",
+                      "/BloodCraftPlus/",
+                      "Docs/vite.config.ts"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "UX"
+                 ],
+        "Title":  "Added sidebar accordion animation (smart single-open behavior)",
+        "Files":  [
+                      "Docs/src/components/Layout.tsx",
+                      "Docs/src/components/Layout.css"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "UX"
+                 ],
+        "Title":  "Character Menu page: split layout (description left, screenshot right)",
+        "Files":  [
+                      "Docs/src/content/client/character-menu.mdx",
+                      "Docs/src/styles/globals.css"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "UX"
+                 ],
+        "Title":  "Added expandable changelog sections with modern styling",
+        "Files":  [
+                      "Docs/src/components/ChangelogSection.tsx",
+                      "Docs/src/components/ChangelogSection.css",
+                      "Docs/src/content/reference/changelog.mdx"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "Fix"
+                 ],
+        "Title":  "Switched to HashRouter to fix 404 on page refresh (GitHub Pages)",
+        "Files":  [
+                      "Docs/src/main.tsx",
+                      "https://dinasor.github.io/BloodCraftPlus/#/client/character-menu"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Process",
+                     "Memory"
+                 ],
+        "Title":  "Added mandatory documentation + changelog update rule to memory system",
+        "Files":  [
+                      ".cursor/memory/hot-rules.md",
+                      ".cursor/memory/memo.md",
+                      ".cursor/memory/lessons.md"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Process",
+                     "Memory"
+                 ],
+        "Title":  "Updated “Gear Level Mirage” current truth (Exp-only)",
+        "Files":  ".cursor/memory/memo.md"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Eclipse Sync",
+                     "Debug"
+                 ],
+        "Title":  "Improved server diagnostics for missing client/server connection",
+        "Files":  [
+                      "Server/Bloodcraftplus/Patches/ChatMessageSystemPatch.cs",
+                      "Server/Bloodcraftplus/Services/EclipseService.cs",
+                      "Server/Bloodcraftplus/Core.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Server/Bloodcraftplus/Bloodcraftplus.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "VDebug",
+                     "Logging"
+                 ],
+        "Title":  "Enable server-mode VDebug + client/server log channels",
+        "Files":  [
+                      "Tools/VDebug/Plugin.cs",
+                      "Tools/VDebug/VDebugApi.cs",
+                      "Tools/VDebug/VDebugLog.cs",
+                      "Client/EclipsePlus/Services/DebugToolsBridge.cs",
+                      "Server/Bloodcraftplus/Services/DebugToolsBridge.cs",
+                      "Server/Bloodcraftplus/Patches/ChatMessageSystemPatch.cs",
+                      "Server/Bloodcraftplus/Services/EclipseService.cs",
+                      "Server/Bloodcraftplus/Core.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Tools/VDebug/VDebug.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "Config"
+                 ],
+        "Title":  "Note startup-cached options require restart",
+        "Files":  [
+                      "Docs/src/content/reference/config.mdx",
+                      "Docs/src/content/reference/changelog.mdx",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Client/EclipsePlus/EclipsePlus.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Server/Bloodcraftplus/Bloodcraftplus.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Eclipse Sync",
+                     "UI"
+                 ],
+        "Title":  "Show “sync disabled” status in Equipment tab summary",
+        "Files":  [
+                      "Server/Bloodcraftplus/Patches/ChatMessageSystemPatch.cs",
+                      "Client/EclipsePlus/Patches/ClientChatSystemPatch.cs",
+                      "Client/EclipsePlus/Services/CanvasService.cs",
+                      "Client/EclipsePlus/Services/DataService.cs",
+                      "Client/EclipsePlus/Services/CharacterMenuService.cs",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Server/Bloodcraftplus/Bloodcraftplus.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Client/EclipsePlus/EclipsePlus.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "VDebug",
+                     "UX"
+                 ],
+        "Title":  "Remove duplicate client/server tag in log prefix",
+        "Files":  [
+                      "Tools/VDebug/VDebugApi.cs",
+                      "[Client]/[Server]",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Tools/VDebug/VDebug.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "VDebug",
+                     "Feature"
+                 ],
+        "Title":  "Superior Console Helper — structured logging with repeat suppression",
+        "Files":  [
+                      "Tools/VDebug/Services/StructuredLogging.cs",
+                      "Tools/VDebug/VDebugApi.cs",
+                      "Tools/VDebug/Plugin.cs",
+                      "Client/EclipsePlus/Services/DebugToolsBridge.cs",
+                      "Server/Bloodcraftplus/Services/DebugToolsBridge.cs",
+                      "Tools/VDebug/README.md",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Tools/VDebug/VDebug.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Client/EclipsePlus/EclipsePlus.csproj",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Server/Bloodcraftplus/Bloodcraftplus.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "VDebug",
+                     "UX"
+                 ],
+        "Title":  "UI Inspector: add optional Hover Inspect toggle",
+        "Files":  [
+                      "Tools/VDebug/Services/UIInspectorService.cs",
+                      "Docs/src/content/tools/vdebug.mdx",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release Tools/VDebug/VDebug.csproj"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Tools",
+                     "DesignMock"
+                 ],
+        "Title":  "Migrated DesignMock from static HTML/CSS/JS to Vite + React + TypeScript",
+        "Files":  [
+                      "Tools/DesignMock/package.json",
+                      "Tools/DesignMock/vite.config.ts",
+                      "Tools/DesignMock/tsconfig.json",
+                      "Tools/DesignMock/src/App.tsx",
+                      "Tools/DesignMock/src/features/",
+                      "Tools/DesignMock/src/shared/components/",
+                      "Tools/DesignMock/src/shared/types/",
+                      "Tools/DesignMock/src/mock-data/",
+                      "Tools/DesignMock/styles/",
+                      "Tools/DesignMock/public/assets/",
+                      "Tools/DesignMock/legacy/",
+                      "Docs/src/content/tools/design-mock.mdx",
+                      "styles/",
+                      "/assets/...",
+                      "public/assets/",
+                      "legacy/"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Tools",
+                     "DesignMock"
+                 ],
+        "Title":  "Cleaned up unused DesignMock artifacts",
+        "Files":  [
+                      "Tools/DesignMock/EQUIPMENT-TAB-HIERARCHY.log",
+                      "Tools/DesignMock/tsconfig.node.tsbuildinfo",
+                      "Tools/DesignMock/tsconfig.tsbuildinfo",
+                      "Tools/DesignMock/vite.config.d.ts"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "Process"
+                 ],
+        "Title":  "Added a plain Markdown changelog for sharing externally",
+        "Files":  "CHANGELOG2.md"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs",
+                     "Process"
+                 ],
+        "Title":  "Converted `CHANGELOG2.md` to plain text (no Markdown)",
+        "Files":  "CHANGELOG2.md"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Aligned Gear Level wording across changelogs + READMEs",
+        "Files":  [
+                      "CHANGELOG.md",
+                      "CHANGELOG2.md",
+                      "README.md",
+                      "Docs/src/content/index.mdx",
+                      "Docs/src/content/reference/changelog.mdx"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Reworked `CHANGELOG2.md` to separate client vs server logs",
+        "Files":  "CHANGELOG2.md"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Redesigned docs changelog page to be full-width and plain Markdown",
+        "Files":  [
+                      "Docs/src/content/reference/changelog.mdx",
+                      "Docs/src/components/Layout.tsx",
+                      "Docs/src/components/Layout.css"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Added per-plugin header styling on the docs changelog page",
+        "Files":  [
+                      "Docs/src/content/reference/changelog.mdx",
+                      "Docs/src/styles/globals.css"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Cleaned up docs changelog titles to avoid cross-plugin wording",
+        "Files":  "Docs/src/content/reference/changelog.mdx"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Disabled heading hyperlink behavior on changelog page",
+        "Files":  "Docs/src/components/mdx-components.tsx"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Reformatted changelog entries: version-first + small date subline",
+        "Files":  [
+                      "Docs/src/content/reference/changelog.mdx",
+                      "Docs/src/styles/globals.css"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Modernized changelog entry headers (badge + title row)",
+        "Files":  [
+                      "Docs/src/content/reference/changelog.mdx",
+                      "Docs/src/styles/globals.css"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Added minimal underline styling to changelog entry titles",
+        "Files":  "Docs/src/styles/globals.css"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Added minimal underline styling to changelog entry titles",
+        "Files":  "Docs/src/styles/globals.css"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Bundled a terminal-style font for the changelog codebox",
+        "Files":  [
+                      "Docs/package.json",
+                      "@fontsource/jetbrains-mono",
+                      "Docs/src/main.tsx",
+                      "Docs/src/styles/globals.css",
+                      "npm install @fontsource/jetbrains-mono"
+                  ]
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-17",
+        "Tags":  [
+                     "Docs"
+                 ],
+        "Title":  "Expanded Familiar Talent System changelog details (stat explanations)",
+        "Files":  "Docs/src/content/reference/changelog.mdx"
+    },
+    {
+        "MonthFile":  "2026-01.md",
+        "Date":  "2026-01-18",
+        "Tags":  [
+                     "Veil"
+                 ],
+        "Title":  "Recreate HUD canvas when lost",
+        "Files":  [
+                      "Client/Veil/Core/CanvasManager.cs",
+                      "Client/Veil/UI/Components/UIComponentBase.cs",
+                      "Client/Veil/Plugin.cs",
+                      "Client/Veil/Veil.csproj",
+                      "Docs/src/content/getting-started/troubleshooting.mdx",
+                      "Docs/src/content/reference/changelog.mdx",
+                      "Docs/src/styles/globals.css",
+                      "C:\\Users\\Asus\\.dotnet8\\dotnet.exe build -c Release",
+                      "Tools/VDebug/VDebug.csproj"
+                  ]
+    }
+]

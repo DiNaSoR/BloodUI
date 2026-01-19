@@ -1,0 +1,26 @@
+#!/bin/sh
+# Cursor Memory: auto-rebuild indexes + lint before commit
+
+set -e
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$ROOT"
+
+echo "[CursorMemory] Rebuilding indexes..."
+if command -v powershell.exe >/dev/null 2>&1; then
+  powershell.exe -ExecutionPolicy Bypass -File "./scripts/memory/rebuild-memory-index.ps1"
+  powershell.exe -ExecutionPolicy Bypass -File "./scripts/memory/lint-memory.ps1"
+elif command -v pwsh >/dev/null 2>&1; then
+  pwsh -ExecutionPolicy Bypass -File "./scripts/memory/rebuild-memory-index.ps1"
+  pwsh -ExecutionPolicy Bypass -File "./scripts/memory/lint-memory.ps1"
+else
+  echo "[CursorMemory] PowerShell not found; skipping memory rebuild/lint."
+fi
+
+git add .cursor/memory/lessons/index.md 2>/dev/null || true
+git add .cursor/memory/lessons-index.json 2>/dev/null || true
+git add .cursor/memory/journal-index.md 2>/dev/null || true
+git add .cursor/memory/journal-index.json 2>/dev/null || true
+git add .cursor/memory/digests/*.digest.md 2>/dev/null || true
+
+exit 0

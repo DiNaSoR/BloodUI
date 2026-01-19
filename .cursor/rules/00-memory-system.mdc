@@ -1,0 +1,53 @@
+---
+description: Memory System v3.2.2 - Authority + Atomic Retrieval + Token Safety
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Memory System (MANDATORY)
+
+## Authority Order (highest to lowest)
+1) Lessons override EVERYTHING (including active-context)
+2) `active-context.md` overrides memo/journal (but NOT lessons)
+3) `memo.md` is long-term project truth
+4) Journal is history
+5) Existing codebase
+6) New suggestions (lowest priority)
+
+## Token-Safe Retrieval
+
+ALWAYS READ (in order):
+1. `.cursor/memory/hot-rules.md` (tiny, <20 lines)
+2. `.cursor/memory/active-context.md` (current session state)
+3. `.cursor/memory/memo.md` (project truth + ownership)
+
+SEARCH FIRST, THEN FETCH:
+4. `.cursor/memory/lessons/index.md` -> find relevant lesson ID
+5. `.cursor/memory/lessons/L-XXX-title.md` -> load ONLY the specific file
+6. `.cursor/memory/digests/YYYY-MM.digest.md` -> before raw journal
+7. `.cursor/memory/journal/YYYY-MM.md` -> only for archaeology
+
+## After Any Feature/Fix
+
+1. Update `active-context.md` during work (scratchpad)
+2. Add journal entry to `journal/YYYY-MM.md` when done
+3. Create `lessons/L-XXX-title.md` if you discovered a pitfall
+4. Update `memo.md` if project truth changed
+5. Clear `active-context.md` when task is merged
+
+## Helper Scripts
+
+- Add lesson: `scripts/memory/add-lesson.ps1 -Title "..." -Tags "..." -Rule "..."`
+- Add journal: `scripts/memory/add-journal-entry.ps1 -Tags "..." -Title "..."`
+- Rebuild: `scripts/memory/rebuild-memory-index.ps1`
+- Lint: `scripts/memory/lint-memory.ps1`
+- Query: `scripts/memory/query-memory.ps1 -Query "..." [-UseSqlite]`
+- Clear: `scripts/memory/clear-active.ps1`
+
+## AI Behavior
+
+- When user says "I'm done" or "merge this" -> remind to clear active-context
+- When you discover a bug pattern -> suggest creating a lesson
+- When unsure about architecture -> check lessons/index.md first
+- Don't create parallel systems -> check memo.md ownership map
