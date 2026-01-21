@@ -550,36 +550,6 @@ internal class StatBonusesTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
                 UpdateRow(_rows[i], entries[i], entry => FormatWeaponStatValue(entry.StatIndex, entry.Value), onClicked);
             }
         }
-        else
-        {
-            UpdateHeader("Mock Sword", selectedCount: 0, maxChoices: 3, level: 67, progress01: 0.45f);
-            UpdateHeaderIcon(DefaultWeaponIconSpriteNames);
-
-            List<StatBonusEntry> mockEntries =
-            [
-                new StatBonusEntry(1, "Max Health", 250f, false),
-                new StatBonusEntry(2, "Movement Speed", 0.15f, false),
-                new StatBonusEntry(3, "Primary Attack Speed", 0.12f, false),
-                new StatBonusEntry(4, "Physical Life Leech", 0.05f, false),
-                new StatBonusEntry(5, "Spell Life Leech", 0.05f, false),
-                new StatBonusEntry(6, "Primary Life Leech", 0.05f, false),
-                new StatBonusEntry(7, "Physical Power", 15f, false),
-                new StatBonusEntry(8, "Spell Power", 15f, false),
-                new StatBonusEntry(9, "Physical Crit Chance", 0.08f, false),
-                new StatBonusEntry(10, "Physical Crit Damage", 0.25f, false),
-                new StatBonusEntry(11, "Spell Crit Chance", 0.08f, false),
-                new StatBonusEntry(12, "Spell Crit Damage", 0.25f, false)
-            ];
-
-            EnsureRows(mockEntries.Count);
-            int rowCount = Math.Min(mockEntries.Count, _rows.Count);
-
-            Action<int> onMockClicked = (statIndex) => DebugToolsBridge.TryLogInfo($"[Mock] Clicked weapon stat index: {statIndex}");
-            for (int i = 0; i < rowCount; i++)
-            {
-                UpdateRow(_rows[i], mockEntries[i], entry => FormatWeaponStatValue(entry.StatIndex, entry.Value), onMockClicked);
-            }
-        }
     }
 
     private void UpdateBloodLegaciesPanel()

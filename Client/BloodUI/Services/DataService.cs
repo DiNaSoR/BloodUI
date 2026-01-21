@@ -9,6 +9,16 @@ using BloodUI.Services;
 namespace BloodUI.Services;
 internal static class DataService
 {
+    private static readonly Regex _regexPrestigeLB = new(@"<color=yellow>(\d+)</color>\| <color=green>(.*?)</color>, <color=#90EE90>(.*?)</color>: <color=white>(\d+)</color>", RegexOptions.Compiled);
+    private static readonly string[] LegacyPrestigeTypes = {
+        "Experience", "Exo", "SwordExpertise", "AxeExpertise", "MaceExpertise",
+        "SpearExpertise", "CrossbowExpertise", "GreatSwordExpertise", "SlashersExpertise",
+        "PistolsExpertise", "ReaperExpertise", "LongbowExpertise", "WhipExpertise",
+        "UnarmedExpertise", "FishingPoleExpertise", "TwinBladesExpertise", "DaggersExpertise",
+        "ClawsExpertise", "WorkerLegacy", "WarriorLegacy", "ScholarLegacy",
+        "RogueLegacy", "MutantLegacy", "DraculinLegacy", "ImmortalLegacy",
+        "CreatureLegacy", "BruteLegacy", "CorruptionLegacy"
+    };
     public enum TargetType
     {
         Kill,
@@ -600,12 +610,48 @@ internal static class DataService
             _prestigeLeaderboardEnabled = _prestigeSystemEnabled;
             _prestigeDataReady = true;
 
+            // Phase 3: Pre-populate prestige types if empty
+            if (_prestigeLeaderboardOrder.Count == 0)
+            {
+                foreach (string type in LegacyPrestigeTypes)
+                {
+                    _prestigeLeaderboardOrder.Add(type);
+                }
+            }
+
             _exoFormEnabled = _prestigeSystemEnabled;
             _exoFormDataReady = true;
 
             _familiarSystemEnabled = _familiarMaxLevel > 0;
             _familiarBattlesEnabled = _familiarSystemEnabled;
             _familiarBattleDataReady = true;
+
+            // Phase 4: Pre-populate weapon stat bonus data if empty
+            if (_weaponStatBonusData == null)
+            {
+                _weaponStatBonusData = new WeaponStatBonusData
+                {
+                    WeaponType = "None",
+                    ExpertiseLevel = 0,
+                    ExpertiseProgress = 0f,
+                    MaxStatChoices = 3
+                };
+
+                foreach (WeaponStatType statType in Enum.GetValues(typeof(WeaponStatType)))
+                {
+                    if (statType == WeaponStatType.None) continue;
+
+                    _weaponStatBonusData.AvailableStats.Add(new StatBonusDataEntry
+                    {
+                        StatIndex = (int)statType,
+                        StatName = System.Text.RegularExpressions.Regex.Replace(statType.ToString(), "([a-z])([A-Z])", "$1 $2"),
+                        Value = 0f,
+                        MaxValue = _weaponStatValues.TryGetValue(statType, out float val) ? val : 0f,
+                        IsSelected = false
+                    });
+                }
+            }
+            _statBonusDataReady = true;
 
             try
             {
@@ -1463,6 +1509,53 @@ internal static class DataService
 
         ShiftSpellData shiftSpellData = new(playerData[index]);
         _shiftSpellIndex = shiftSpellData.ShiftSpellIndex;
+
+        // Phase 4: Sync weapon stat bonus data from progress payload
+        if (_weaponStatBonusData != null)
+        {
+            _weaponStatBonusData.ExpertiseLevel = _expertiseLevel;
+            _weaponStatBonusData.ExpertiseProgress = _expertiseProgress;
+            _weaponStatBonusData.WeaponType = _expertiseType;
+
+            // Clear previous selections
+            _weaponStatBonusData.SelectedStats.Clear();
+            foreach (var stat in _weaponStatBonusData.AvailableStats)
+            {
+                stat.IsSelected = false;
+            }
+
+            // Apply selections from 6-digit integer string (e.g. "010310")
+            // _expertiseBonusStats is already a List<string> of enum names (e.g. ["MaxHealth", "PrimaryAttackSpeed"])
+            if (_expertiseBonusStats != null)
+            {
+                foreach (string statName in _expertiseBonusStats)
+                {
+                    var statEntry = _weaponStatBonusData.AvailableStats.Find(s => 
+                        s.StatName.Replace(" ", "").Equals(statName, StringComparison.OrdinalIgnoreCase));
+                    
+                    if (statEntry != null)
+                    {
+                        statEntry.IsSelected = true;
+                        _weaponStatBonusData.SelectedStats.Add(statEntry);
+                    }
+                }
+            }
+
+            // Update Values based on level/prestige/class synergy
+            foreach (var stat in _weaponStatBonusData.AvailableStats)
+            {
+                if (Enum.TryParse(stat.StatName.Replace(" ", ""), out WeaponStatType statType))
+                {
+                    float baseCap = _weaponStatValues.TryGetValue(statType, out float cap) ? cap : 0f;
+                    float classMultiplier = BloodUI.Services.HUD.Shared.HudUtilities.ClassSynergy(statType, _classType, _classStatSynergies);
+                    float prestigeMultiplier = 1f + (_prestigeStatMultiplier * _expertisePrestige);
+                    float levelMultiplier = _expertiseMaxLevel > 0 ? ((float)_expertiseLevel / _expertiseMaxLevel) : 0f;
+                    
+                    stat.Value = baseCap * prestigeMultiplier * classMultiplier * levelMultiplier;
+                    stat.MaxValue = baseCap; // Or calculate actual max possible?
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -1504,5 +1597,56 @@ internal static class DataService
             DebugToolsBridge.TryLogWarning($"Failed to parse Eclipse sync status: {ex}");
         }
     }
+    public static void RequestPrestigeLeaderboard(string typeKey)
+    {
+        // Don't use [ECLIPSE] sub-type because the server doesn't support it for LB updates.
+        // Send as regular command that the server's VCF system handles.
+        BloodUI.Utilities.Quips.SendCommand($".prestige lb {typeKey}");
+    }
 
+    public static bool TryParsePrestigeLeaderboardChatMessage(string message)
+    {
+        var matches = _regexPrestigeLB.Matches(message);
+        if (matches.Count == 0) return false;
+
+        foreach (Match match in matches)
+        {
+            try
+            {
+                string rankStr = match.Groups[1].Value;
+                string name = match.Groups[2].Value;
+                string typeKey = match.Groups[3].Value;
+                int level = int.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
+
+                if (!_prestigeLeaderboards.ContainsKey(typeKey))
+                {
+                    _prestigeLeaderboards[typeKey] = new List<PrestigeLeaderboardEntry>();
+                }
+
+                // If this is the start of a batch (rank 1), clear the previous data for this type
+                if (rankStr == "1")
+                {
+                    _prestigeLeaderboards[typeKey].Clear();
+                }
+
+                // Check for duplicates
+                if (!_prestigeLeaderboards[typeKey].Any(e => e.Name == name))
+                {
+                    _prestigeLeaderboards[typeKey].Add(new PrestigeLeaderboardEntry(name, level));
+                }
+
+                // Ensure the type is in our order list if it wasn't pre-populated
+                if (!_prestigeLeaderboardOrder.Contains(typeKey))
+                {
+                    _prestigeLeaderboardOrder.Add(typeKey);
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugToolsBridge.TryLogWarning($"Failed to parse prestige leaderboard entry from chat: {ex}");
+            }
+        }
+
+        return true;
+    }
 }

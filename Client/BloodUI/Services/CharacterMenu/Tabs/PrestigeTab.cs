@@ -201,6 +201,17 @@ internal class PrestigeTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         UpdatePanel();
     }
 
+    public override void OnActivated()
+    {
+        base.OnActivated();
+
+        // Phase 3: Request current leaderboard when tab is opened
+        if (_prestigeLeaderboardOrder != null && _prestigeLeaderboardOrder.Count > 0)
+        {
+            DataService.RequestPrestigeLeaderboard(_prestigeLeaderboardOrder[_leaderboardIndex]);
+        }
+    }
+
     public override void Reset()
     {
         base.Reset();
@@ -319,6 +330,9 @@ internal class PrestigeTab : CharacterMenuTabBase, ICharacterMenuTabWithPanel
         {
             _typeDropdownListRoot.gameObject.SetActive(false);
         }
+
+        // Phase 3: Request the leaderboard from the server when type is selected
+        DataService.RequestPrestigeLeaderboard(_prestigeLeaderboardOrder[_leaderboardIndex]);
 
         UpdateLeaderboard();
     }

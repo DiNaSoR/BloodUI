@@ -112,10 +112,13 @@ internal static class ClientChatSystemPatch
                         }
                         else
                         {
-                            // Try parsing talent response first, then familiar box
+                            // Try parsing talent response first, then familiar box, then prestige leaderboard
                             if (!DataService.TryParseFamiliarTalentMessage(message))
                             {
-                                DataService.TryParseFamiliarBoxChatMessage(message);
+                                if (!DataService.TryParseFamiliarBoxChatMessage(message))
+                                {
+                                    DataService.TryParsePrestigeLeaderboardChatMessage(message);
+                                }
                             }
                         }
                     }
