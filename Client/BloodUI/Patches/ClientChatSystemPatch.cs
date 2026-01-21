@@ -44,7 +44,7 @@ internal static class ClientChatSystemPatch
         IsDebugEvent = false,
     };
 
-    public const string V1_4 = "1.4";
+    public const string V1_3 = "1.3";
     public const string VERSION = MyPluginInfo.PLUGIN_VERSION;
     public enum NetworkEventSubType
     {
@@ -142,7 +142,7 @@ internal static class ClientChatSystemPatch
         string intermediateMessage = $"[ECLIPSE][{(int)subType}]:{message}";
         string messageWithMAC = modVersion switch
         {
-            _ when modVersion.StartsWith(V1_4) => $"{intermediateMessage};mac{GenerateMACV1_3(intermediateMessage)}",
+            _ when modVersion.StartsWith(V1_3) => $"{intermediateMessage};mac{GenerateMACV1_3(intermediateMessage)}",
             _ => string.Empty
         };
 
