@@ -285,7 +285,7 @@ internal static class DataService
     public static bool _prestigeLeaderboardEnabled;
     public static readonly Dictionary<string, List<PrestigeLeaderboardEntry>> _prestigeLeaderboards = [];
     public static readonly List<string> _prestigeLeaderboardOrder = [];
-    public static int _prestigeLeaderboardIndex;
+
 
     public static bool _exoFormDataReady;
     public static bool _exoFormEnabled;

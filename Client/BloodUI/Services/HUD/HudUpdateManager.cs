@@ -764,13 +764,13 @@ internal static class HudUpdateManager
             {
                 case TargetType.Kill:
                     if (!questIcon.gameObject.active) questIcon.gameObject.active = true;
-                    if (isVBlood && questIcon.sprite != _questKillVBloodUnit)
+                    if (isVBlood && questIcon.sprite != HudData.QuestKillVBloodUnit)
                     {
-                        questIcon.sprite = _questKillVBloodUnit;
+                        questIcon.sprite = HudData.QuestKillVBloodUnit;
                     }
-                    else if (!isVBlood && questIcon.sprite != _questKillStandardUnit)
+                    else if (!isVBlood && questIcon.sprite != HudData.QuestKillStandardUnit)
                     {
-                        questIcon.sprite = _questKillStandardUnit;
+                        questIcon.sprite = HudData.QuestKillStandardUnit;
                     }
                     break;
                 case TargetType.Craft:

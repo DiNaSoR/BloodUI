@@ -263,19 +263,12 @@ internal static class HudData
     #region Canvas References
 
     public static UICanvasBase CanvasBase;
-    public static Canvas BottomBarCanvas;
-    public static Canvas TargetInfoPanelCanvas;
 
     #endregion
 
     #region Global State
 
     public static string Version = string.Empty;
-    public static int Layer;
-    public static int BarNumber;
-    public static int GraphBarNumber;
-    public static float HorizontalBarHeaderFontSize;
-    public static float WindowOffset;
 
     public static bool IsReady = false;
     public static bool IsActive = false;

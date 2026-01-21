@@ -703,8 +703,7 @@ internal class CanvasService
 
         public static readonly Dictionary<string, Sprite> Sprites = [];
 
-        public static Sprite _questKillStandardUnit;
-        public static Sprite _questKillVBloodUnit;
+
 
         public static readonly Regex ClassNameRegex = new("(?<!^)([A-Z])");
         public static readonly Regex AbilitySpellRegex = new("(?<=AB_).*(?=_Group)");

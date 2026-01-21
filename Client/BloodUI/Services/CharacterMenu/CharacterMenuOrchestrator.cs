@@ -36,10 +36,7 @@ internal class CharacterMenuOrchestrator
 
     private InventorySubMenu _inventorySubMenu;
     private RectTransform _bloodcraftTab;
-    private SimpleStunButton _bloodcraftTabButton;
     private Transform _contentRoot;
-    private Transform _entriesRoot;
-    private GameObject _entryTemplate;
     private TextMeshProUGUI _entryStyle;
 
     private BloodcraftTab _activeTab = BloodcraftTab.Prestige;
@@ -259,10 +256,7 @@ internal class CharacterMenuOrchestrator
 
         _inventorySubMenu = null;
         _bloodcraftTab = null;
-        _bloodcraftTabButton = null;
         _contentRoot = null;
-        _entriesRoot = null;
-        _entryTemplate = null;
         _entryStyle = null;
         _activeTab = BloodcraftTab.Prestige;
         _bloodcraftTabIndex = -1;
